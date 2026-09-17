@@ -1,0 +1,4615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1C2026">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23131B2E'/%3E%3Cstop offset='1' stop-color='%231E2A44'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M22 30.5v-8.5a10 10 0 0 1 20 0v8.5' fill='none' stroke='%237FE3DC' stroke-width='4.4' stroke-linecap='round'/%3E%3Crect x='15.5' y='30' width='33' height='23' rx='7.5' fill='%237FE3DC' fill-opacity='.18'/%3E%3Crect x='15.5' y='30' width='33' height='23' rx='7.5' fill='none' stroke='%237FE3DC' stroke-width='2.2'/%3E%3Ccircle cx='32' cy='39.5' r='3.3' fill='%237FE3DC'/%3E%3Crect x='30.6' y='41' width='2.8' height='6.4' rx='1.4' fill='%237FE3DC'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23131B2E'/%3E%3Cstop offset='1' stop-color='%231E2A44'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M22 30.5v-8.5a10 10 0 0 1 20 0v8.5' fill='none' stroke='%237FE3DC' stroke-width='4.4' stroke-linecap='round'/%3E%3Crect x='15.5' y='30' width='33' height='23' rx='7.5' fill='%237FE3DC' fill-opacity='.18'/%3E%3Crect x='15.5' y='30' width='33' height='23' rx='7.5' fill='none' stroke='%237FE3DC' stroke-width='2.2'/%3E%3Ccircle cx='32' cy='39.5' r='3.3' fill='%237FE3DC'/%3E%3Crect x='30.6' y='41' width='2.8' height='6.4' rx='1.4' fill='%237FE3DC'/%3E%3C/svg%3E">
+<title>CipherBox · 账号密码管理</title>
+<style>
+:root{
+  /* ============================================================
+     设计令牌层 ·「青」四色体系
+     中文里的"青"本就兼指绿、蓝、黑、白四色，所以这不是四色拼贴，
+     而是一个色系的四张面孔：
+       黑（245°）承结构   白（248°）承文字与光
+       蓝（240°）承行动   绿（168°）承状态
+     蓝绿相距 72°，是"分裂互补"—— 有张力，又共享同一份青的底子。
+     ============================================================ */
+
+  /* ---------- 色阶 · 原语令牌 ----------
+     四色体系「青」—— 中文里的"青"本就兼指绿、蓝、黑、白四色。
+     黑与白承担结构与文字，蓝与绿只出现在"行动"与"状态"上。 */
+
+  /* 墨阶 · 黑（245° 极低 chroma。死黑会发灰，带一线冷调才透亮）*/
+  --ink-950:oklch(14% .006 245);
+  --ink-900:oklch(19% .007 245);
+  --ink-850:oklch(23% .008 245);
+  --ink-800:oklch(27% .009 245);
+  --ink-700:oklch(33% .010 245);
+  --ink-600:oklch(40% .011 245);
+  --ink-550:oklch(46% .012 245);
+  --ink-500:oklch(52% .013 244);
+  --ink-450:oklch(59% .014 244);
+  --ink-425:oklch(65% .015 244);
+  --ink-400:oklch(72% .015 244);
+  --ink-300:oklch(86% .011 246);
+  --ink-200:oklch(95% .006 248);
+
+  /* 青蓝阶 · 蓝（主行动色 · 240°）*/
+  --azure-700:oklch(46% .150 240);
+  --azure-600:oklch(56% .155 240);
+  --azure-500:oklch(66% .150 240);
+  --azure-400:oklch(75% .125 240);
+  --azure-300:oklch(84% .095 240);
+  --azure-200:oklch(93% .045 240);
+
+  /* 青绿阶 · 绿（状态色 · 168°，与蓝相距 72°，是"分裂互补"的张力）*/
+  --jade-700:oklch(46% .120 168);
+  --jade-600:oklch(56% .135 168);
+  --jade-500:oklch(67% .140 168);
+  --jade-400:oklch(78% .125 168);
+  --jade-300:oklch(87% .085 168);
+  --jade-200:oklch(95% .042 168);
+
+  /* 素阶 · 白（248°，带极淡冷调 —— 纯白刺眼且显旧）*/
+  --chalk-100:oklch(98% .003 248);
+  --chalk-200:oklch(92% .005 248);
+  --chalk-300:oklch(85% .007 248);
+  --chalk-500:oklch(88% .006 248);
+  --chalk-600:oklch(84% .008 248);
+  --chalk-700:oklch(58% .010 248);
+
+  /* ---------- 语义令牌 · 暗色（默认）---------- */
+  --bg-canvas:var(--ink-950);
+  --bg-surface:var(--ink-900);
+  --bg-raised:var(--ink-700);
+  --bg-inset:oklch(21% .008 245);
+  --bg-hover:oklch(25% .009 245);
+
+  --text-primary:var(--chalk-100);
+  --text-secondary:var(--chalk-500);
+  --text-tertiary:var(--chalk-600);
+
+  /* 描边是白细线 —— 这是玻璃的边缘语言，换成彩线就脏了 */
+  --line-soft:rgb(255 255 255 / .10);
+  --line-strong:rgb(255 255 255 / .18);
+  --line-control:rgb(255 255 255 / .30);
+
+  /* 主强调 = 青蓝。只用在"行动"与"焦点"上 */
+  --accent:var(--azure-300);
+  --accent-hover:var(--azure-200);
+  --accent-ink:oklch(18% .040 244);
+  --brand-ink:oklch(18% .040 244);
+
+  /* 危险保留红 —— 删除操作需要明确的警示，这是可用性底线，
+     不能被"只用四种颜色"这条规则吃掉。 */
+  --danger:oklch(74% .150 26);
+  --danger-bg:oklch(46% .140 22 / .18);
+  --danger-line:oklch(72% .155 25 / .46);
+  /* 成功与警示都收敛到青绿 */
+  --success:var(--jade-300);
+  --success-bg:oklch(40% .090 168 / .22);
+  --warn:var(--jade-300);
+  --warn-bg:oklch(40% .090 168 / .18);
+  --warn-line:oklch(72% .100 168 / .34);
+
+  /* 焦点环改用青蓝（WCAG 1.4.11 需 3:1）*/
+  --focus:var(--azure-300);
+
+  /* ---------- 弹层 ----------
+     遮罩必须**按主题分开**：亮色下若沿用深黑遮罩，近白的界面会被压成灰，
+     抽屉玻璃透出来就是灰的。 */
+  --scrim-bg:oklch(6% .006 245 / .62);
+  --sheet-cast:rgb(2 4 14 / .70);
+  --hairline:rgb(255 255 255 / .14);
+  /* 表单输入区：比玻璃更实、更暗，形成"内凹" */
+  --field-face:oklch(19% .008 245 / .52);
+
+  /* ---------- 背景光场 ----------
+     四色在这里合成：蓝与绿各据一角，白做主光晕（光源感）。
+     玻璃本身是无色的 —— 它透出的颜色，就是这层光。 */
+  --glow-1:oklch(58% .135 240 / .34);   /* 青蓝 · 左上 */
+  --glow-2:oklch(42% .055 244 / .34);   /* 深蓝 · 右中（压暗，造斜向明暗）*/
+  --glow-3:oklch(96% .004 245 / .22);   /* 白 · 左下主光晕 */
+  --glow-4:oklch(58% .125 168 / .30);   /* 青绿 · 右下 */
+  --grain:.034;
+
+  /* ---------- 玻璃材质 ----------
+     真玻璃靠三件事，只有 blur 就是廉价毛玻璃：
+     ① 顶部边缘的受光高光（--glass-lip）
+     ② 底部内阴影造成的"厚度"（--glass-under）
+     ③ backdrop 模糊+提饱和，让背后光斑渗进来 */
+  --glass-face:linear-gradient(163deg,
+      oklch(97% .014 238 / .105) 0%,
+      oklch(95% .012 240 / .058) 46%,
+      oklch(94% .010 242 / .030) 100%);
+  --glass-face-hi:linear-gradient(163deg,
+      oklch(97% .014 238 / .175) 0%,
+      oklch(95% .012 240 / .098) 45%,
+      oklch(94% .010 242 / .054) 100%);
+  --glass-blur:28px;
+  --glass-sat:150%;
+  --glass-edge:rgb(255 255 255 / .24);
+  --glass-edge-hi:rgb(255 255 255 / .42);
+  /* 顶部受光边加强 —— 这是"玻璃有厚度"最直接的信号 */
+  --glass-lip:inset 1.5px 1.5px 0 rgb(255 255 255 / .13),
+              inset 3px 3px 11px -4px rgb(255 255 255 / .20);
+  --glass-under:inset -1.5px -1.5px 0 rgb(0 0 0 / .26),
+                inset -4px -4px 13px -5px rgb(0 0 0 / .32);
+  --glass-cast:0 2px 6px -2px rgb(4 8 18 / .36),
+                0 20px 48px -12px rgb(4 8 18 / .60);
+  --glass-inset-dark:inset 0 1px 2px rgb(0 0 0 / .28);
+
+  /* ---------- 彩色玻璃 ----------
+     主按钮 / FAB / 选中 chip / 徽章是"染了色的玻璃"。
+     现在染的是青蓝 —— 四色里的"行动色"。
+     两个主题必须各自定义，否则亮色下白字配亮蓝底会崩。 */
+  --tint-face:linear-gradient(158deg,
+      oklch(72% .130 240 / .58) 0%,
+      oklch(62% .150 240 / .46) 48%,
+      oklch(54% .145 240 / .38) 100%);
+  --tint-face-soft:linear-gradient(160deg,
+      oklch(70% .120 240 / .46) 0%,
+      oklch(58% .140 240 / .34) 100%);
+  --tint-face-deep:linear-gradient(150deg,
+      oklch(66% .140 240 / .52) 0%,
+      oklch(50% .150 240 / .40) 100%);
+  --tint-ink:oklch(99% .004 245);
+  --tint-edge:oklch(90% .060 240 / .46);
+  --tint-edge-deep:oklch(80% .080 240 / .26);
+  --tint-lip:inset 1.5px 1.5px 0 oklch(96% .040 240 / .46),
+             inset 3px 3px 12px -4px oklch(92% .060 240 / .38);
+  --tint-under:inset -1.5px -1.5px 0 rgb(0 0 0 / .26),
+               inset -4px -4px 13px -5px rgb(0 0 0 / .30);
+  --tint-cast:0 16px 38px -12px oklch(26% .110 244 / .58);
+
+  /* ---------- 字体 ----------
+     标题一律用无衬线 —— 衬线是"旧"感的首要来源。
+     中文优先现代几何体（MiSans / HarmonyOS Sans），回退系统 UI 字体。 */
+  --font-sans:"MiSans","HarmonyOS Sans SC","PingFang SC","Source Han Sans SC","Noto Sans CJK SC","Microsoft YaHei",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-display:"MiSans Semibold","PingFang SC","HarmonyOS Sans SC","Source Han Sans SC","Noto Sans CJK SC","Microsoft YaHei",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:ui-monospace,"SF Mono","Cascadia Code","JetBrains Mono",Menlo,Consolas,monospace;
+
+  /* ---------- 字号阶梯 · 级差比上版拉大 ---------- */
+  --text-xs:.75rem;
+  --text-sm:.84375rem;
+  --text-base:.96875rem;
+  --text-lg:1.0625rem;
+  --text-xl:1.5rem;
+  --text-2xl:1.9375rem;
+  --text-3xl:2.5rem;
+
+  /* ---------- 间距 · 4pt 基数 ---------- */
+  --sp-1:.25rem; --sp-2:.5rem; --sp-3:.75rem; --sp-4:1rem;
+  --sp-5:1.25rem; --sp-6:1.5rem; --sp-8:2rem; --sp-12:3rem;
+
+  /* ---------- 圆角 · 玻璃需要更饱满的弧度 ---------- */
+  --r-sm:13px; --r-md:19px; --r-lg:27px; --r-xl:34px; --r-2xl:44px; --r-full:999px;
+
+  /* ---------- 动效 ---------- */
+  --ease-out:cubic-bezier(.25,1,.5,1);
+  --ease-expo:cubic-bezier(.16,1,.3,1);
+  --ease-in:cubic-bezier(.7,0,.84,0);
+  --ease-glass:cubic-bezier(.22,1,.36,1);
+  --dur-fast:140ms;
+  --dur-mid:240ms;
+  --dur-slow:380ms;
+
+  /* ---------- 层级 ---------- */
+  --z-sticky:200; --z-scrim:300; --z-sheet:400; --z-toast:500;
+}
+
+/* 亮色 · "晨雾中的玻璃"，不是暗色的机械反转。
+   底用冷调浅灰蓝，让青与紫罗兰成为画面唯一的色彩来源。 */
+html[data-theme="light"]{
+  --sheet-face:linear-gradient(180deg, oklch(98% .006 248 / .88), oklch(94% .01 248 / .94));
+  /* 底：近白微冷。纯白底上白玻璃会彻底消失 */
+  --bg-canvas:oklch(92.5% .004 248);
+  --bg-surface:oklch(97% .003 248);
+  --bg-raised:oklch(100% 0 0);
+  --bg-inset:oklch(89% .005 248);
+  --bg-hover:oklch(86% .006 248);
+
+  /* 底色一动，深色文字的对比度会**下降**（不是上升），文字要同步加深 */
+  --text-primary:oklch(19% .020 246);
+  --text-secondary:oklch(34% .018 246);
+  --text-tertiary:oklch(36% .018 246);
+
+  --line-soft:oklch(88% .006 248);
+  --line-strong:oklch(78% .008 248);
+  --line-control:oklch(48% .016 246);
+
+  /* 亮色下蓝必须压深才承得住白字（亮色系上踩过的坑）*/
+  --accent:oklch(45% .150 240);
+  --accent-hover:oklch(38% .150 242);
+  --accent-ink:oklch(100% 0 0);
+
+  --brand:oklch(43% .148 240);
+  --brand-hover:oklch(36% .148 242);
+  --brand-ink:oklch(100% 0 0);
+
+  --danger:oklch(48% .170 27);
+  --danger-bg:oklch(58% .170 26 / .09);
+  --danger-line:oklch(52% .170 26 / .32);
+  --success:oklch(40% .125 168);
+  --success-bg:oklch(50% .110 168 / .10);
+  --warn:oklch(42% .120 168);
+  --warn-bg:oklch(60% .080 168 / .12);
+  --warn-line:oklch(52% .100 168 / .28);
+  --focus:oklch(44% .150 240);
+
+  /* 弹层：遮罩只让背景"退后"，不把它压成灰 —— 这是浅色下不显灰的关键 */
+  --scrim-bg:oklch(54% .014 246 / .17);
+  --sheet-cast:oklch(42% .030 246 / .20);
+  --hairline:oklch(82% .010 248 / .85);
+  --field-face:oklch(99.5% .002 248 / .64);
+
+  /* 亮色光场：蓝绿各据一角，两个深色块负责制造明暗 ——
+     浅底上纯亮光晕等于没有对比，玻璃也就无物可透。 */
+  --glow-1:oklch(92% .055 240 / .74);   /* 浅蓝 · 左上 */
+  --glow-2:oklch(54% .095 236 / .42);   /* 深蓝 · 右中（暗区）*/
+  --glow-3:oklch(100% 0 0 / .78);       /* 白 · 左下主光晕 */
+  --glow-4:oklch(58% .105 170 / .38);   /* 青绿 · 右下（暗区）*/
+  --grain:.034;
+
+  /* 亮色玻璃：靠白色叠加提亮 + 深色投影造悬浮，而非压暗 */
+  /* alpha 从 .90→.54 降到 .38→.20：之前实测透光率 k 只有 0.393，
+     背景的明暗被压到 39%，玻璃成了一块均匀白板 —— 那才是"看不出
+     玻璃质感"的真因。玻璃的可见性改由描边 + 顶部高光 + 投影承担。 */
+  --glass-face:linear-gradient(163deg,
+      oklch(99.5% .008 238 / .275) 0%,
+      oklch(99% .007 240 / .195) 48%,
+      oklch(98.5% .006 242 / .135) 100%);
+  --glass-face-hi:linear-gradient(163deg,
+      oklch(99.5% .008 238 / .425) 0%,
+      oklch(99% .007 240 / .305) 100%);
+  --glass-blur:24px;
+  --glass-sat:120%;
+  --glass-edge:rgb(255 255 255 / .95);
+  --glass-edge-hi:rgb(255 255 255 / 1);
+  --glass-lip:inset 1.5px 1.5px 0 rgb(255 255 255 / 1),
+              inset 3px 3px 11px -4px rgb(255 255 255 / .78);
+  --glass-under:inset -1.5px -1.5px 0 rgb(28 38 62 / .10),
+                inset -4px -4px 13px -5px rgb(28 38 62 / .09);
+  --glass-cast:0 1px 3px -1px rgb(30 42 70 / .20),
+                0 22px 50px -14px rgb(30 42 70 / .40);
+  --glass-inset-dark:inset 0 1px 2px rgb(30 42 70 / .08);
+
+  /* 亮色下"染色玻璃"的 alpha 要更高（.78–.88），
+     因为浅底会把它整体提亮，必须靠更实的蓝把白字承住。 */
+  --tint-face:linear-gradient(158deg,
+      oklch(45% .148 240 / .88) 0%,
+      oklch(39% .152 240 / .84) 50%,
+      oklch(34% .144 240 / .80) 100%);
+  --tint-face-soft:linear-gradient(160deg,
+      oklch(48% .134 240 / .82) 0%,
+      oklch(40% .142 240 / .76) 100%);
+  --tint-face-deep:linear-gradient(150deg,
+      oklch(42% .150 240 / .90) 0%,
+      oklch(35% .150 240 / .84) 100%);
+  --tint-ink:oklch(100% 0 0);
+  --tint-edge:oklch(96% .020 240 / .90);
+  --tint-edge-deep:oklch(90% .040 240 / .60);
+  --tint-lip:inset 1.5px 1.5px 0 oklch(99% .010 240 / .58),
+             inset 3px 3px 12px -4px oklch(96% .020 240 / .40);
+  --tint-under:inset -1.5px -1.5px 0 rgb(0 0 0 / .12),
+               inset -4px -4px 13px -5px rgb(0 0 0 / .10);
+  --tint-cast:0 16px 38px -12px oklch(34% .110 244 / .36);
+}
+
+html[data-theme="dark"]{
+  --sheet-face:linear-gradient(180deg, oklch(23% .02 245 / .88), oklch(20% .018 245 / .92));
+}
+
+/* ============================================================
+   饮品粉 · 浅色（底 #f2b1c6，主色深酒红 #4b2933）
+   ============================================================ */
+html[data-theme="pink-drink"]{
+  --sheet-face:linear-gradient(180deg, oklch(96% .02 2 / .86), oklch(91% .03 2 / .92));
+  --bg-canvas:oklch(81% .075 2);
+  --bg-surface:oklch(87% .055 2);
+  --bg-raised:oklch(97% .015 2);
+  --bg-inset:oklch(75% .07 4);
+  --bg-hover:oklch(78% .065 3);
+  --text-primary:oklch(24% .05 8);
+  --text-secondary:oklch(33% .042 8);
+  --text-tertiary:oklch(28% .044 8);
+  --line-soft:oklch(72% .055 2 / .7);
+  --line-strong:oklch(62% .065 4);
+  --line-control:oklch(40% .05 8);
+  --accent:oklch(30% .05 10);
+  --accent-hover:oklch(24% .045 10);
+  --accent-ink:oklch(96% .02 0);
+  --brand:oklch(30% .05 10);
+  --brand-hover:oklch(24% .045 10);
+  --brand-ink:oklch(96% .02 0);
+  --danger:oklch(50% .17 25);
+  --danger-bg:oklch(97% .02 20 / .55);
+  --danger-line:oklch(52% .17 25 / .4);
+  --success:oklch(38% .11 155);
+  --success-bg:oklch(97% .03 155 / .6);
+  --warn:oklch(45% .12 70);
+  --warn-bg:oklch(96% .04 70 / .6);
+  --warn-line:oklch(52% .11 70 / .35);
+  --focus:oklch(30% .05 10);
+  --scrim-bg:oklch(48% .07 5 / .30);
+  --sheet-cast:oklch(30% .06 10 / .38);
+  --hairline:oklch(96% .02 2 / .85);
+  --field-face:oklch(98% .012 2 / .75);
+  --glow-1:oklch(89% .055 0 / .80);
+  --glow-2:oklch(58% .105 5 / .50);
+  --glow-3:oklch(99% .012 0 / .85);
+  --glow-4:oklch(56% .115 15 / .48);
+  --grain:.034;
+  --glass-face:linear-gradient(163deg, oklch(99% .012 2 / .34) 0%, oklch(98% .010 4 / .24) 48%, oklch(97% .008 6 / .17) 100%);
+  --glass-face-hi:linear-gradient(163deg, oklch(99% .012 2 / .42) 0%, oklch(98% .010 4 / .30) 100%);
+  --glass-blur:24px;
+  --glass-sat:120%;
+  --glass-edge:rgb(255 255 255 / .92);
+  --glass-edge-hi:rgb(255 255 255 / 1);
+  --glass-lip:inset 1.5px 1.5px 0 rgb(255 255 255 / .95), inset 3px 3px 11px -4px rgb(255 255 255 / .70);
+  --glass-under:inset -1.5px -1.5px 0 oklch(35% .06 10 / .12), inset -4px -4px 13px -5px oklch(35% .06 10 / .10);
+  --glass-cast:0 1px 3px -1px oklch(35% .06 10 / .22), 0 22px 50px -14px oklch(35% .06 10 / .42);
+  --glass-inset-dark:inset 0 1px 2px oklch(35% .06 10 / .08);
+  --tint-face:linear-gradient(158deg, oklch(32% .055 10 / .90) 0%, oklch(27% .05 12 / .86) 50%, oklch(23% .045 14 / .82) 100%);
+  --tint-face-soft:linear-gradient(160deg, oklch(36% .055 10 / .84) 0%, oklch(30% .05 12 / .78) 100%);
+  --tint-face-deep:linear-gradient(150deg, oklch(28% .05 12 / .92) 0%, oklch(24% .045 14 / .86) 100%);
+  --tint-ink:oklch(97% .015 0);
+  --tint-edge:oklch(92% .03 0 / .85);
+  --tint-edge-deep:oklch(80% .05 5 / .55);
+  --tint-lip:inset 1.5px 1.5px 0 oklch(97% .015 0 / .55), inset 3px 3px 12px -4px oklch(95% .02 0 / .38);
+  --tint-under:inset -1.5px -1.5px 0 rgb(0 0 0 / .14), inset -4px -4px 13px -5px rgb(0 0 0 / .12);
+  --tint-cast:0 16px 38px -12px oklch(28% .055 10 / .45);
+}
+
+/* ============================================================
+   草莓雪 · 浅色（底 #fbccd8 的浅化，主色莓粉 #e07494）
+   ============================================================ */
+html[data-theme="pink-ice"]{
+  --sheet-face:linear-gradient(180deg, oklch(97% .015 2 / .88), oklch(93% .025 2 / .94));
+  --bg-canvas:oklch(93% .028 2);
+  --bg-surface:oklch(96% .022 2);
+  --bg-raised:oklch(99% .008 2);
+  --bg-inset:oklch(87% .04 2);
+  --bg-hover:oklch(90% .035 2);
+  --text-primary:oklch(28% .06 5);
+  --text-secondary:oklch(40% .05 5);
+  --text-tertiary:oklch(39% .05 5);
+  --line-soft:oklch(84% .03 2 / .8);
+  --line-strong:oklch(74% .045 3);
+  --line-control:oklch(42% .06 5);
+  --accent:oklch(45% .155 5);
+  --accent-hover:oklch(40% .155 5);
+  --accent-ink:oklch(99% .01 0);
+  --brand:oklch(45% .155 5);
+  --brand-hover:oklch(40% .155 5);
+  --brand-ink:oklch(99% .01 0);
+  --danger:oklch(48% .17 25);
+  --danger-bg:oklch(97% .02 20 / .6);
+  --danger-line:oklch(52% .17 25 / .4);
+  --success:oklch(38% .11 155);
+  --success-bg:oklch(97% .03 155 / .65);
+  --warn:oklch(45% .12 70);
+  --warn-bg:oklch(96% .04 70 / .65);
+  --warn-line:oklch(52% .11 70 / .35);
+  --focus:oklch(54% .15 5);
+  --scrim-bg:oklch(52% .06 3 / .26);
+  --sheet-cast:oklch(38% .06 5 / .32);
+  --hairline:oklch(84% .03 2 / .85);
+  --field-face:oklch(99% .008 2 / .8);
+  --glow-1:oklch(93% .045 0 / .85);
+  --glow-2:oklch(60% .13 5 / .45);
+  --glow-3:oklch(99% .012 0 / .9);
+  --glow-4:oklch(55% .13 15 / .42);
+  --grain:.034;
+  --glass-face:linear-gradient(163deg, oklch(99.5% .008 2 / .30) 0%, oklch(99% .006 4 / .21) 48%, oklch(98.5% .005 6 / .15) 100%);
+  --glass-face-hi:linear-gradient(163deg, oklch(99.5% .008 2 / .40) 0%, oklch(99% .006 4 / .28) 100%);
+  --glass-blur:24px;
+  --glass-sat:120%;
+  --glass-edge:rgb(255 255 255 / .95);
+  --glass-edge-hi:rgb(255 255 255 / 1);
+  --glass-lip:inset 1.5px 1.5px 0 rgb(255 255 255 / 1), inset 3px 3px 11px -4px rgb(255 255 255 / .75);
+  --glass-under:inset -1.5px -1.5px 0 oklch(40% .07 5 / .10), inset -4px -4px 13px -5px oklch(40% .07 5 / .08);
+  --glass-cast:0 1px 3px -1px oklch(40% .07 5 / .18), 0 22px 50px -14px oklch(40% .07 5 / .35);
+  --glass-inset-dark:inset 0 1px 2px oklch(40% .07 5 / .07);
+  --tint-face:linear-gradient(158deg, oklch(44% .14 5 / .92) 0%, oklch(39% .135 8 / .88) 50%, oklch(35% .125 12 / .84) 100%);
+  --tint-face-soft:linear-gradient(160deg, oklch(48% .13 5 / .86) 0%, oklch(41% .125 8 / .80) 100%);
+  --tint-face-deep:linear-gradient(150deg, oklch(40% .13 8 / .94) 0%, oklch(35% .12 12 / .88) 100%);
+  --tint-ink:oklch(99% .01 0);
+  --tint-edge:oklch(94% .03 0 / .88);
+  --tint-edge-deep:oklch(82% .05 5 / .58);
+  --tint-lip:inset 1.5px 1.5px 0 oklch(98% .012 0 / .60), inset 3px 3px 12px -4px oklch(96% .015 0 / .42);
+  --tint-under:inset -1.5px -1.5px 0 rgb(0 0 0 / .13), inset -4px -4px 13px -5px rgb(0 0 0 / .11);
+  --tint-cast:0 16px 38px -12px oklch(45% .12 8 / .42);
+}
+
+/* ============================================================
+   咖啡绿金 · 浅色（底咖啡金 #c38564，主色深绿 #006633）
+   ============================================================ */
+html[data-theme="green-gold"]{
+  --sheet-face:linear-gradient(180deg, oklch(96% .015 78 / .88), oklch(91% .02 78 / .94));
+  /* 参考图的深金棕只出现在首屏 hero —— 列表页是浅底。
+     底色用米金白，金棕留给光场，深绿做行动色：文字对比度全员达标 */
+  --bg-canvas:oklch(88% .035 78);
+  --bg-surface:oklch(93% .025 78);
+  --bg-raised:oklch(98% .01 78);
+  --bg-inset:oklch(82% .04 75);
+  --bg-hover:oklch(85% .032 76);
+  --text-primary:oklch(23% .05 155);
+  --text-secondary:oklch(34% .05 155);
+  --text-tertiary:oklch(23% .05 155);
+  --line-soft:oklch(80% .03 78 / .8);
+  --line-strong:oklch(70% .04 76);
+  --line-control:oklch(38% .08 155);
+  --accent:oklch(38% .10 155);
+  --accent-hover:oklch(32% .10 155);
+  --accent-ink:oklch(96% .02 150);
+  --brand:oklch(38% .10 155);
+  --brand-hover:oklch(32% .10 155);
+  --brand-ink:oklch(96% .02 150);
+  --danger:oklch(48% .17 25);
+  --danger-bg:oklch(96% .02 25 / .6);
+  --danger-line:oklch(52% .17 25 / .45);
+  --success:oklch(29% .09 152);
+  --success-bg:oklch(95% .03 152 / .62);
+  --warn:oklch(42% .11 75);
+  --warn-bg:oklch(95% .04 75 / .6);
+  --warn-line:oklch(50% .11 75 / .4);
+  --focus:oklch(38% .10 155);
+  --scrim-bg:oklch(30% .06 55 / .35);
+  --sheet-cast:oklch(22% .05 55 / .45);
+  --hairline:oklch(90% .03 65 / .8);
+  --field-face:oklch(97% .012 70 / .82);
+  --glow-1:oklch(78% .07 60 / .75);
+  --glow-2:oklch(38% .09 155 / .45);
+  --glow-3:oklch(94% .03 65 / .8);
+  --glow-4:oklch(35% .09 150 / .42);
+  --grain:.034;
+  --glass-face:linear-gradient(163deg, oklch(98% .015 70 / .34) 0%, oklch(96% .012 70 / .24) 48%, oklch(94% .010 70 / .17) 100%);
+  --glass-face-hi:linear-gradient(163deg, oklch(98% .015 70 / .42) 0%, oklch(96% .012 70 / .30) 100%);
+  --glass-blur:24px;
+  --glass-sat:120%;
+  --glass-edge:rgb(255 255 255 / .92);
+  --glass-edge-hi:rgb(255 255 255 / 1);
+  --glass-lip:inset 1.5px 1.5px 0 rgb(255 255 255 / .9), inset 3px 3px 11px -4px rgb(255 255 255 / .65);
+  --glass-under:inset -1.5px -1.5px 0 oklch(30% .06 50 / .14), inset -4px -4px 13px -5px oklch(30% .06 50 / .12);
+  --glass-cast:0 1px 3px -1px oklch(30% .06 50 / .24), 0 22px 50px -14px oklch(30% .06 50 / .45);
+  --glass-inset-dark:inset 0 1px 2px oklch(30% .06 50 / .09);
+  --tint-face:linear-gradient(158deg, oklch(34% .09 152 / .90) 0%, oklch(29% .085 152 / .86) 50%, oklch(25% .08 152 / .82) 100%);
+  --tint-face-soft:linear-gradient(160deg, oklch(38% .09 152 / .84) 0%, oklch(32% .085 152 / .78) 100%);
+  --tint-face-deep:linear-gradient(150deg, oklch(30% .085 152 / .92) 0%, oklch(26% .08 152 / .86) 100%);
+  --tint-ink:oklch(95% .02 150);
+  --tint-edge:oklch(88% .05 145 / .8);
+  --tint-edge-deep:oklch(72% .08 150 / .55);
+  --tint-lip:inset 1.5px 1.5px 0 oklch(93% .04 148 / .5), inset 3px 3px 12px -4px oklch(90% .05 148 / .35);
+  --tint-under:inset -1.5px -1.5px 0 rgb(0 0 0 / .15), inset -4px -4px 13px -5px rgb(0 0 0 / .13);
+  --tint-cast:0 16px 38px -12px oklch(24% .075 152 / .5);
+}
+
+/* ============================================================
+   星巴克绿 · 浅色（底浅绿白，主色 #006633，辅 #73bc76）
+   ============================================================ */
+html[data-theme="starbucks"]{
+  --sheet-face:linear-gradient(180deg, oklch(97% .012 150 / .88), oklch(93% .018 150 / .94));
+  --bg-canvas:oklch(94% .02 150);
+  --bg-surface:oklch(96.5% .015 150);
+  --bg-raised:oklch(99% .008 150);
+  --bg-inset:oklch(88% .03 150);
+  --bg-hover:oklch(91% .025 150);
+  --text-primary:oklch(25% .05 155);
+  --text-secondary:oklch(35% .045 155);
+  --text-tertiary:oklch(26% .048 155);
+  --line-soft:oklch(85% .025 150 / .8);
+  --line-strong:oklch(76% .035 150);
+  --line-control:oklch(40% .07 155);
+  --accent:oklch(40% .10 155);
+  --accent-hover:oklch(34% .10 155);
+  --accent-ink:oklch(96% .02 150);
+  --brand:oklch(40% .10 155);
+  --brand-hover:oklch(34% .10 155);
+  --brand-ink:oklch(96% .02 150);
+  --danger:oklch(48% .17 25);
+  --danger-bg:oklch(97% .02 25 / .6);
+  --danger-line:oklch(52% .17 25 / .4);
+  --success:oklch(29% .09 152);
+  --success-bg:oklch(95% .03 152 / .62);
+  --warn:oklch(42% .11 90);
+  --warn-bg:oklch(96% .04 90 / .6);
+  --warn-line:oklch(52% .11 90 / .4);
+  --focus:oklch(40% .10 155);
+  --scrim-bg:oklch(35% .06 152 / .30);
+  --sheet-cast:oklch(25% .05 155 / .40);
+  --hairline:oklch(86% .02 150 / .85);
+  --field-face:oklch(98% .01 150 / .8);
+  --glow-1:oklch(72% .11 145 / .55);
+  --glow-2:oklch(34% .08 155 / .45);
+  --glow-3:oklch(97% .02 150 / .85);
+  --glow-4:oklch(45% .09 150 / .40);
+  --grain:.034;
+  --glass-face:linear-gradient(163deg, oklch(99% .01 150 / .32) 0%, oklch(98% .008 150 / .22) 48%, oklch(97% .007 150 / .16) 100%);
+  --glass-face-hi:linear-gradient(163deg, oklch(99% .01 150 / .42) 0%, oklch(98% .008 150 / .30) 100%);
+  --glass-blur:24px;
+  --glass-sat:120%;
+  --glass-edge:rgb(255 255 255 / .95);
+  --glass-edge-hi:rgb(255 255 255 / 1);
+  --glass-lip:inset 1.5px 1.5px 0 rgb(255 255 255 / .95), inset 3px 3px 11px -4px rgb(255 255 255 / .72);
+  --glass-under:inset -1.5px -1.5px 0 oklch(32% .06 155 / .11), inset -4px -4px 13px -5px oklch(32% .06 155 / .09);
+  --glass-cast:0 1px 3px -1px oklch(32% .06 155 / .20), 0 22px 50px -14px oklch(32% .06 155 / .38);
+  --glass-inset-dark:inset 0 1px 2px oklch(32% .06 155 / .08);
+  --tint-face:linear-gradient(158deg, oklch(36% .095 155 / .90) 0%, oklch(31% .09 155 / .86) 50%, oklch(27% .085 155 / .82) 100%);
+  --tint-face-soft:linear-gradient(160deg, oklch(40% .09 155 / .84) 0%, oklch(34% .085 155 / .78) 100%);
+  --tint-face-deep:linear-gradient(150deg, oklch(32% .085 155 / .92) 0%, oklch(28% .08 155 / .86) 100%);
+  --tint-ink:oklch(96% .02 150);
+  --tint-edge:oklch(88% .06 148 / .82);
+  --tint-edge-deep:oklch(74% .09 150 / .55);
+  --tint-lip:inset 1.5px 1.5px 0 oklch(94% .04 148 / .52), inset 3px 3px 12px -4px oklch(91% .05 148 / .36);
+  --tint-under:inset -1.5px -1.5px 0 rgb(0 0 0 / .14), inset -4px -4px 13px -5px rgb(0 0 0 / .12);
+  --tint-cast:0 16px 38px -12px oklch(26% .08 155 / .48);
+}
+
+/* ============================================================
+   咖啡棕 · 深色（底 #2a180d，主色焦糖橙 #bd6c3b）
+   ============================================================ */
+html[data-theme="coffee"]{
+  --sheet-face:linear-gradient(180deg, oklch(26% .04 60 / .86), oklch(22% .038 60 / .92));
+  --bg-canvas:oklch(19% .035 60);
+  --bg-surface:oklch(24% .04 60);
+  --bg-raised:oklch(28% .042 58);
+  --bg-inset:oklch(15% .03 60);
+  --bg-hover:oklch(26% .04 58);
+  --text-primary:oklch(93% .02 70);
+  --text-secondary:oklch(80% .025 70);
+  --text-tertiary:oklch(70% .03 70);
+  --line-soft:oklch(32% .03 60 / .9);
+  --line-strong:oklch(42% .04 58);
+  --line-control:oklch(72% .04 70);
+  --accent:oklch(52% .125 55);
+  --accent-hover:oklch(58% .13 55);
+  --accent-ink:oklch(99% .015 70);
+  --brand:oklch(52% .125 55);
+  --brand-hover:oklch(58% .13 55);
+  --brand-ink:oklch(99% .015 70);
+  --danger:oklch(70% .16 25);
+  --danger-bg:oklch(70% .16 25 / .14);
+  --danger-line:oklch(70% .16 25 / .38);
+  --success:oklch(75% .12 145);
+  --success-bg:oklch(75% .12 145 / .13);
+  --warn:oklch(78% .12 85);
+  --warn-bg:oklch(78% .12 85 / .13);
+  --warn-line:oklch(78% .12 85 / .34);
+  --focus:oklch(70% .12 55);
+  --scrim-bg:oklch(10% .025 60 / .55);
+  --sheet-cast:rgb(0 0 0 / .65);
+  --hairline:oklch(38% .04 60 / .9);
+  --field-face:oklch(22% .035 60 / .6);
+  --glow-1:oklch(38% .06 55 / .6);
+  --glow-2:oklch(24% .04 45 / .6);
+  --glow-3:oklch(42% .07 60 / .45);
+  --glow-4:oklch(30% .05 40 / .5);
+  --grain:.034;
+  --glass-face:linear-gradient(163deg, oklch(34% .035 60 / .34) 0%, oklch(30% .032 58 / .22) 48%, oklch(27% .03 58 / .14) 100%);
+  --glass-face-hi:linear-gradient(163deg, oklch(36% .04 60 / .40) 0%, oklch(32% .035 58 / .26) 100%);
+  --glass-blur:28px;
+  --glass-sat:150%;
+  --glass-edge:rgb(255 231 209 / .24);
+  --glass-edge-hi:rgb(255 231 209 / .34);
+  --glass-lip:inset 1.5px 1.5px 0 rgb(255 231 209 / .28), inset 3px 3px 11px -4px rgb(255 231 209 / .12);
+  --glass-under:inset -1.5px -1.5px 0 rgb(0 0 0 / .36), inset -4px -4px 13px -5px rgb(0 0 0 / .30);
+  --glass-cast:0 2px 6px -2px rgb(0 0 0 / .40), 0 20px 48px -12px rgb(10 4 0 / .55);
+  --glass-inset-dark:inset 0 1px 2px rgb(0 0 0 / .24);
+  --tint-face:linear-gradient(158deg, oklch(44% .10 55 / .88) 0%, oklch(38% .09 52 / .84) 50%, oklch(33% .08 50 / .80) 100%);
+  --tint-face-soft:linear-gradient(160deg, oklch(48% .10 55 / .82) 0%, oklch(41% .09 52 / .76) 100%);
+  --tint-face-deep:linear-gradient(150deg, oklch(40% .09 52 / .90) 0%, oklch(35% .085 50 / .84) 100%);
+  --tint-ink:oklch(97% .02 70);
+  --tint-edge:oklch(78% .08 58 / .55);
+  --tint-edge-deep:oklch(62% .09 55 / .45);
+  --tint-lip:inset 1.5px 1.5px 0 oklch(88% .06 60 / .45), inset 3px 3px 12px -4px oklch(84% .06 58 / .30);
+  --tint-under:inset -1.5px -1.5px 0 rgb(0 0 0 / .32), inset -4px -4px 13px -5px rgb(0 0 0 / .28);
+  --tint-cast:0 16px 38px -12px rgb(8 3 0 / .6);
+}
+
+/* ============================================================
+   暗夜蓝灰 · 深色（底 #0d0d13，面板 #1e1e2c / #212d3c）
+   ============================================================ */
+html[data-theme="midnight"]{
+  --sheet-face:linear-gradient(180deg, oklch(24% .02 285 / .88), oklch(20% .018 285 / .92));
+  --bg-canvas:oklch(15% .015 285);
+  --bg-surface:oklch(20% .018 285);
+  --bg-raised:oklch(25% .02 280);
+  --bg-inset:oklch(11% .012 285);
+  --bg-hover:oklch(23% .018 283);
+  --text-primary:oklch(94% .008 285);
+  --text-secondary:oklch(80% .012 285);
+  --text-tertiary:oklch(68% .015 285);
+  --line-soft:oklch(30% .02 285 / .9);
+  --line-strong:oklch(40% .025 282);
+  --line-control:oklch(68% .02 285);
+  --accent:oklch(72% .055 275);
+  --accent-hover:oklch(78% .055 275);
+  --accent-ink:oklch(14% .02 285);
+  --brand:oklch(72% .055 275);
+  --brand-hover:oklch(78% .055 275);
+  --brand-ink:oklch(14% .02 285);
+  --danger:oklch(70% .16 20);
+  --danger-bg:oklch(70% .16 20 / .14);
+  --danger-line:oklch(70% .16 20 / .38);
+  --success:oklch(76% .11 160);
+  --success-bg:oklch(76% .11 160 / .13);
+  --warn:oklch(78% .11 90);
+  --warn-bg:oklch(78% .11 90 / .13);
+  --warn-line:oklch(78% .11 90 / .34);
+  --focus:oklch(75% .05 275);
+  --scrim-bg:oklch(8% .012 285 / .55);
+  --sheet-cast:rgb(0 0 0 / .65);
+  --hairline:oklch(32% .02 285 / .9);
+  --field-face:oklch(21% .018 285 / .6);
+  --glow-1:oklch(30% .045 285 / .55);
+  --glow-2:oklch(20% .03 275 / .55);
+  --glow-3:oklch(36% .05 290 / .40);
+  --glow-4:oklch(24% .035 260 / .5);
+  --grain:.034;
+  --glass-face:linear-gradient(163deg, oklch(28% .025 285 / .34) 0%, oklch(24% .022 285 / .22) 48%, oklch(21% .02 285 / .14) 100%);
+  --glass-face-hi:linear-gradient(163deg, oklch(30% .028 285 / .40) 0%, oklch(26% .025 285 / .26) 100%);
+  --glass-blur:28px;
+  --glass-sat:150%;
+  --glass-edge:rgb(190 200 235 / .26);
+  --glass-edge-hi:rgb(190 200 235 / .36);
+  --glass-lip:inset 1.5px 1.5px 0 rgb(190 200 235 / .30), inset 3px 3px 11px -4px rgb(190 200 235 / .14);
+  --glass-under:inset -1.5px -1.5px 0 rgb(0 0 0 / .36), inset -4px -4px 13px -5px rgb(0 0 0 / .30);
+  --glass-cast:0 2px 6px -2px rgb(0 0 0 / .42), 0 20px 48px -12px rgb(0 0 0 / .58);
+  --glass-inset-dark:inset 0 1px 2px rgb(0 0 0 / .26);
+  --tint-face:linear-gradient(158deg, oklch(34% .05 275 / .88) 0%, oklch(29% .045 275 / .84) 50%, oklch(25% .04 275 / .80) 100%);
+  --tint-face-soft:linear-gradient(160deg, oklch(38% .05 275 / .82) 0%, oklch(32% .045 275 / .76) 100%);
+  --tint-face-deep:linear-gradient(150deg, oklch(30% .045 275 / .90) 0%, oklch(26% .04 275 / .84) 100%);
+  --tint-ink:oklch(95% .015 285);
+  --tint-edge:oklch(60% .04 275 / .5);
+  --tint-edge-deep:oklch(48% .035 275 / .42);
+  --tint-lip:inset 1.5px 1.5px 0 oklch(72% .04 275 / .38), inset 3px 3px 12px -4px oklch(66% .035 275 / .26);
+  --tint-under:inset -1.5px -1.5px 0 rgb(0 0 0 / .30), inset -4px -4px 13px -5px rgb(0 0 0 / .26);
+  --tint-cast:0 16px 38px -12px rgb(0 0 0 / .55);
+}
+
+
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body{ margin:0; padding:0; }
+html{ background:var(--bg-canvas); }
+body{
+  /* 背景交给 .aurora 光场层，body 保持透明才能让它透出来 */
+  background:transparent; color:var(--text-primary);
+  font-family:var(--font-sans); font-size:var(--text-base);
+  line-height:1.55; overscroll-behavior-y:contain;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  font-kerning:normal; font-optical-sizing:auto; font-synthesis:none;
+}
+[hidden]{ display:none !important; }
+/* ============================================================
+   液态玻璃 · 边缘折射层（Apple Liquid Glass）
+   关键认知：Liquid Glass ≠ 更重的模糊，而是**边缘的光学折射** ——
+   背后内容在玻璃边缘被弯曲，中间保持清晰。用 SVG 的
+   feTurbulence 生成噪声图、feDisplacementMap 做位移，
+   再用 mask 把效果限制在边缘环内（中间不扭曲，这才是 iOS 的行为）。
+
+   性能实测（8 卡片 + 40 按钮）：
+     无折射 30fps · 仅 2 个悬浮层折射 30fps（零代价）
+     8 卡片折射 20fps · 全量折射 15fps
+   所以只给"真正悬浮在内容之上"的层用折射。
+   ============================================================ */
+.lg-refract{ position:relative; overflow:hidden; isolation:isolate; }
+.lg-refract::before,
+.topbar::before,
+.fab::before,
+.sheet::before,
+.lock-card::before,
+#toast::before{
+  content:''; position:absolute; inset:0; border-radius:inherit;
+  z-index:-1; pointer-events:none;
+  /* blur 不能为 0 —— 需要它来触发 backdrop-filter 的滤镜链 */
+  backdrop-filter:blur(3px) url(#lg-dist);
+  -webkit-backdrop-filter:blur(2.5px) saturate(175%);
+  padding:var(--lg-edge,13px);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite:exclude;
+}
+
+/* ---------- 挂载：真正悬浮在内容之上的层 ----------
+   顶栏刻意**不加** overflow:hidden —— 它靠 position:sticky 吸顶，
+   一旦成为滚动容器，sticky 会失效。 */
+.topbar, .fab, .sheet, .lock-card, #toast{ position:relative; isolation:isolate; }
+.fab, .sheet, .lock-card, #toast{ overflow:hidden; }
+
+/* 顶栏贴在屏幕顶，其余三边在视口外，只在底边做折射才不浪费 */
+.topbar::before{ padding:0 0 16px 0; }
+/* FAB 与 Toast 关闭折射层。
+   折射层用的是"边缘环"（padding + mask-composite）。环宽 11–13px
+   在 60px 的 FAB 上占短边 37%，在 45px 高的 Toast 上占 58%；
+   环内做位移、环外不做 —— 两者渲染方式不同，于是在元素内部留下了
+   一圈可见的"内芯轮廓"，也就是看到的"颜色分割"。
+   液态玻璃的折射本就是浮层材质的表现，在这两个小控件上收益极低，
+   代价却很明显。它们保留自身的模糊 + 白玻璃 + 高光 + 描边，依然是玻璃。 */
+.fab::before, #toast::before{ content:none; }
+/* 锁屏卡是第一印象，折射环放宽，显得更"厚" */
+.lock-card::before{ padding:18px; }
+
+/* 滤镜链不被支持时（例如 Safari 的 backdrop-filter 不吃 url()）
+   整层退掉，避免留下一圈孤立扭曲 */
+@supports not (backdrop-filter: blur(1px)){
+  .lg-refract::before, .topbar::before, .fab::before,
+  .sheet::before, .lock-card::before, #toast::before{ content:none; }
+}
+@media (prefers-reduced-transparency:reduce){
+  .lg-refract::before, .topbar::before, .fab::before,
+  .sheet::before, .lock-card::before, #toast::before{ content:none; }
+}
+
+/* 低端设备主动降级：折射链在弱 GPU 上是滚动帧率的主要开销 */
+html.no-refract .lg-refract::before,
+html.no-refract .topbar::before,
+html.no-refract .fab::before,
+html.no-refract .sheet::before,
+html.no-refract .lock-card::before,
+html.no-refract #toast::before{ content:none; }
+/* 小尺寸控件用更窄的折射环，否则整个按钮都在扭曲 */
+.lg-refract.lg-sm::before{ padding:9px; }
+/* SVG 容器别占布局 */
+.lg-svg{ position:absolute; left:-9999px; top:-9999px; }
+/* 不支持 backdrop-filter 的滤镜链时（如 Safari），退回普通模糊，不报错 */
+@supports not (backdrop-filter: blur(1px)){
+  .lg-refract::before{ content:none; }
+}
+/* 用户要求减少透明度时同理退掉，避免在模糊被关掉后留下孤立的扭曲 */
+@media (prefers-reduced-transparency:reduce){
+  .lg-refract::before{ content:none; }
+}
+
+/* ============================================================
+   背景光场 · 深空
+   光斑位置是有意的，不是随机撒的：
+   主光（青）压在左上，把视线带进入口；次光（紫）在右中平衡构图；
+   暖光（珊瑚）落在底部，给冷色画面一点温度差；
+   小高光点是"远处星体"，制造景深。
+   ============================================================ */
+.aurora{
+  position:fixed; inset:0; z-index:0;
+  overflow:hidden; pointer-events:none;
+  /* 双层渐变让光斑中心亮度叠加偏高（立体感的代价），背景整体变亮后
+     浅色主题的灰色文字对比度被压低（实测 6 主题 FAIL）。
+     整体降 25% 亮度：保留双层鼓形结构，把背景拉回可读区间。 */
+  opacity:.75;
+}
+.aurora i{
+  position:absolute; display:block; border-radius:50%;
+  /* 光斑的柔和改由渐变自身过渡段实现：filter:blur 的 GPU shader
+     是动画中的负载大头（132px 时每帧 104ms，手机发热耗电），
+     且移动端半径减半会破坏光斑间的连续梯度（玻璃分层/平面感的来源）。
+     双层同色渐变叠加 = 内层较实的核心 + 外层宽的淡晕，
+     等效 blur 的「中心鼓 + 宽扩散」立体效果 —— 无 filter，成本趋近零。 */
+  will-change:transform;
+}
+/* 尺寸是刻意放大的（130–155vw）：之前光斑都堆在四个角，
+   内容区（视口中段）几乎没有光斑覆盖，实测卡片后方背景的变化
+   σ 只有 1.9/255 —— 玻璃再透也无物可透。放大后四个光斑充分重叠，
+   整个视口都有连续的明暗梯度，才让"透"这件事实在。 */
+.aurora i:nth-child(1){                    /* 主光 · 左上（向内延伸）*/
+  width:min(155vw,1500px); height:min(155vw,1500px);
+  top:-30%; left:-28%;
+  background:
+    radial-gradient(circle at 50% 50%, var(--glow-1) 0%, transparent 52%),
+    radial-gradient(circle at 50% 50%, var(--glow-1) 0%, transparent 100%);
+  animation:drift1 28s var(--ease-glass) infinite alternate;
+}
+.aurora i:nth-child(2){                    /* 次光 · 右上偏中 */
+  width:min(145vw,1400px); height:min(145vw,1400px);
+  top:-4%; right:-32%;
+    background:
+    radial-gradient(circle at 50% 50%, var(--glow-2) 0%, transparent 52%),
+    radial-gradient(circle at 50% 50%, var(--glow-2) 0%, transparent 100%);
+  animation:drift2 34s var(--ease-glass) infinite alternate;
+}
+.aurora i:nth-child(3){                    /* 主光晕 · 左下（向上延伸到画面中部）*/
+  width:min(150vw,1450px); height:min(150vw,1450px);
+  bottom:-24%; left:-20%;
+    background:
+    radial-gradient(circle at 50% 50%, var(--glow-3) 0%, transparent 52%),
+    radial-gradient(circle at 50% 50%, var(--glow-3) 0%, transparent 100%);
+  animation:drift3 40s var(--ease-glass) infinite alternate;
+}
+.aurora i:nth-child(4){                    /* 补光 · 右下（与左下错开，形成斜向明暗）*/
+  width:min(135vw,1300px); height:min(135vw,1300px);
+  bottom:-12%; right:-22%;
+    background:
+    radial-gradient(circle at 50% 50%, var(--glow-4) 0%, transparent 52%),
+    radial-gradient(circle at 50% 50%, var(--glow-4) 0%, transparent 100%);
+  animation:drift4 22s var(--ease-glass) infinite alternate;
+}
+@keyframes drift1{ from{ transform:translate3d(0,0,0) scale(1); }      to{ transform:translate3d(9vw,7vh,0) scale(1.14); } }
+@keyframes drift2{ from{ transform:translate3d(0,0,0) scale(1.08); }   to{ transform:translate3d(-8vw,-9vh,0) scale(.94); } }
+@keyframes drift3{ from{ transform:translate3d(0,0,0) scale(1); }      to{ transform:translate3d(6vw,-6vh,0) scale(1.2); } }
+@keyframes drift4{ from{ transform:translate3d(0,0,0); opacity:.45; }  to{ transform:translate3d(-5vw,5vh,0); opacity:.75; } }
+
+/* 全局噪点（dithering）：以极轻的随机噪声打破 8-bit 量化台阶。
+   必须放在**全屏最顶层** —— 卡片玻璃的 backdrop-filter 会把底下的
+   噪点一并模糊掉，所以只加在背景层是无效的：背景的色带消失了，
+   玻璃面上仍留下成片纯色（实测内部有 45–50px 完全同值的平坦区，
+   那正是肉眼看到的"颜色断层"）。
+   用普通混合而非 overlay：overlay 在极暗（暗色主题底色）与极亮
+   （亮色主题的白玻璃）两端响应都很弱，而那正好是本项目的主色域。 */
+body::after{
+  content:''; position:fixed; inset:0; z-index:900; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px 180px;
+  opacity:var(--grain);
+}
+
+/* 小屏少画一个光斑，省移动端 GPU */
+@media (max-width:480px){ .aurora i:nth-child(4){ display:none; } }
+/* 【已回滚】曾试过移动端 blur 132→64 降负载：GPU 负载确实降 6 倍，
+   但 blur 减半破坏了光斑间的连续明暗梯度 —— 弹层的 backdrop-filter
+   抹不平锐化后的光斑边界，玻璃出现「分层/平面感」（G 实测）。
+   改用渐变自身的过渡段替代 filter（见 .aurora i），负载同样趋零。 */
+/* 锁屏 / 切后台：光场动画暂停 —— 此时它被锁屏层盖着、谁也看不见，
+   但动画一帧没停，GPU 满载持续发热。暂停后 GPU 归零。 */
+html.fx-paused .aurora i{ animation-play-state:paused; }
+
+/* 用户要求减少透明度时，退回不透明面 —— 这是必需的无障碍降级。
+   注意必须把 --glass-blur 归零，否则"减少透明度"的偏好会被无视。 */
+@media (prefers-reduced-transparency:reduce){
+  :root{
+    --glass-face:oklch(24% .008 245);
+    --glass-face-hi:oklch(28% .009 245);
+    --glass-blur:0px; --glass-sat:100%;
+    --glass-edge:rgb(255 255 255 / .20);
+    --glass-cast:0 6px 18px rgb(0 0 0 / .40);
+    --grain:0;
+  }
+  html[data-theme="light"]{
+    --glass-face:oklch(100% 0 0);
+    --glass-face-hi:oklch(99% .003 248);
+    --glass-edge:oklch(90% .006 248);
+  }
+  .aurora{ display:none; }
+}
+/* 不支持 backdrop-filter 时同样退回不透明面，避免文字压在模糊失败的背景上 */
+@supports not (backdrop-filter: blur(1px)){
+  :root{
+    --glass-face:oklch(24% .008 245);
+    --glass-face-hi:oklch(28% .009 245);
+    --glass-blur:0px; --glass-sat:100%;
+  }
+  html[data-theme="light"]{
+    --glass-face:oklch(100% 0 0);
+    --glass-face-hi:oklch(99% .003 248);
+  }
+}
+
+button{ font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; }
+input,textarea,select{ font-family:inherit; font-size:16px; color:var(--text-primary); }
+a{ color:var(--brand); }
+
+/* ---------- 焦点环 · 唯一使用 outline 的地方 ---------- */
+:focus{ outline:none; }
+:focus-visible{
+  outline:2px solid var(--focus);
+  outline-offset:2px;
+  border-radius:var(--r-sm);
+}
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+.skip-link{
+  position:absolute; left:var(--sp-4); top:-100px; z-index:var(--z-toast);
+  background:var(--tint-face-soft);
+  color:var(--tint-ink); font-weight:650;
+  padding:var(--sp-3) var(--sp-5); border-radius:var(--r-full);
+  font-size:var(--text-base); text-decoration:none;
+  box-shadow:0 12px 30px -10px rgb(255 255 255 / .16);
+  transition:top var(--dur-fast) var(--ease-out);
+}
+.skip-link:focus{ top:var(--sp-4); }
+
+/* ============================================================
+   锁屏
+   ============================================================ */
+/* 锁屏不再自带不透明底色 —— 背景交给 .aurora 光场，
+   只在顶部补一层极光青的柔光，把视线引向锁徽章 */
+#lockScreen{
+  /* z-index 提到所有弹层之上（scrim 300 / sheet 400 / toast 500）。
+     closeAllScrims 是"主动关闭"，这里是"被动遮挡" —— 双保险：
+     万一将来加了新弹层忘了走 openScrim，或某个异步回调在锁定后才
+     打开弹层，也会被锁屏盖住。锁屏必须是最后的屏障。 */
+  position:relative; z-index:600;
+  min-height:100dvh;
+  display:grid; place-items:center;
+  padding:calc(var(--sp-6) + env(safe-area-inset-top)) var(--sp-4) calc(var(--sp-6) + env(safe-area-inset-bottom));
+  background:radial-gradient(126% 78% at 50% 0%, rgb(255 255 255 / .12) 0%, transparent 62%);
+}
+
+/* 锁屏卡是整个应用最"重"的一块玻璃 —— 它承担第一印象 */
+.lock-card{
+  position:relative; overflow:hidden;
+  width:100%; max-width:392px;
+  background:
+    radial-gradient(128% 88% at 20% -14%, rgb(255 255 255 / .22), transparent 56%),
+    var(--glass-face-hi);
+  border:1px solid var(--glass-edge);
+  border-radius:var(--r-2xl);
+  padding:var(--sp-8) var(--sp-6) var(--sp-6);
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  box-shadow:var(--glass-lip), var(--glass-under),
+             0 30px 70px -18px rgb(2 4 14 / .70);
+}
+
+/* 徽章：一块彩色玻璃，光从左上角来 */
+.lock-emblem{
+  position:relative; overflow:hidden;
+  width:64px; height:64px; margin:0 auto var(--sp-5);
+  border-radius:20px;
+  display:grid; place-items:center;
+  /* 无色玻璃徽章：靠白边和厚度立住，不靠颜色 */
+  background:linear-gradient(158deg,
+    rgb(255 255 255 / .28) 0%,
+    rgb(255 255 255 / .16) 52%,
+    rgb(255 255 255 / .10) 100%);
+  border:1px solid rgb(255 255 255 / .40);
+  box-shadow:
+    inset 0 1.5px 0 rgb(255 255 255 / .55),
+    inset 0 -2px 0 rgb(0 0 0 / .28),
+    0 14px 32px -10px rgb(4 8 18 / .60);
+}
+.lock-emblem::before{
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(120% 90% at 24% -18%, rgb(255 255 255 / .38), transparent 58%);
+}
+.lock-emblem svg{ width:30px; height:30px; display:block; }
+
+.lock-title{
+  font-family:var(--font-display);
+  font-size:var(--text-3xl); font-weight:650;
+  margin:0 0 var(--sp-2); text-align:center;
+  letter-spacing:-.022em; line-height:1.16;
+}
+.lock-sub{
+  color:var(--text-secondary); font-size:var(--text-sm);
+  margin:0 0 var(--sp-6); text-align:center; line-height:1.6;
+}
+
+.notice{
+  border-radius:var(--r-lg); padding:var(--sp-3) var(--sp-4);
+  font-size:var(--text-sm); line-height:1.6; text-align:left;
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / .10);
+}
+.notice.warn{ background:var(--warn-bg); border:1px solid var(--warn-line); color:var(--warn); }
+.notice.info{ background:var(--glass-face); border:1px solid var(--glass-edge); color:var(--text-secondary); }
+.notice b{ color:inherit; font-weight:600; }
+
+.field{ margin-bottom:var(--sp-3); text-align:left; }
+.field label{
+  display:block; font-size:var(--text-sm); font-weight:550;
+  color:var(--text-secondary); margin-bottom:var(--sp-2);
+}
+.field input{
+  width:100%; padding:var(--sp-3) var(--sp-4);
+  border:1px solid var(--line-control); border-radius:var(--r-md);
+  background:var(--field-face); outline:none;
+  box-shadow:var(--glass-inset-dark), inset 0 1px 0 rgb(255 255 255 / .06);
+  transition:border-color var(--dur-mid) var(--ease-glass),
+             background var(--dur-mid) var(--ease-glass),
+             box-shadow var(--dur-mid) var(--ease-glass);
+}
+.field input:focus{
+  border-color:rgb(255 255 255 / .48);
+  background:var(--glass-face-hi);
+  box-shadow:inset 0 1px 2px rgb(0 0 0 / .22),
+             0 0 0 3px rgb(255 255 255 / .14);
+}
+.field input::placeholder{ color:var(--text-tertiary); }
+
+/* ============================================================
+   玻璃按钮
+   廉价毛玻璃 = 一层 blur()。真玻璃需要：
+   ① 定向反光（::before 的径向高光，模拟单一光源）
+   ② 顶部受光边 + 底部内阴影 = 厚度
+   ③ backdrop 提饱和，让背后光斑"渗"进按钮里
+   ============================================================ */
+.btn{
+  position:relative; overflow:hidden; isolation:isolate;
+  display:inline-flex; align-items:center; justify-content:center; gap:var(--sp-2);
+  border-radius:var(--r-full); padding:var(--sp-3) var(--sp-5);
+  font-size:var(--text-base); font-weight:600;
+  letter-spacing:-.005em;
+  border:1px solid var(--glass-edge);
+  background:var(--glass-face); color:var(--text-primary);
+  box-shadow:var(--glass-lip), var(--glass-under),
+             0 10px 26px -12px rgb(2 4 14 / .60);
+
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  transition:background var(--dur-mid) var(--ease-glass),
+             border-color var(--dur-mid) var(--ease-glass),
+             box-shadow var(--dur-mid) var(--ease-glass),
+             transform var(--dur-fast) var(--ease-out);
+  min-height:46px;
+}
+.btn::before{
+  content:''; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:radial-gradient(126% 92% at 20% -14%, rgb(255 255 255 / .32), transparent 58%);
+  transition:opacity var(--dur-mid) var(--ease-glass), transform var(--dur-slow) var(--ease-glass);
+}
+@media (hover:hover){
+  .btn:hover{
+    background:var(--glass-face-hi);
+    border-color:var(--glass-edge-hi);
+    transform:translateY(-1.5px);
+    box-shadow:var(--glass-lip), var(--glass-under),
+               0 20px 44px -14px rgb(2 4 14 / .72);
+  }
+  .btn:hover::before{ transform:translateY(-10%) scale(1.06); }
+}
+.btn:active{ transform:translateY(0) scale(.982); }
+/* 主按钮：彩色玻璃 —— 光透过来是极光青，不是一块纯色塑料 */
+.btn.primary{
+  background:var(--tint-face);
+  color:var(--tint-ink); font-weight:650;
+  border-color:var(--tint-edge);
+  box-shadow:var(--tint-lip), var(--tint-under), var(--tint-cast);
+}
+.btn.brand{
+  background:var(--tint-face-soft);
+  color:var(--tint-ink); font-weight:650;
+  border-color:var(--tint-edge);
+}
+.btn.ghost{
+  background:transparent; border-color:var(--glass-edge);
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / .07);
+}
+@media (hover:hover){ .btn.ghost:hover{ background:var(--glass-face); } }
+.btn.danger{
+  background:linear-gradient(160deg,
+    oklch(56% .170 26 / .30) 0%,
+    oklch(44% .150 22 / .24) 100%);
+  color:var(--danger); border-color:var(--danger-line);
+  box-shadow:inset 0 1px 0 oklch(88% .120 30 / .22);
+}
+@media (hover:hover){ .btn.danger:hover{ background:oklch(50% .160 24 / .40); } }
+.btn.block{ display:flex; width:100%; }
+.btn:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+.btn svg{ width:17px; height:17px; flex-shrink:0; }
+.btn-row{ display:flex; gap:var(--sp-3); margin-top:var(--sp-4); }
+.btn-row .btn{ flex:1; }
+
+.err-line{
+  color:var(--danger); font-size:var(--text-sm);
+  margin:var(--sp-3) 0 0; min-height:1.2em; text-align:center;
+}
+
+/* ============================================================
+   主界面
+   ============================================================ */
+.app{
+  position:relative; z-index:1;   /* 必须高于 .aurora，否则内容被光场盖住 */
+  min-height:100dvh;
+  display:grid;
+  /* 必须用 minmax(0,1fr)：裸 1fr 的隐含最小值是 auto，
+     会被内部长文本/nowrap 元素的 min-content 撑破视口，产生横向滚动。 */
+  grid-template-columns:minmax(0,1fr);
+  max-width:1440px; margin:0 auto;
+  overflow-x:clip;
+}
+
+/* 顶栏是一层"横跨屏幕的玻璃条"，比卡片更薄更透，避免压抑 */
+.topbar{
+  contain:paint;
+  position:sticky; top:0; z-index:var(--z-sticky);
+  background:linear-gradient(180deg, rgb(255 255 255 / .085) 0%, rgb(255 255 255 / .030) 100%);
+  -webkit-backdrop-filter:blur(30px) saturate(190%);
+  backdrop-filter:blur(30px) saturate(190%);
+  border-bottom:1px solid var(--glass-edge);
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / .10);
+  padding:calc(var(--sp-3) + env(safe-area-inset-top)) var(--sp-4) var(--sp-3);
+  display:flex; align-items:center; justify-content:space-between; gap:var(--sp-3);
+}
+.brand-block{ min-width:0; }
+.brand-name{
+  font-family:var(--font-display);
+  font-size:var(--text-xl); font-weight:680;
+  letter-spacing:-.028em; margin:0; line-height:1.2;
+}
+.brand-status{
+  display:flex; align-items:center; gap:var(--sp-2);
+  font-size:var(--text-xs); color:var(--text-secondary); margin-top:2px;
+}
+.dot{
+  width:6px; height:6px; border-radius:50%;
+  background:var(--success); flex-shrink:0;
+  /* 一点点辉光 —— 状态点太小，不发光就看不见它是有语义的 */
+  box-shadow:0 0 6px color-mix(in oklab, var(--success) 55%, transparent);
+}
+.dot.idle{ background:var(--azure-500); }
+
+.icon-btn{
+  position:relative; overflow:hidden; isolation:isolate;
+  width:42px; height:42px; border-radius:var(--r-md);
+  display:grid; place-items:center; flex-shrink:0;
+  border:1px solid var(--glass-edge); color:var(--text-secondary);
+  background:var(--glass-face);
+  box-shadow:var(--glass-lip), 0 6px 16px -8px rgb(2 4 14 / .55);
+
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  transition:background var(--dur-mid) var(--ease-glass),
+             color var(--dur-fast) var(--ease-out),
+             border-color var(--dur-mid) var(--ease-glass),
+             transform var(--dur-fast) var(--ease-out);
+}
+.icon-btn::before{
+  content:''; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:radial-gradient(130% 96% at 24% -16%, rgb(255 255 255 / .26), transparent 60%);
+}
+.icon-btn svg{ width:18px; height:18px; display:block; }
+@media (hover:hover){
+  .icon-btn:hover{
+    background:var(--glass-face-hi); color:var(--text-primary);
+    border-color:var(--glass-edge-hi);
+  }
+}
+.icon-btn:active{ transform:scale(.94); }
+.top-actions{ display:flex; gap:var(--sp-2); }
+
+/* ---------- 工具条 ---------- */
+.toolbar{ padding:var(--sp-3) var(--sp-4) 0; }
+.search-field{ position:relative; }
+.search-field svg{
+  position:absolute; left:13px; top:50%; transform:translateY(-50%);
+  width:16px; height:16px; color:var(--text-tertiary); pointer-events:none;
+}
+.search-field input{
+  width:100%; padding:var(--sp-3) var(--sp-4) var(--sp-3) 40px;
+  border:1px solid var(--glass-edge); border-radius:var(--r-full);
+  background:var(--glass-face); outline:none;
+  box-shadow:var(--glass-inset-dark), inset 0 1px 0 rgb(255 255 255 / .06);
+  transition:border-color var(--dur-mid) var(--ease-glass),
+             box-shadow var(--dur-mid) var(--ease-glass),
+             background var(--dur-mid) var(--ease-glass);
+  min-height:46px;
+}
+.search-field input:focus{
+  border-color:rgb(255 255 255 / .48);
+  background:var(--glass-face-hi);
+  box-shadow:inset 0 1px 2px rgb(0 0 0 / .22),
+             0 0 0 3px rgb(255 255 255 / .14);
+}
+.search-field input::placeholder{ color:var(--text-tertiary); }
+.search-kbd{
+  position:absolute; right:11px; top:50%; transform:translateY(-50%);
+  font-family:var(--font-mono); font-size:11px; font-weight:500;
+  padding:2px 7px; border-radius:7px;
+  border:1px solid var(--glass-edge); color:var(--text-tertiary);
+  background:var(--glass-face);
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / .08);
+  pointer-events:none;
+}
+@media (pointer:coarse){ .search-kbd{ display:none; } }
+
+.cat-row{
+  display:flex; gap:var(--sp-2); overflow-x:auto;
+  padding:var(--sp-3) 0 var(--sp-1);
+  scrollbar-width:none;
+  /* 右侧渐隐：触屏上提示"还能横向滑"。宽度收窄到 20px，
+     只做边缘暗示，不至于把最后一个 chip 遮掉一半（那样像渲染错误）。 */
+  -webkit-mask-image:linear-gradient(to right, #000 calc(100% - 20px), transparent 100%);
+  mask-image:linear-gradient(to right, #000 calc(100% - 20px), transparent 100%);
+}
+/* 滚到最右时取消渐隐，避免最后一个 chip 被永久遮住 */
+.cat-row[data-atend="1"]{
+  -webkit-mask-image:none; mask-image:none;
+}
+.cat-row::-webkit-scrollbar{ display:none; }
+.chip{
+  position:relative; overflow:hidden; isolation:isolate;
+  contain:paint;
+  flex-shrink:0; white-space:nowrap;
+  border-radius:var(--r-full); padding:7px 14px;
+  font-size:var(--text-sm); font-weight:550;
+  border:1px solid var(--glass-edge); color:var(--text-secondary);
+  background:var(--glass-face);
+  box-shadow:var(--glass-lip), 0 5px 14px -8px rgb(2 4 14 / .50);
+
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  transition:background var(--dur-mid) var(--ease-glass),
+             color var(--dur-fast) var(--ease-out),
+             border-color var(--dur-mid) var(--ease-glass),
+             box-shadow var(--dur-mid) var(--ease-glass);
+  min-height:36px; display:inline-flex; align-items:center;
+}
+.chip::before{
+  content:''; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:radial-gradient(130% 100% at 22% -20%, rgb(255 255 255 / .22), transparent 62%);
+}
+@media (hover:hover){
+  .chip:hover{ background:var(--glass-face-hi); color:var(--text-primary); }
+}
+.chip.on{
+  background:var(--tint-face-soft);
+  color:var(--tint-ink); font-weight:650;
+  border-color:var(--tint-edge);
+  box-shadow:var(--tint-lip), 0 10px 24px -10px rgb(255 255 255 / .10);
+}
+.chip .cnt{ opacity:.66; margin-left:5px; font-variant-numeric:tabular-nums; }
+
+/* ---------- 备份提醒 ---------- */
+.banner.welcome{ border-color:var(--accent); }
+.banner.welcome .b-go{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+
+.banner{
+  display:flex; align-items:center; gap:var(--sp-3);
+  margin:var(--sp-3) var(--sp-4) 0;
+  padding:var(--sp-3) var(--sp-4);
+  border-radius:var(--r-lg); font-size:var(--text-sm);
+  background:var(--warn-bg); border:1px solid var(--warn-line); color:var(--warn);
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / .10);
+  line-height:1.5;
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  backdrop-filter:blur(18px) saturate(160%);
+}
+.banner .b-msg{ flex:1; min-width:0; }
+.banner .b-go{
+  border-radius:var(--r-full); padding:7px 13px; font-size:var(--text-xs); padding:6px 11px; font-size:var(--text-xs);
+  background:var(--accent); color:var(--accent-ink); white-space:nowrap; font-weight:500;
+}
+.banner .b-x{
+  color:inherit; opacity:.7; font-size:16px; padding:4px 7px; line-height:1;
+  border-radius:var(--r-sm);
+}
+@media (hover:hover){ .banner .b-x:hover{ opacity:1; } }
+
+/* ---------- 列表 ---------- */
+.list-wrap{ padding:0 var(--sp-4) 0; }
+.group-head{
+  display:flex; align-items:center; gap:var(--sp-3);
+  padding:var(--sp-5) 0 var(--sp-2);
+  font-size:var(--text-xs); font-weight:600; color:var(--text-tertiary);
+  letter-spacing:.10em;
+}
+.group-head::after{
+  content:''; flex:1; height:1px;
+  background:linear-gradient(90deg, var(--glass-edge), transparent);
+}
+.group-head .mark{ color:var(--accent); }
+
+/* 卡片是最常用的玻璃面。边界刻意做得柔和 —— 可点击性由悬停/选中态补足，
+   控件类元素（按钮、输入框）才强制 3:1 边界。 */
+.card{
+  position:relative; overflow:hidden; isolation:isolate;
+  contain:paint;
+  background:var(--glass-face);
+  border:1px solid var(--glass-edge);
+  border-radius:var(--r-lg);
+  padding:var(--sp-4);
+  margin-bottom:var(--sp-3);
+  box-shadow:var(--glass-lip), var(--glass-under),
+             0 12px 30px -14px rgb(2 4 14 / .62);
+
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  transition:border-color var(--dur-mid) var(--ease-glass),
+             background var(--dur-mid) var(--ease-glass),
+             box-shadow var(--dur-mid) var(--ease-glass),
+             transform var(--dur-mid) var(--ease-glass);
+  animation:rise var(--dur-slow) var(--ease-expo) both;
+  animation-delay:calc(var(--i,0) * 34ms);
+}
+.card::before{
+  content:''; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:radial-gradient(134% 74% at 18% -12%, rgb(255 255 255 / .15), transparent 58%);
+  transition:transform var(--dur-slow) var(--ease-glass),
+             opacity var(--dur-mid) var(--ease-glass);
+}
+@keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.985); } to{ opacity:1; transform:none; } }
+@media (hover:hover){
+  .card:hover{
+    background:var(--glass-face-hi);
+    border-color:var(--glass-edge-hi);
+    transform:translateY(-1px);
+  }
+  /* 光跟着指针"走"一点，玻璃才有活性 */
+  .card:hover::before{ transform:translateY(-8%) scale(1.05); }
+}
+/* 置顶：用一条内侧发光条表达，不再是生硬的实色左边框 */
+.card.pinned{
+  box-shadow:var(--glass-lip), var(--glass-under),
+             inset 3px 0 0 -1px var(--accent),
+             0 12px 30px -14px rgb(2 4 14 / .62);
+}
+.card.selected{
+  border-color:rgb(255 255 255 / .55);
+  box-shadow:var(--glass-lip), var(--glass-under),
+             0 0 0 1px rgb(255 255 255 / .30),
+             0 18px 42px -16px rgb(255 255 255 / .14);
+}
+
+.card-head{ display:flex; align-items:center; gap:var(--sp-3); min-width:0; }
+.avatar{
+  position:relative; overflow:hidden;
+  width:38px; height:38px; border-radius:13px; flex-shrink:0;
+  display:grid; place-items:center;
+  font-size:var(--text-sm); font-weight:700; letter-spacing:-.02em;
+  background:var(--tint-face-deep);
+  color:var(--tint-ink);
+  border:1px solid var(--tint-edge-deep);
+  box-shadow:inset 0 1px 0 oklch(100% 0 0 / .34),
+             0 6px 16px -8px rgb(255 255 255 / .12);
+}
+.avatar::before{
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(126% 90% at 24% -16%, rgb(255 255 255 / .30), transparent 60%);
+}
+.card.pinned .avatar{
+  background:var(--tint-face);
+  color:var(--tint-ink);
+  border-color:var(--tint-edge);
+}
+.card-body{ min-width:0; flex:1; }
+.card-title{
+  font-size:var(--text-lg); font-weight:640; letter-spacing:-.018em; margin:0;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.card-meta{
+  font-size:var(--text-xs); color:var(--text-tertiary);
+  margin-top:2px; display:flex; align-items:center; gap:var(--sp-2); flex-wrap:wrap;
+}
+.card-meta .sep{ opacity:.4; }
+/* 密码重复的警示标记 —— 用危险色系（红），因为这是真风险不是提示。
+   全站只有"删除"和它用红，让红始终意味着"该看一眼"。 */
+.dup-flag{
+  display:inline-flex; align-items:center; white-space:nowrap;
+  padding:1px 7px; border-radius:999px; font-weight:600;
+  color:var(--danger); background:var(--danger-bg);
+  border:1px solid var(--danger-line);
+}
+.dup-note{
+  margin:6px 0 0; font-size:var(--text-xs); line-height:1.55;
+  color:var(--danger);
+}
+/* 「从不自动锁定」的风险说明 —— 跟随设置项显隐，只在选了「从不」时出现 */
+.lock-warn{
+  margin:6px 0 0; font-size:var(--text-xs); line-height:1.5;
+  color:var(--danger);
+}
+.badge{
+  font-size:var(--text-xs); font-weight:600;
+  padding:2px 8px; border-radius:8px;
+  /* 分类标签用青绿 —— 四色里的"状态色"，也是画面里唯一的绿色块。
+     底用**实色**（success 混 --bg-surface），不跟着玻璃一起变透：
+     徽章很小，清晰比通透值钱；半透明底会让背景的暗区透进来拉低对比度。 */
+  background:color-mix(in oklab, var(--success) 18%, var(--bg-surface) 82%);
+  color:var(--success);
+  border:1px solid color-mix(in oklab, var(--success) 34%, transparent);
+}
+.card-link{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:34px; height:34px; border-radius:12px; flex-shrink:0;
+  color:var(--text-tertiary);
+  border:1px solid var(--glass-edge);
+  background:var(--glass-face);
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / .10);
+  transition:color var(--dur-fast) var(--ease-out),
+             border-color var(--dur-mid) var(--ease-glass),
+             background var(--dur-mid) var(--ease-glass);
+  text-decoration:none;
+}
+.card-link svg{ width:15px; height:15px; }
+@media (hover:hover){
+  .card-link:hover{
+    color:var(--brand); border-color:rgb(255 255 255 / .45);
+    background:var(--glass-face-hi);
+  }
+}
+
+.card-desc{
+  font-size:var(--text-sm); color:var(--text-secondary);
+  margin:var(--sp-3) 0 0; line-height:1.6;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+
+.card-sep{
+  height:1px; margin:var(--sp-4) 0 var(--sp-3);
+  background:linear-gradient(90deg, transparent, var(--glass-edge) 18%, var(--glass-edge) 82%, transparent);
+}
+
+.secret-row{
+  display:flex; align-items:center; gap:var(--sp-3);
+  margin-top:var(--sp-3); min-width:0;
+}
+.secret-label{
+  font-size:var(--text-xs); font-weight:600; color:var(--text-tertiary);
+  letter-spacing:.04em; width:32px; flex-shrink:0;
+}
+.secret-val{
+  flex:1; min-width:0; font-size:var(--text-sm);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.secret-val.mono{
+  font-family:var(--font-mono); letter-spacing:.06em;
+  font-variant-ligatures:none;
+}
+.secret-val.masked{ color:var(--text-tertiary); }
+.secret-val.mono{
+  font-family:var(--font-mono); font-weight:500;
+  letter-spacing:.06em; font-variant-ligatures:none;
+}
+.secret-val.revealed{
+  color:var(--accent);
+  text-shadow:0 0 16px rgb(255 255 255 / .45);
+}
+
+/* 卡片动作区：默认 2×2 网格 —— 手机窄屏下四个动作按钮如果挤在一行，
+   "复制账号"这类标签会折行把卡片撑高。改成两行两列，文字标签得以保留，
+   可用性比"砍成纯图标"好得多（图标按钮不点不知道是什么）。 */
+.actions{
+  display:grid; gap:var(--sp-2); margin-top:var(--sp-4);
+  grid-template-columns:1fr 1fr;
+}
+/* 第二行的"显示"跨两格宽度、更多按钮收窄成固定宽，
+   避免一个空图标独占半行造成视觉失衡 */
+.actions .act.reveal{ grid-column:span 1; }
+.actions .act.more{ grid-column:span 1; }
+.act{
+  position:relative; overflow:hidden; isolation:isolate;
+  contain:paint;
+  min-width:0; min-height:44px;
+  display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  border:1px solid var(--glass-edge); border-radius:var(--r-md);
+  font-size:var(--text-sm); font-weight:550; color:var(--text-primary);
+  white-space:nowrap; overflow:hidden;
+  background:var(--glass-face);
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / .10);
+
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  transition:background var(--dur-mid) var(--ease-glass),
+             border-color var(--dur-mid) var(--ease-glass),
+             color var(--dur-fast) var(--ease-out),
+             transform var(--dur-fast) var(--ease-out);
+}
+.act svg{ width:14px; height:14px; flex-shrink:0; }
+.act .act-txt{ display:inline-block; }
+@media (hover:hover){
+  .act:hover{ background:var(--glass-face-hi); border-color:var(--glass-edge-hi); }
+}
+.act:active{ transform:scale(.972); }
+.act.reveal{ color:var(--accent); border-color:var(--warn-line); }
+.act.done{ color:var(--success); border-color:var(--success-bg); }
+/* 有充足宽度的卡片（平板/分栏前的宽屏）回到单行 4 列，避免无谓的纵向占位 */
+@media (min-width:560px) and (max-width:1023px){
+  .actions{ grid-template-columns:repeat(4,1fr); }
+}
+
+/* ---------- 空状态 ---------- */
+.empty{
+  text-align:center; padding:var(--sp-12) var(--sp-6);
+  max-width:400px; margin:0 auto;
+}
+.empty-art{
+  position:relative; overflow:hidden;
+  width:84px; height:84px; margin:0 auto var(--sp-5);
+  border-radius:26px;
+  display:grid; place-items:center;
+  background:var(--glass-face-hi); border:1px solid var(--glass-edge);
+  box-shadow:var(--glass-lip), 0 16px 36px -14px rgb(2 4 14 / .60);
+}
+.empty-art svg{ width:36px; height:36px; color:var(--text-tertiary); }
+.empty h2{
+  font-family:var(--font-display); font-size:var(--text-2xl);
+  font-weight:650; letter-spacing:-.024em; margin:0 0 var(--sp-3);
+}
+.empty p{
+  color:var(--text-secondary); font-size:var(--text-sm);
+  margin:0 0 var(--sp-5); line-height:1.65;
+}
+.empty .steps{
+  display:flex; flex-direction:column; gap:var(--sp-2);
+  text-align:left; margin:0 0 var(--sp-5);
+}
+.empty .step{
+  display:flex; gap:var(--sp-3); align-items:flex-start;
+  font-size:var(--text-sm); color:var(--text-secondary);
+  line-height:1.55;
+}
+.step-num{
+  width:22px; height:22px; border-radius:8px; flex-shrink:0;
+  display:grid; place-items:center; margin-top:1px;
+  background:var(--glass-face); border:1px solid var(--glass-edge);
+  font-size:11px; font-weight:600; color:var(--text-secondary);
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / .10);
+}
+
+.no-result{
+  text-align:center; padding:var(--sp-12) var(--sp-6);
+  color:var(--text-secondary); font-size:var(--text-base);
+  max-width:380px; margin:0 auto;
+}
+.no-result b{
+  display:block; color:var(--text-primary); font-weight:650;
+  font-size:var(--text-xl); letter-spacing:-.02em; margin-bottom:var(--sp-3);
+}
+.no-result .btn{ margin-top:var(--sp-5); }
+
+.foot-stat{
+  text-align:center; color:var(--text-tertiary);
+  font-size:var(--text-xs); padding:var(--sp-6) 0 calc(var(--sp-12) + 72px);
+  line-height:1.7;
+}
+
+/* ---------- 添加按钮 ---------- */
+/* 主 CTA 做成一颗彩色玻璃球 —— 画面里最亮的东西应该是最想让你按的东西 */
+.fab{
+  contain:paint;
+  /* 主 CTA 沿用全局的青蓝玻璃（--tint-face）。
+     这里曾有一条硬编码的白色覆盖 —— 那是玻璃还是无色的时候留下的；
+     现在图标是白色，白玻璃承不住白图标（实测 1.09:1）。 */
+  position:fixed; right:var(--sp-5);
+  bottom:calc(var(--sp-6) + env(safe-area-inset-bottom));
+  z-index:var(--z-sticky);
+  width:60px; height:60px; border-radius:22px;
+  /* 高光并入 background，把 ::before 腾给折射层 */
+  background:
+    radial-gradient(130% 96% at 24% -14%, rgb(255 255 255 / .40), transparent 60%),
+    var(--tint-face);
+  -webkit-backdrop-filter:blur(20px) saturate(190%);
+  backdrop-filter:blur(20px) saturate(190%);
+  color:var(--tint-ink);
+  display:grid; place-items:center;
+  border:1px solid var(--tint-edge);
+  box-shadow:var(--tint-lip), var(--tint-under), var(--tint-cast);
+  transition:transform var(--dur-fast) var(--ease-out),
+             box-shadow var(--dur-mid) var(--ease-glass);
+}
+.fab svg{ width:27px; height:27px; position:relative; }
+@media (hover:hover){
+  .fab:hover{ box-shadow:var(--tint-lip), var(--tint-under),
+                          0 26px 56px -10px rgb(255 255 255 / .18); }
+}
+.fab:active{ transform:scale(.94); }
+
+/* ============================================================
+   弹层
+   ============================================================ */
+.scrim{
+  position:fixed; inset:0; z-index:var(--z-scrim);
+  overscroll-behavior:contain;
+  background:var(--scrim-bg);
+  -webkit-backdrop-filter:blur(6px) saturate(120%);
+  backdrop-filter:blur(6px) saturate(120%);
+  display:flex; align-items:flex-end; justify-content:center;
+  animation:fade var(--dur-mid) var(--ease-out);
+}
+/* 弹层开着时锁住页面滚动：手势即使落在弹层外的遮罩上，主页也不滚。
+   Chrome 会保留锁住前的滚动位置，关闭后从原处继续。 */
+html.scrim-open, html.scrim-open body{ overflow:hidden; }
+.scrim.center{ align-items:center; padding:var(--sp-4); }
+@keyframes fade{ from{ opacity:0; } to{ opacity:1; } }
+
+/* 抽屉是一块从底部升起的厚玻璃：底部圆角加强，顶部留一条受光边 */
+.sheet{
+  position:relative; overflow:hidden;
+  /* --sheet-face（各主题的均匀半透明实底）压在玻璃高光层之上：
+     背后光场/主界面的明暗不均被冲淡成隐约层次，
+     弹层上下不再出现「亮区/灰区」的割裂（G 实测的分层与宽度差） */
+  background:
+    radial-gradient(120% 60% at 24% -8%, rgb(255 255 255 / .20), transparent 58%),
+    var(--sheet-face),
+    var(--glass-face-hi);
+  width:100%; max-width:520px;
+  border-radius:var(--r-2xl) var(--r-2xl) 0 0;
+  border:1px solid var(--glass-edge); border-bottom:none;
+  padding:var(--sp-5) var(--sp-5) calc(var(--sp-6) + env(safe-area-inset-bottom));
+  max-height:88dvh; overflow-y:auto;
+  overscroll-behavior:contain;   /* 滑到弹层底就停，不带动后面的主界面 */
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / .22),
+             0 -22px 60px -20px var(--sheet-cast);
+  animation:slideUp var(--dur-slow) var(--ease-expo);
+}
+@keyframes slideUp{ from{ transform:translateY(22px); opacity:.5; } to{ transform:none; opacity:1; } }
+.scrim.center .sheet{
+  border-radius:var(--r-2xl); border-bottom:1px solid var(--glass-edge);
+  max-width:404px; padding-bottom:var(--sp-5);
+  animation:pop var(--dur-mid) var(--ease-expo);
+}
+@keyframes pop{ from{ transform:scale(.965); opacity:.5; } to{ transform:none; opacity:1; } }
+
+.sheet-grip{
+  width:38px; height:4px; border-radius:2px;
+  background:rgb(255 255 255 / .26); margin:0 auto var(--sp-4);
+  box-shadow:inset 0 1px 0 rgb(0 0 0 / .12);
+}
+.scrim.center .sheet-grip{ display:none; }
+
+.sheet-head{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:var(--sp-3); margin-bottom:var(--sp-4);
+}
+.sheet-head h2{
+  font-family:var(--font-display); font-size:var(--text-xl);
+  font-weight:650; letter-spacing:-.022em; margin:0;
+}
+.sheet-head .icon-btn{
+  width:36px; height:36px; border-radius:12px;
+  background:var(--glass-face); border-color:var(--glass-edge);
+}
+
+.f-label{
+  display:block; font-size:var(--text-sm); font-weight:550;
+  color:var(--text-secondary); margin:var(--sp-4) 0 var(--sp-2);
+}
+.f-label:first-of-type{ margin-top:0; }
+.f-label .req{ color:var(--danger); }
+.f-hint{
+  font-size:var(--text-xs); color:var(--text-tertiary);
+  margin:var(--sp-2) 0 0; line-height:1.5;
+}
+.sheet input[type=text],.sheet input[type=password],.sheet input[type=search],
+.sheet textarea,.sheet select{
+  width:100%; padding:var(--sp-3) var(--sp-4);
+  border:1px solid var(--line-control); border-radius:var(--r-md);
+  background:var(--field-face); outline:none;
+  box-shadow:var(--glass-inset-dark), inset 0 1px 0 rgb(255 255 255 / .06);
+  transition:border-color var(--dur-mid) var(--ease-glass),
+             background var(--dur-mid) var(--ease-glass),
+             box-shadow var(--dur-mid) var(--ease-glass);
+  min-height:46px;
+}
+.sheet input:focus,.sheet textarea:focus,.sheet select:focus{
+  border-color:rgb(255 255 255 / .48);
+  background:var(--glass-face-hi);
+  box-shadow:inset 0 1px 2px rgb(0 0 0 / .22),
+             0 0 0 3px rgb(255 255 255 / .14);
+}
+.sheet input::placeholder,.sheet textarea::placeholder{ color:var(--text-tertiary); }
+.sheet textarea{ resize:vertical; line-height:1.6; }
+.sheet select{ appearance:none; background-image:none; cursor:pointer; }
+
+.pw-line{ display:flex; gap:var(--sp-2); }
+.pw-line input{ flex:1; min-width:0; }
+.pw-line .icon-btn{
+  width:46px; height:46px; flex-shrink:0;
+  background:var(--glass-face); border-color:var(--glass-edge); color:var(--text-secondary);
+}
+@media (hover:hover){ .pw-line .icon-btn:hover{ color:var(--text-primary); } }
+
+.strength{ margin-top:var(--sp-3); }
+.strength-bars{ display:flex; gap:4px; }
+.strength-bars i{
+  flex:1; height:4px; border-radius:2px;
+  background:rgb(255 255 255 / .10);
+  transition:background var(--dur-mid) var(--ease-glass),
+             box-shadow var(--dur-mid) var(--ease-glass);
+}
+.strength-text{
+  font-size:var(--text-xs); color:var(--text-tertiary);
+  margin-top:6px; display:flex; justify-content:space-between; gap:var(--sp-3);
+}
+
+.menu{
+  display:flex; flex-direction:column;
+  /* 面板化：与数据卡同形态——menu 区整体一块面板，
+     按钮之间的空隙不再透出光场暗区（横向断层消失） */
+  background:var(--field-face); border:1px solid var(--glass-edge);
+  border-radius:var(--r-md); overflow:hidden;
+}
+.menu button{
+  display:flex; align-items:center; gap:var(--sp-3);
+  padding:var(--sp-3) var(--sp-3); text-align:left;
+  font-size:var(--text-base); font-weight:500; color:var(--text-primary);
+  background:transparent;
+  border-bottom:1px solid var(--hairline);
+  min-height:54px; border-radius:0;
+  transition:background var(--dur-fast) var(--ease-out);
+}
+.menu button:last-child{ border-bottom:none; }
+@media (hover:hover){ .menu button:hover{ background:var(--bg-hover); } }
+.menu button svg{ width:17px; height:17px; color:var(--text-tertiary); flex-shrink:0; }
+.menu button .m-label{ flex:1; }
+.menu button .m-note{ font-size:var(--text-xs); color:var(--text-tertiary); }
+.menu button .m-sub{
+  display:block; font-size:var(--text-xs); font-weight:400;
+  color:var(--text-tertiary); margin-top:2px;
+}
+.menu button.disabled{ opacity:.42; }
+/* ---------- 主题预览卡 ---------- */
+.theme-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-3);
+}
+.theme-card{
+  position:relative; display:flex; flex-direction:column; gap:var(--sp-2);
+  padding:var(--sp-2); border-radius:var(--r-lg);
+  background:var(--glass-face); border:1px solid var(--glass-edge);
+  box-shadow:var(--glass-lip), var(--glass-under), var(--glass-cast);
+  cursor:pointer; text-align:left;
+  transition:transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+.theme-card:active{ transform:scale(.97); }
+.theme-card.on{
+  border-color:var(--accent);
+  box-shadow:0 0 0 2px var(--accent), var(--glass-cast);
+}
+.tc-view{
+  position:relative; display:block; height:64px; border-radius:var(--r-md);
+  overflow:hidden; background:var(--bg-canvas);
+  border:1px solid rgba(0,0,0,.06);
+}
+.tc-glow{
+  position:absolute; inset:-35%;
+  background:radial-gradient(circle at 28% 18%, var(--tc-glow), transparent 62%);
+  filter:blur(4px);
+}
+.tc-glass{
+  position:absolute; left:8px; right:36px; top:10px; bottom:10px;
+  border-radius:10px; background:var(--tc-glass);
+  border:1px solid rgba(255,255,255,.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45), 0 4px 14px -4px rgba(0,0,0,.35);
+}
+.tc-bar{
+  position:absolute; left:16px; top:20px; width:34px; height:5px;
+  border-radius:3px; background:rgba(255,255,255,.75);
+}
+.tc-btn{
+  position:absolute; right:12px; bottom:12px; width:26px; height:15px;
+  border-radius:8px; background:var(--tc-accent);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25);
+}
+.tc-name{
+  display:block; font-size:var(--text-sm); font-weight:600;
+  color:var(--text-primary);
+}
+.tc-check{
+  position:absolute; top:8px; right:8px; width:19px; height:19px;
+  border-radius:50%; background:var(--accent); color:var(--accent-ink);
+  display:grid; place-items:center;
+}
+.tc-check svg{ width:11px; height:11px; }
+/* ---------- 数据卡（单面板行式，替代 5 块独立玻璃面板的堆叠）---------- */
+.ds-panel{
+  background:var(--field-face); border:1px solid var(--glass-edge);
+  border-radius:var(--r-md); overflow:hidden;
+}
+.ds-row{
+  display:flex; align-items:baseline; justify-content:space-between; gap:var(--sp-3);
+  padding:var(--sp-3) var(--sp-4);
+}
+.ds-row + .ds-row{ border-top:1px solid var(--line-soft); }
+.ds-row .k{ font-size:var(--text-xs); color:var(--text-tertiary); }
+.ds-row .v{ font-size:var(--text-sm); font-weight:600; color:var(--text-primary); text-align:right; }
+/* ---------- 导入差异摘要 ---------- */
+.imp-stats{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:var(--sp-2);
+  margin-bottom:var(--sp-3);
+}
+.imp-stat{
+  padding:var(--sp-2); border-radius:var(--r-md); text-align:center;
+  background:var(--glass-face); border:1px solid var(--glass-edge);
+}
+.imp-stat b{ display:block; font-size:var(--text-lg); font-weight:700; }
+.imp-stat span{ display:block; font-size:var(--text-xs); color:var(--text-tertiary); margin-top:2px; }
+.imp-stat.add b{ color:var(--success); }
+.imp-stat.upd b{ color:var(--accent); }
+.imp-stat.keep b{ color:var(--text-primary); }
+.imp-list{
+  max-height:200px; overflow-y:auto; overscroll-behavior:contain;
+  border:1px solid var(--line-soft); border-radius:var(--r-md);
+}
+.imp-list .imp-row{
+  display:flex; align-items:center; gap:var(--sp-2);
+  padding:var(--sp-2) var(--sp-3); border-bottom:1px solid var(--line-soft);
+  font-size:var(--text-sm);
+}
+.imp-list .imp-row:last-child{ border-bottom:none; }
+.imp-list .imp-tag{
+  flex:0 0 auto; padding:1px 7px; border-radius:999px; font-size:var(--text-xs); font-weight:600;
+}
+.imp-tag.add{ color:var(--success); background:var(--success-bg); }
+.imp-tag.upd{ color:var(--accent); background:var(--glass-face-hi); border:1px solid var(--glass-edge); }
+.imp-tag.keep{ color:var(--text-tertiary); background:var(--bg-inset); }
+.imp-list .imp-row span.nm{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.menu button.danger{ color:var(--danger); }
+.menu button.danger svg{ color:var(--danger); }
+
+.menu-row{
+  display:flex; justify-content:space-between; align-items:center;
+  gap:var(--sp-3); padding:var(--sp-3) var(--sp-3);
+  border-bottom:1px solid var(--hairline); font-size:var(--text-base);
+  min-height:54px;
+}
+.menu-row:last-of-type{ border-bottom:none; }
+.menu-row .m-label{ display:flex; align-items:center; gap:var(--sp-3); }
+.menu-row .m-label svg{ width:17px; height:17px; color:var(--text-tertiary); }
+.menu-row select{
+  width:auto; padding:9px 13px; border-radius:var(--r-md);
+  border:1px solid var(--line-control); background:var(--field-face);
+  font-size:var(--text-sm);
+}
+.switch{ position:relative; display:inline-flex; flex-shrink:0; }
+.switch input{ position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer; }
+.switch .track{
+  width:48px; height:28px; border-radius:var(--r-full);
+  background:var(--hairline);
+  border:1px solid var(--line-control);
+  box-shadow:inset 0 1px 3px rgb(0 0 0 / .30);
+  position:relative;
+  transition:background var(--dur-mid) var(--ease-glass),
+             border-color var(--dur-mid) var(--ease-glass),
+             box-shadow var(--dur-mid) var(--ease-glass);
+}
+.switch .track::after{
+  content:''; position:absolute; top:3px; left:3px;
+  width:20px; height:20px; border-radius:50%;
+  background:linear-gradient(160deg, oklch(99% .004 233), oklch(90% .010 234));
+  box-shadow:0 2px 5px rgb(0 0 0 / .38), inset 0 1px 0 rgb(255 255 255 / .85);
+  transition:transform var(--dur-mid) var(--ease-expo);
+}
+.switch input:checked + .track{
+  background:var(--tint-face-soft);
+  border-color:var(--tint-edge);
+  box-shadow:inset 0 1px 0 oklch(100% 0 0 / .50),
+             0 6px 16px -8px rgb(255 255 255 / .12);
+}
+.switch input:checked + .track::after{ transform:translateX(20px); }
+.switch input:focus-visible + .track{ outline:2px solid var(--focus); outline-offset:2px; }
+
+.sheet-note{
+  font-size:var(--text-xs); color:var(--text-tertiary);
+  text-align:center; margin:var(--sp-5) 0 0; line-height:1.6;
+}
+
+.help-text{ font-size:var(--text-sm); color:var(--text-secondary); line-height:1.7; }
+.help-text h3{
+  font-size:var(--text-base); font-weight:500; color:var(--text-primary);
+  margin:var(--sp-5) 0 var(--sp-2);
+  display:flex; align-items:center; gap:var(--sp-2);
+}
+.help-text h3:first-child{ margin-top:0; }
+.help-text h3 svg{ width:15px; height:15px; color:var(--accent); }
+.help-text p{ margin:0 0 var(--sp-2); padding-left:var(--sp-4); position:relative; }
+.help-text p::before{
+  content:''; position:absolute; left:5px; top:.62em;
+  width:3px; height:3px; border-radius:50%; background:var(--text-tertiary);
+}
+.help-text kbd{
+  font-family:var(--font-mono); font-size:11px;
+  padding:2px 6px; border-radius:6px; border:1px solid var(--glass-edge);
+  background:var(--glass-face); color:var(--text-secondary);
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / .10);
+}
+
+/* ---------- 回收站 ---------- */
+.t-item{
+  display:flex; align-items:center; gap:var(--sp-3);
+  padding:var(--sp-3) 0; border-bottom:1px solid var(--glass-edge);
+}
+.t-item:last-child{ border-bottom:none; }
+.t-info{ flex:1; min-width:0; }
+.t-name{ font-size:var(--text-base); font-weight:550; }
+.t-sub{ font-size:var(--text-xs); color:var(--text-tertiary); margin-top:2px; }
+.t-days{ color:var(--accent); }
+.t-ops{ display:flex; gap:var(--sp-2); flex-shrink:0; }
+.t-ops button{
+  font-size:var(--text-xs); font-weight:550; padding:7px 12px; border-radius:var(--r-full);
+  border:1px solid var(--glass-edge); color:var(--text-primary);
+  background:var(--glass-face);
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / .10);
+  min-height:36px;
+  transition:background var(--dur-fast) var(--ease-out);
+}
+@media (hover:hover){ .t-ops button:hover{ background:var(--glass-face-hi); } }
+.t-ops button.danger{ color:var(--danger); border-color:var(--danger-line); background:var(--danger-bg); }
+
+/* ---------- Toast ---------- */
+#toast{
+  position:fixed; left:50%; z-index:var(--z-toast);
+  bottom:calc(96px + env(safe-area-inset-bottom));
+  transform:translateX(-50%) translateY(14px) scale(.96);
+  background:var(--glass-face-hi); color:var(--text-primary);
+  border:1px solid var(--glass-edge);
+  padding:var(--sp-3) var(--sp-5); border-radius:var(--r-full);
+  font-size:var(--text-sm); font-weight:550;
+  opacity:0; pointer-events:none;
+
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / .24),
+             0 16px 40px -12px rgb(2 4 14 / .72);
+  transition:opacity var(--dur-mid) var(--ease-out),
+             transform var(--dur-mid) var(--ease-expo);
+  max-width:86vw; text-align:center;
+}
+#toast.show{ opacity:1; transform:translateX(-50%) translateY(0) scale(1); }
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+}
+</style>
+<style>
+/* ============================================================
+   桌面端 · 分栏工作台
+   ============================================================ */
+@media (min-width:1024px){
+  .app{
+    grid-template-columns:minmax(340px,400px) 1fr;
+    grid-template-rows:auto 1fr;
+    grid-template-areas:"top top" "pane detail";
+    height:100dvh;
+    border-left:1px solid var(--glass-edge);
+    border-right:1px solid var(--glass-edge);
+  }
+  .topbar{ grid-area:top; }
+  .pane{
+    grid-area:pane;
+    overflow-y:auto;
+    background:linear-gradient(180deg, rgb(255 255 255 / .028), transparent 220px);
+    border-right:1px solid var(--glass-edge);
+    scrollbar-width:thin;
+    scrollbar-color:var(--line-strong) transparent;
+  }
+  .pane::-webkit-scrollbar{ width:8px; }
+  .pane::-webkit-scrollbar-thumb{ background:var(--line-strong); border-radius:4px; }
+
+  .list-wrap{ padding:0 var(--sp-4); }
+  .foot-stat{ padding-bottom:var(--sp-8); }
+
+  .card{ cursor:pointer; }
+  .card .actions{ display:none; }
+  .card.selected{ background:var(--glass-face-hi); }
+
+  .fab{
+    position:sticky;
+    right:auto; bottom:auto;
+    margin:0 var(--sp-4) var(--sp-6);
+    /* width:100% 取的是包含块宽度，而 margin 加在外侧 ——
+       两者相加会让按钮比左栏宽 32px，溢出到右栏详情面板底下，
+       看起来"被遮挡了一截"。这里显式扣掉左右 margin。
+       （不能写 auto：在当前位置它会被当作 shrink-to-fit，缩成内容宽 ~100px） */
+    width:calc(100% - var(--sp-8)); height:52px;
+    border-radius:var(--r-full);
+    box-shadow:var(--tint-lip), var(--tint-under), var(--tint-cast);
+  }
+  .fab svg{ width:18px; height:18px; }
+  .fab::after{
+    content:'添加新账号';
+    font-size:var(--text-base); font-weight:500;
+    margin-left:var(--sp-2);
+  }
+
+  .app .detail{
+    grid-area:detail;
+    overflow-y:auto;
+    padding:var(--sp-8) var(--sp-8) var(--sp-8);
+    display:block;
+    scrollbar-width:thin;
+    scrollbar-color:var(--line-strong) transparent;
+  }
+  .app .detail::-webkit-scrollbar{ width:8px; }
+  .app .detail::-webkit-scrollbar-thumb{ background:var(--line-strong); border-radius:4px; }
+  .detail-inner{ max-width:620px; }
+
+  /* toast 对齐左侧列表栏的中心（左栏 340–400px），而不是整页中心，
+     否则桌面端提示会飘在右侧空白区中间，跟触发它的操作离得太远。 */
+  #toast{ left:200px; bottom:var(--sp-8); }
+}
+
+/* 手机端不显示右侧详情面板；桌面分栏下由 @media (min-width:1024px) 改回 block。
+   注意：媒体查询不提升优先级，这条与媒体查询里的 .detail 同权重，
+   若写在媒体查询之后就会反向覆盖。所以这里用 .app .detail 提高一级特异性，
+   确保无论声明顺序如何，桌面端都是显示的。 */
+.app .detail{ display:none; }
+@media (min-width:1024px){
+  .app .detail{ display:block; }
+}
+.detail-empty{
+  display:grid; place-items:center; height:100%;
+  text-align:center; color:var(--text-tertiary);
+  min-height:340px;
+}
+.detail-empty .empty-art{ margin-bottom:var(--sp-5); }
+.detail-empty h2{
+  font-family:var(--font-display); font-size:var(--text-2xl);
+  font-weight:650; letter-spacing:-.024em;
+  color:var(--text-secondary); margin:0 0 var(--sp-3);
+}
+.detail-empty p{ font-size:var(--text-sm); margin:0; max-width:300px; line-height:1.65; }
+
+.d-hero{ display:flex; align-items:center; gap:var(--sp-4); margin-bottom:var(--sp-6); }
+.d-hero .avatar{
+  width:56px; height:56px; border-radius:19px;
+  font-size:var(--text-xl); font-weight:680;
+}
+.d-hero h2{
+  font-family:var(--font-display); font-size:var(--text-2xl);
+  font-weight:680; letter-spacing:-.028em; margin:0; line-height:1.2;
+}
+.d-hero .card-meta{ font-size:var(--text-sm); margin-top:var(--sp-2); }
+
+/* 详情里的信息块同样用玻璃，但更薄 —— 避免和主卡片抢视觉重量 */
+.d-block{
+  position:relative; overflow:hidden;
+  background:var(--glass-face);
+  border:1px solid var(--glass-edge);
+  border-radius:var(--r-lg);
+  padding:var(--sp-4) var(--sp-5);
+  margin-bottom:var(--sp-4);
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / .10),
+             0 10px 26px -16px rgb(2 4 14 / .60);
+
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+}
+.d-block-title{
+  font-size:var(--text-xs); font-weight:650; color:var(--text-tertiary);
+  letter-spacing:.10em; margin:0 0 var(--sp-4);
+  display:flex; align-items:center; justify-content:space-between; gap:var(--sp-3);
+}
+.d-field{ margin-bottom:var(--sp-4); }
+.d-field:last-child{ margin-bottom:0; }
+.d-field-label{
+  font-size:var(--text-xs); color:var(--text-tertiary);
+  margin:0 0 5px;
+}
+.d-field-value{
+  font-size:var(--text-base); word-break:break-all; line-height:1.6;
+}
+.d-field-value.mono{
+  font-family:var(--font-mono); letter-spacing:.05em;
+  font-variant-ligatures:none;
+}
+.d-field-value.masked{ color:var(--text-tertiary); letter-spacing:.14em; }
+.d-field-value.revealed{
+  color:var(--accent);
+  text-shadow:0 0 18px rgb(255 255 255 / .42);
+}
+.d-field-row{ display:flex; align-items:center; gap:var(--sp-3); }
+.d-field-row .d-field-value{ flex:1; min-width:0; }
+.d-inline-acts{ display:flex; gap:var(--sp-2); flex-shrink:0; }
+.d-inline-acts button{
+  min-width:46px; height:46px; padding:0 var(--sp-3);
+  display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  border-radius:var(--r-md);
+  font-size:var(--text-sm); font-weight:550; white-space:nowrap;
+  border:1px solid var(--glass-edge); color:var(--text-secondary);
+  background:var(--glass-face);
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / .10);
+  transition:background var(--dur-mid) var(--ease-glass),
+             color var(--dur-fast) var(--ease-out),
+             border-color var(--dur-mid) var(--ease-glass);
+}
+.d-inline-acts button svg{ width:16px; height:16px; flex-shrink:0; }
+.d-act-txt{ display:inline; }
+@media (max-width:1180px){
+  .d-act-txt{ display:none; }
+  .d-inline-acts button{ padding:0; width:46px; }
+}
+@media (hover:hover){
+  .d-inline-acts button:hover{
+    background:var(--glass-face-hi); color:var(--text-primary);
+    border-color:var(--glass-edge-hi);
+  }
+}
+.d-inline-acts button.on{ color:var(--accent); border-color:var(--warn-line); }
+.d-inline-acts button.done{ color:var(--success); border-color:var(--success-bg); }
+
+.d-actions{ display:flex; gap:var(--sp-3); flex-wrap:wrap; }
+.d-actions .btn{ flex:1; min-width:130px; }
+
+.d-desc{
+  font-size:var(--text-base); color:var(--text-secondary);
+  line-height:1.7; margin:0; white-space:pre-wrap; word-break:break-word;
+}
+
+.d-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:var(--sp-4);
+}
+.d-metric{
+  background:var(--glass-face); border:1px solid var(--glass-edge);
+  border-radius:var(--r-md);
+  padding:var(--sp-3) var(--sp-4);
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / .08);
+}
+.d-metric .k{ font-size:var(--text-xs); color:var(--text-tertiary); margin-bottom:4px; }
+/* 亮色下白玻璃叠白玻璃会糊成一片，改用内凹的暗一档表面 */
+/* 亮色下白玻璃叠白玻璃会糊成一片 —— 这几个"嵌在卡片里"的小面
+   需要一个比画布亮一档的表面才立得住。全部走令牌，不再硬编码。 */
+html[data-theme="light"] .d-metric,
+html[data-theme="light"] .chip:not(.on),
+html[data-theme="light"] .act{
+  background:var(--bg-surface);
+  border-color:var(--line-soft);
+}
+html[data-theme="light"] .d-metric{
+  box-shadow:inset 0 1px 2px oklch(42% .030 246 / .05);
+}
+html[data-theme="light"] .chip:not(.on){
+  box-shadow:0 2px 5px -2px oklch(42% .030 246 / .10);
+}
+/* 注意：这里**没有** .badge 覆盖 —— 徽章由基类统一用青绿，
+   之前那条覆盖（色相还停在 265°）把绿底压成了白底。 */
+.d-metric .v{ font-size:var(--text-base); font-weight:500; font-variant-numeric:tabular-nums; }
+</style>
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<svg class="lg-svg" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="lg-dist" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.006 0.006" numOctaves="2" seed="92" result="noise"/>
+      <feGaussianBlur in="noise" stdDeviation="2.6" result="blurred"/>
+      <feDisplacementMap in="SourceGraphic" in2="blurred" scale="92" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<noscript>本应用需要启用 JavaScript 才能使用。</noscript>
+<a class="skip-link" href="#mainList">跳到账号列表</a>
+
+<!-- ============ 锁屏 ============ -->
+<section id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-emblem" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#F2F6F8" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 11V8a5 5 0 0 1 10 0v3"/>
+        <rect x="4.5" y="11" width="15" height="10" rx="2.4" fill="rgba(255,255,255,.24)" stroke="#F2F6F8"/>
+        <circle cx="12" cy="15.2" r="1.35" fill="#F2F6F8" stroke="none"/>
+        <path d="M12 16.4v2.2" stroke="#F2F6F8" stroke-width="1.7"/>
+      </svg>
+    </div>
+    <h1 class="lock-title" id="lockTitle">CipherBox</h1>
+    <p class="lock-sub" id="lockSub">输入主密码解锁</p>
+
+    <div id="lockFirstWrap" hidden>
+      <div class="notice warn" style="margin-bottom:var(--sp-5)">
+        主密码用于加密全部数据，<b>忘记无法找回</b>。请设置一个你一定会记住的密码。
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="lockPw" id="lockPwLabel">主密码</label>
+      <input id="lockPw" type="password" placeholder="至少 6 位" autocomplete="current-password" enterkeyhint="go">
+    </div>
+
+    <div class="field" id="lockPw2Wrap" hidden>
+      <label for="lockPw2">再次输入主密码</label>
+      <input id="lockPw2" type="password" placeholder="两次输入需一致" autocomplete="new-password" enterkeyhint="go">
+    </div>
+
+    <div class="field" id="hintWrap" hidden>
+      <label for="hintInput">密码提示 <span style="color:var(--text-tertiary)">（选填）</span></label>
+      <input id="hintInput" type="text" placeholder="如：我的常用密码" maxlength="30">
+      <p class="f-hint">解锁时会显示这条提示，帮助你回忆。不要写得太直白。</p>
+    </div>
+
+    <p class="notice info" id="lockHint" hidden style="margin-bottom:var(--sp-4)"></p>
+
+    <button id="lockBtn" class="btn primary block">解锁</button>
+    <p class="err-line" id="lockErr" role="alert" aria-live="assertive"></p>
+  </div>
+</section>
+
+<!-- ============ 主界面 ============ -->
+<section id="mainScreen" class="app" hidden>
+
+  <header class="topbar">
+    <div class="brand-block">
+      <h1 class="brand-name">CipherBox</h1>
+      <p class="brand-status">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">已解锁</span>
+        <span aria-hidden="true" style="opacity:.4">·</span>
+        <span id="statusCount">0 条记录</span>
+      </p>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btnTheme" title="切换主题" aria-label="切换深浅主题">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M4.2 12H2M22 12h-2.2M6.3 6.3 4.8 4.8M19.2 19.2l-1.5-1.5M17.7 6.3l1.5-1.5M4.8 19.2l1.5-1.5"/></svg>
+      </button>
+      <button class="icon-btn" id="btnSettings" title="设置" aria-label="打开设置">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-2.87 1.2V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 7 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 2.6 15a1.7 1.7 0 0 0-1.2-2.87H1a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 2.6 5.4a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 7 1.6a1.7 1.7 0 0 0 2.87-1.2V.3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 17 2.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 21.4 7v.09a1.7 1.7 0 0 0 1.2 2.87H23a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51.94z" transform="translate(0.5 -0.3) scale(0.96)"/></svg>
+      </button>
+      <button class="icon-btn" id="btnLock" title="立即锁定" aria-label="立即锁定CipherBox">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="2.4"/><path d="M7.5 10.5V7.5a4.5 4.5 0 0 1 9 0v3"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="pane">
+    <div class="toolbar">
+      <div class="search-field">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+        <label class="sr-only" for="search">搜索账号</label>
+        <input id="search" type="search" placeholder="搜名称、账号、简介或分类" autocomplete="off">
+        <span class="search-kbd" aria-hidden="true">/</span>
+      </div>
+      <div class="cat-row" id="catRow" hidden></div>
+    </div>
+
+    <div class="banner welcome" id="welcomeBar" hidden>
+      <span class="b-msg">🎉 欢迎使用 CipherBox —— 建议先花两分钟看看使用说明</span>
+      <button class="b-go" id="welcomeHelp">查看说明</button>
+      <button class="b-x" id="welcomeClose" aria-label="不再显示">✕</button>
+    </div>
+
+    <div class="banner" id="backupBanner" hidden>
+      <span class="b-msg">已超过 30 天没有备份。清缓存会丢数据，建议导出一份。</span>
+      <button class="b-go" id="bannerExport">导出</button>
+      <button class="b-x" id="bannerClose" aria-label="7 天内不再提醒">✕</button>
+    </div>
+
+    <div class="list-wrap">
+      <div id="mainList" role="list" aria-live="polite" aria-label="账号列表"></div>
+
+      <div class="empty" id="empty">
+        <div class="empty-art" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="16" rx="2.4"/>
+            <path d="M3 9h18M8.5 13.5h7M8.5 16.5h4"/>
+          </svg>
+        </div>
+        <h2>CipherBox还是空的</h2>
+        <p>存下第一条账号，之后登录就不用来回翻短信了。</p>
+        <div class="steps">
+          <div class="step"><span class="step-num">1</span><span>点下面的按钮，填名称、账号、密码</span></div>
+          <div class="step"><span class="step-num">2</span><span>写一句简介，说明这个网站是干什么的</span></div>
+          <div class="step"><span class="step-num">3</span><span>以后点「复制」就能直接粘贴登录</span></div>
+        </div>
+        <button class="btn primary" id="emptyAdd">添加第一条账号</button>
+      </div>
+
+      <div class="no-result" id="noResult" hidden>
+        <b>没有匹配的记录</b>
+        <span id="noResultSub">换个关键词试试</span>
+        <br>
+        <button class="btn ghost" id="clearFilters">清除筛选条件</button>
+      </div>
+    </div>
+
+    <div class="foot-stat" id="stat"></div>
+    <button class="fab" id="fab" title="添加账号" aria-label="添加新账号">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5.5v13M5.5 12h13"/></svg>
+    </button>
+  </div>
+
+  <div class="detail" id="detail"></div>
+</section>
+
+<!-- ============ 添加 / 编辑 ============ -->
+<div class="scrim" id="editOverlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <div class="sheet-head">
+      <h2 id="editTitle">添加账号</h2>
+      <button class="icon-btn" id="editClose" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+
+    <label class="f-label" for="fName">网站或应用名称 <span class="req" aria-hidden="true">*</span></label>
+    <input type="text" id="fName" placeholder="淘宝 / 公司邮箱 / 学校教务系统" maxlength="50" required>
+    <p class="f-hint">写你一眼能认出的名字。</p>
+
+    <label class="f-label" for="fUrl">网址</label>
+    <input type="text" id="fUrl" placeholder="https://…" maxlength="200" inputmode="url">
+    <p class="f-hint">填了之后卡片上会出现跳转入口。App 可以跳过。</p>
+
+    <label class="f-label" for="fCat">分类</label>
+    <input type="text" id="fCat" list="catList" placeholder="工作 / 社交 / 购物 / 学习" maxlength="20">
+    <datalist id="catList"></datalist>
+    <p class="f-hint">填了之后列表上方会出现筛选项。</p>
+
+    <label class="f-label" for="fAccount">账号 <span class="req" aria-hidden="true">*</span></label>
+    <input type="text" id="fAccount" placeholder="手机号 / 邮箱 / 用户名" maxlength="100" required>
+
+    <label class="f-label" for="fPw">密码 <span class="req" aria-hidden="true">*</span></label>
+    <div class="pw-line">
+      <input type="password" id="fPw" placeholder="密码" maxlength="100" required>
+      <button type="button" class="icon-btn" id="fPwEye" aria-label="显示密码">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="2.8"/></svg>
+      </button>
+      <button type="button" class="icon-btn" id="fGen" aria-label="生成随机密码">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h3.5l9 10H20M4 17h3.5l2.4-2.7M13 8.5 14.5 7H20"/><path d="m17.5 4.5 2.5 2.5-2.5 2.5M17.5 14.5 20 17l-2.5 2.5"/></svg>
+      </button>
+    </div>
+    <div class="strength" id="strengthBox" hidden>
+      <div class="strength-bars" aria-hidden="true">
+        <i></i><i></i><i></i><i></i>
+      </div>
+      <div class="strength-text">
+        <span id="strengthLabel">强度</span>
+        <span id="strengthTip"></span>
+      </div>
+    </div>
+
+    <label class="f-label" for="fDesc">简介</label>
+    <textarea id="fDesc" rows="3" placeholder="这个网站是干什么的，怎么登录" maxlength="200"></textarea>
+    <p class="f-hint">写下来以后就不用猜了。例如「网上买东西，手机号 + 验证码登录」。</p>
+
+    <p class="err-line" id="editErr" role="alert" aria-live="assertive" style="text-align:left"></p>
+    <button class="btn primary block" id="saveBtn" style="margin-top:var(--sp-4)">保存</button>
+  </div>
+</div>
+
+<!-- ============ 设置 ============ -->
+<div class="scrim" id="settingsOverlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <div class="sheet-head">
+      <h2 id="settingsTitle">设置</h2>
+      <button class="icon-btn" id="settingsClose" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+
+    <div class="d-block" style="margin-bottom:var(--sp-4)">
+      <p class="d-block-title">数据</p>
+      <div class="ds-panel">
+        <div class="ds-row"><span class="k">记录</span><span class="v" id="dsCount">—</span></div>
+        <div class="ds-row"><span class="k">最后修改</span><span class="v" id="dsModified">—</span></div>
+        <div class="ds-row"><span class="k">上次备份</span><span class="v" id="dsBackup">—</span></div>
+        <div class="ds-row"><span class="k">上次合并</span><span class="v" id="dsMerge">—</span></div>
+        <div class="ds-row"><span class="k">存储占用</span><span class="v" id="dsSize">—</span></div>
+      </div>
+    </div>
+
+    <div class="menu">
+      <button id="btnExport">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11M8 11l4 3.5 4-3.5M4.5 16.5v2a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-2"/></svg>
+        <span class="m-label">导出备份</span>
+        <span class="m-note" id="exportNote"></span>
+      </button>
+      <button id="btnImport">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15.5v-11M8 8l4-3.5L16 8M4.5 16.5v2a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-2"/></svg>
+        <span class="m-label">导入备份</span>
+      </button>
+      <button id="btnChPw">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="12" r="3.2"/><path d="M11.2 12H20M17.5 12v3M20 12v2.2"/></svg>
+        <span class="m-label">修改主密码</span>
+      </button>
+      <button id="btnTrash">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 6.5h15M9.5 6.5V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 5v1.5M6.5 6.5 7.4 19a2 2 0 0 0 2 1.9h5.2a2 2 0 0 0 2-1.9l.9-12.5"/></svg>
+        <span class="m-label">回收站</span>
+        <span class="m-note" id="trashCount"></span>
+      </button>
+      <button id="btnHelp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2-2.4 3.6M12 17.2h.01"/></svg>
+        <span class="m-label">使用说明</span>
+      </button>
+      <button id="btnClear" class="danger">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8.5v5M12 16.6h.01"/><path d="M10.3 3.5h3.4l6.8 12a2 2 0 0 1-1.7 3H5.2a2 2 0 0 1-1.7-3l6.8-12Z"/></svg>
+        <span class="m-label">清空所有数据</span>
+      </button>
+    </div>
+
+    <div class="menu-row">
+      <span class="m-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>
+        无操作自动锁定
+      </span>
+      <label class="sr-only" for="autolockSel">自动锁定时长</label>
+      <select id="autolockSel">
+        <option value="1">1 分钟</option>
+        <option value="5" selected>5 分钟</option>
+        <option value="10">10 分钟</option>
+        <option value="30">30 分钟</option>
+        <option value="0">从不</option>
+      </select>
+      <p class="lock-warn" id="lockWarn" hidden>关闭自动锁定后，解锁状态下任何拿到手机的人都能看到全部密码。</p>
+    </div>
+
+    <div class="menu-row">
+      <span class="m-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.4"/><path d="M3.5 9.5h17"/></svg>
+        切到后台立即锁定
+      </span>
+      <label class="switch">
+        <span class="sr-only">切到后台立即锁定</span>
+        <input type="checkbox" id="bgLockChk">
+        <span class="track" aria-hidden="true"></span>
+      </label>
+    </div>
+
+    <p class="sheet-note">
+      数据加密后只存在这台设备的浏览器里，不会上传到任何服务器。
+    </p>
+    <input type="file" id="importFile" accept=".json,application/json" hidden>
+  </div>
+</div>
+
+<!-- ============ 回收站 ============ -->
+<div class="scrim" id="trashOverlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="trashTitle">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <div class="sheet-head">
+      <h2 id="trashTitle">回收站</h2>
+      <button class="icon-btn" id="trashClose" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <p class="notice info" style="margin-bottom:var(--sp-4)">删除的记录在这里保留 30 天，之后自动彻底清除。</p>
+    <div id="trashList"></div>
+    <button class="btn danger block" id="btnEmptyTrash" hidden style="margin-top:var(--sp-5)">清空回收站</button>
+  </div>
+</div>
+
+<!-- ============ 修改主密码 ============ -->
+<div class="scrim" id="chpwOverlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="chpwTitle">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <div class="sheet-head">
+      <h2 id="chpwTitle">修改主密码</h2>
+      <button class="icon-btn" id="chpwClose" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <label class="f-label" for="oldPw">当前主密码</label>
+    <input type="password" id="oldPw" autocomplete="current-password">
+    <label class="f-label" for="newPw">新主密码</label>
+    <input type="password" id="newPw" autocomplete="new-password">
+    <div class="strength" id="chStrengthBox" hidden>
+      <div class="strength-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="strength-text"><span id="chStrengthLabel">强度</span><span></span></div>
+    </div>
+    <label class="f-label" for="newPw2">再次输入新主密码</label>
+    <input type="password" id="newPw2" autocomplete="new-password">
+    <p class="err-line" id="chpwErr" role="alert" aria-live="assertive" style="text-align:left"></p>
+    <p class="f-hint" style="margin-top:var(--sp-4)">改完之后建议重新导出一次备份，旧备份仍然要用旧密码打开。</p>
+    <button class="btn primary block" id="chpwSave" style="margin-top:var(--sp-4)">确认修改</button>
+  </div>
+</div>
+
+<!-- ============ 使用说明 ============ -->
+<!-- ============ 导出 ============ -->
+<div class="scrim" id="exportOverlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <div class="sheet-head">
+      <h2 id="exportTitle">导出备份</h2>
+      <button class="icon-btn" id="exportClose" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <p class="notice info" style="margin-bottom:var(--sp-4)">备份文件是加密的，没有主密码无法打开 —— 分享给别的应用也一样安全。</p>
+    <div class="menu">
+      <button id="expDownload">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11M8 11l4 3.5 4-3.5M4.5 16.5v2a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-2"/></svg>
+        <span class="m-label">保存到下载<span class="m-sub">浏览器默认的下载位置</span></span>
+      </button>
+      <button id="expPicker" data-cap="picker">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.5a2 2 0 0 1 2-2h4l2 2.5h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/></svg>
+        <span class="m-label">保存到指定位置<span class="m-sub">自选文件夹和文件名</span></span>
+      </button>
+      <button id="expShare" data-cap="share">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15.5v-11M8 8l4-3.5L16 8M4.5 16.5v2a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-2"/></svg>
+        <span class="m-label">分享到其他应用<span class="m-sub">微信 / QQ / 网盘 / 邮件…</span></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 主题选择 ============ -->
+<div class="scrim" id="themeOverlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="themeTitle">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <div class="sheet-head">
+      <h2 id="themeTitle">切换主题</h2>
+      <button class="icon-btn" id="themeClose" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <p class="notice info" style="margin-bottom:var(--sp-4)">八套主题共用同一套玻璃质感，只是颜色不同 —— 深空 / 晨雾是原来的深浅两色。</p>
+    <div class="theme-grid" id="themeGrid" role="radiogroup" aria-label="选择主题"></div>
+  </div>
+</div>
+
+<!-- ============ 导入备份（解密 → 差异 → 合并）============ -->
+<div class="scrim" id="importOverlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="importTitle">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <div class="sheet-head">
+      <h2 id="importTitle">导入备份</h2>
+      <button class="icon-btn" id="importClose" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+
+    <div id="impStep1">
+      <p class="notice info" style="margin-bottom:var(--sp-3)">已选择：<b id="impFileName"></b><span id="impFileMeta"></span></p>
+      <div class="d-field">
+        <p class="d-field-label">这份备份的主密码</p>
+        <div class="d-field-row">
+          <input type="password" id="impPw" autocomplete="off" placeholder="导出该备份时使用的主密码">
+          <button type="button" class="icon-btn" id="impPwEye" aria-label="显示或隐藏密码">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.6"/></svg>
+          </button>
+        </div>
+        <p class="dup-note" id="impErr" hidden></p>
+      </div>
+      <button class="btn primary block" id="impDecrypt">解密并预览差异</button>
+      <p class="lock-warn" style="margin-top:var(--sp-3)">合并不会改动本机的主密码；别人的备份没有导出时的主密码是解不开的。</p>
+    </div>
+
+    <div id="impStep2" hidden>
+      <div class="imp-stats" id="impStats"></div>
+      <div class="imp-list" id="impList"></div>
+      <div class="d-actions" style="margin-top:var(--sp-4)">
+        <button class="btn" id="impCancel">取消</button>
+        <button class="btn primary" id="impMerge">确认合并</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="scrim" id="helpOverlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <div class="sheet-head">
+      <h2 id="helpTitle">使用说明</h2>
+      <button class="icon-btn" id="helpClose" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="help-text">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>日常操作</h3>
+      <p>点右下角按钮添加账号，名称、账号、密码必填，其余可以留空。</p>
+      <p>点「显示」看密码，再点一次隐藏，20 秒后会自动盖回去。</p>
+      <p>「复制」把内容放进剪贴板，去登录页粘贴即可。</p>
+      <p>搜索支持名称、账号、简介、分类，也能用拼音首字母：打 <kbd>tb</kbd> 找到「淘宝」，<kbd>gsyh</kbd> 找到「工商银行」。</p>
+      <p>同一条密码用在多个账号时，卡片会标出「密码重复 · N 处」，底部也会汇总提醒。</p>
+      <p>点卡片上的「⋯」可以置顶、编辑、删除；置顶的记录排在最前。</p>
+
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/></svg>主题</h3>
+      <p>设置 → 切换主题：八套配色任选（深空、晨雾、饮品粉、草莓雪、咖啡绿金、星巴克、咖啡棕、暗夜），每张预览卡就是该主题的真实效果，点一下立即生效，选择会记住。</p>
+
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3.5 20.5 8v8L12 20.5 3.5 16V8L12 3.5Z"/><path d="M12 12v8.5M12 12 3.5 8M12 12l8.5-4"/></svg>数据存在哪里</h3>
+      <p>全部记录用主密码加密后保存在本机：电脑上是浏览器存储，手机 App 里是应用私有目录 —— 不上传、不联网。</p>
+      <p>手机版 CipherBox 在系统层面没有任何网络权限，其他应用也读不到它的数据；截图和录屏会被系统拦截。</p>
+      <p>电脑上请固定用同一个浏览器打开页面，不同浏览器之间数据不互通。</p>
+
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 8.5v5M12 16.6h.01"/><path d="M10.3 3.5h3.4l6.8 12a2 2 0 0 1-1.7 3H5.2a2 2 0 0 1-1.7-3l6.8-12Z"/></svg>备份与恢复（认真对待）</h3>
+      <p>清理浏览器数据、卸载 App 都会让记录消失，请定期导出备份。设置里的「数据」区能看到记录数、上次备份和上次合并的时间。</p>
+      <p>导出有三条路：保存到下载 / 保存到指定位置 / 分享到其他应用（微信、QQ、网盘都可以）。</p>
+      <p>导入不是覆盖，而是合并：选好备份文件后输入「这份备份的主密码」，先看差异（新增几条、更新几条、本机较新的几条），确认后才合并 —— 本机较新的修改永远不会被旧备份覆盖。</p>
+      <p>手机上数据改动后会自动往应用目录留一份加密备份（保留最近 5 份），不用手动操心。</p>
+      <p>超过 30 天没备份，首页会出现提醒条；导出后自动消失。</p>
+
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3.5 20.5 8v8L12 20.5 3.5 16V8L12 3.5Z"/><path d="M12 12v8.5M12 12 3.5 8M12 12l8.5-4"/></svg>电脑和手机之间</h3>
+      <p>两端数据各自独立，互通方式：一端导出备份 → 通过微信/网盘传到另一端 → 导入时合并。两端主密码可以不一样 —— 导入时输入备份那一端的主密码即可。</p>
+
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4.5 6.5h15M9.5 6.5V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 5v1.5M6.5 6.5 7.4 19a2 2 0 0 0 2 1.9h5.2a2 2 0 0 0 2-1.9l.9-12.5"/></svg>删除与恢复</h3>
+      <p>删除的记录进回收站，30 天内可以恢复，超期自动彻底清除。</p>
+
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="4.5" y="11" width="15" height="10" rx="2.4"/></svg>安全注意事项</h3>
+      <p>主密码没有找回通道 —— 数据是加密的，谁也解不开，包括这个页面本身。</p>
+      <p>连续输错 5 次会进入 10 秒冷却，防止被反复试探。</p>
+      <p>密钥派生使用 60 万次迭代，暴力尝试的代价极高，但仍然请用足够强的主密码。</p>
+      <p>备份文件本身是加密的，没有对方的主密码谁也打不开 —— 但仍然不要发给不信任的人（对方可以离线慢慢猜）。</p>
+      <p>别在无痕模式下使用（关闭后数据不保留）。</p>
+
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2.5" y="6" width="19" height="12" rx="2"/><path d="M6.5 10h3M6.5 13.5h6M15 10h2.5"/></svg>键盘快捷键（电脑）</h3>
+      <p><kbd>/</kbd> 聚焦搜索 · <kbd>N</kbd> 新建账号 · <kbd>Esc</kbd> 关闭当前弹层</p>
+      <p><kbd>↑</kbd> <kbd>↓</kbd> 在列表里移动 · <kbd>Enter</kbd> 打开详情 · <kbd>C</kbd> 复制密码</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 卡片更多菜单 ============ -->
+<div class="scrim" id="moreOverlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="moreTitle">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <div class="sheet-head">
+      <h2 id="moreTitle">记录操作</h2>
+      <button class="icon-btn" id="moreClose" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="menu" id="moreMenu"></div>
+  </div>
+</div>
+
+<!-- ============ 确认框 ============ -->
+<div class="scrim center" id="confirmOverlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="confirmMsg">
+    <p id="confirmMsg" style="margin:0 0 var(--sp-4); text-align:center; font-size:var(--text-base); line-height:1.6;"></p>
+    <div class="btn-row" style="margin-top:0">
+      <button class="btn ghost" id="confirmCancel">取消</button>
+      <button class="btn danger" id="confirmOk">确定</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<!-- 拼音首字母表：GB2312 字集 6763 字，只存「首字母 → 汉字串」分组 -->
+<script>
+var PY_GROUPS={
+  a:"啊阿埃挨哎唉哀皑癌蔼矮艾碍爱隘鞍氨安俺按暗岸胺案肮昂盎凹敖熬翱袄傲奥懊澳嚣谙坳埯艹拗捱揞吖嗷嗄嗳嗌岙犴庵廒遨媪嫒骜瑷桉獒暧砹铵锕锿鹌聱螯霭鏊鳌鏖黯",
+  b:"芭捌扒叭吧笆八疤巴拔跋靶把坝霸罢爸白柏百摆佰败拜稗斑班搬扳般颁板版扮拌伴瓣半办绊邦帮梆榜膀绑棒磅蚌镑傍谤苞胞包褒剥薄雹保堡饱宝抱报暴豹鲍爆杯碑悲卑北辈背贝钡倍狈备惫焙被奔苯本笨崩绷甭泵蹦迸逼鼻比鄙笔彼碧蓖蔽毕毙毖币庇痹闭敝弊必壁臂避陛鞭边编贬扁便变卞辨辩辫遍标彪膘表鳖憋别瘪彬斌濒滨宾摈兵冰柄丙秉饼炳病并玻菠播拨钵波博勃搏铂箔伯帛舶脖膊渤泊驳捕卜哺补埠不布步簿部怖匕孛匾俾傧勹亳禀冫阪陂邴邶弁畚坌坂苄茇荜荸菝萆葆蓓蒡薜捭摒卟吡呗哔啵嘣岜豳狴饽庳忭悖愎汴浜滗濞灞逋弼妣婊婢嬖孢缏缤玢璧槟檗殡瓿甏晡贲掰擘膑飑飙飚煲煸砭碚碥礴畀钚钣钯钸钹铋锛镔镖镳秕鸨鹁鹎瘢瘭癍窆裱裨褙褓褊蝙笾筚箅篦簸舭舨襞粑醭蹩趵跛跸踣龅鐾鲅鳊鳔鞴髀髌魃髟鬓",
+  c:"擦猜裁材才财睬踩采彩菜蔡餐参蚕残惭惨灿苍舱仓沧藏操糙槽曹草厕策侧册测层蹭插叉茬茶查碴搽察岔差诧拆柴豺搀掺蝉馋谗缠铲产阐颤昌猖场尝常长偿肠厂敞畅唱倡超抄钞朝嘲潮巢吵炒车扯撤掣彻澈郴臣辰尘晨忱沉陈趁衬撑称城橙成呈乘程惩澄诚承逞骋秤吃痴持匙池迟弛驰耻齿侈尺赤翅斥炽充冲虫崇宠抽酬畴踌稠愁筹仇绸瞅丑臭初出橱厨躇锄雏滁除楚础储矗搐触处揣川穿椽传船喘串疮窗床闯创吹炊捶锤垂春椿醇唇淳纯蠢戳绰疵茨磁雌辞慈瓷词此刺赐次聪葱囱匆从丛凑粗醋簇促蹿篡窜摧崔催脆瘁粹淬翠村存寸磋撮搓措挫错刹畜曾亍丞厝伥伧侪俦傺汆冁谄谌谶陲郗刍鬯坼埕墀苌苁茌茺莼菖萃蒇蔟抻搋撺叱呲哧啐啜啻嗔嗤嘈噌嚓帱岑嵯彳徂徜猝猹舛饬馇廛忖忏忡怅怆怵怊恻惝惆悴憧憷阊汊涔淙漕潺澶宸辶遄孱羼屮姹娼婵媸嫦骖骢骣绌巛琮琛璀璁璨杈杵枨枞柽楮棰楱槌榇槎榱樗樘檫殂辍辏昶晁觇毳氅氚敕脞腠塍膪焯爨祠禅砗碜礤眵瞠钏钗铖铳锉锸镩镲矬鸱鹑鹚痤瘥瘛瘳衩裎褚褫皴耖虿蚩蛏蜍蝽螭螬蟾笞篪舂舡艚艟粲糍豉酢酲鹾蹙踔踟踹蹉蹰蹴躔龀龊雠鲳魑黜黪",
+  d:"搭达答瘩打大呆歹傣戴带殆代贷袋待逮怠耽担丹单郸掸胆旦氮但惮淡诞蛋当挡党荡档刀捣蹈倒岛祷导到稻悼道盗德得的蹬灯登等瞪凳邓堤低滴迪敌笛狄涤嫡抵底地蒂第帝弟递缔颠掂滇碘点典靛垫电佃甸店惦奠淀殿碉叼雕凋刁掉吊钓跌爹碟蝶迭谍叠丁盯叮钉顶鼎锭定订丢东冬董懂动栋侗恫冻洞兜抖斗陡豆逗痘都督毒犊独读堵睹赌杜镀肚度渡妒端短锻段断缎堆兑队对墩吨蹲敦顿钝盾遁掇哆多夺垛躲朵跺舵剁惰堕氐刂仃儋籴诋谛谠邸凼坫坻垤垌埭堞芏荻萏菪蔸耷揲甙叨呔咚咄哒哚啖啶喋嗒嘟嗲嘀噔岽岱峒嶝巅忉怛沌沲渎澹宕迨妲娣骀绐缍玎玷玳柢椟棣椴殚戥赕觌氘氡牍牒胨胴腚炖煅怼憝砀砘砥硐碓碇碲礅磴盹眈睇钿铎铛铞铥锝镝镦镫瓞鸫疔疸瘅癜癫窦裆裰褡耋耵聃蚪蠹笃笪箪篼簖簟簦羝纛酊趸踮蹀踱貂鲷鲽靼鞑骶髑黛黩",
+  e:"蛾峨鹅俄额讹娥恶厄扼遏鄂饿恩而儿耳尔饵洱二贰噩佴诶谔垩苊莪萼蒽摁呃愕阏迩屙婀珥轭腭铒锇锷鸸鹗颚鲕鳄",
+  f:"发罚筏伐乏阀法珐藩帆番翻樊矾钒繁凡烦反返范贩犯饭泛坊芳方肪房防妨仿访纺放菲非啡飞肥匪诽吠肺废沸费芬酚吩氛分纷坟焚汾粉奋份忿愤粪丰封枫蜂峰锋风疯烽逢冯缝讽奉凤佛否夫敷肤孵扶拂辐幅氟符伏俘服浮涪福袱弗甫抚辅俯釜斧腑府腐赴副覆赋复傅付阜父腹负富讣附妇缚咐匚俸偾匐凫阝邡郛酆垡芙芾苻茯菔葑蕃蘩拊呋呒唪幞幡狒怫悱沣淝滏瀵艴妃孚驸绂绋绯枋梵桴棼榧赙腓斐燔扉祓砜砝砩黻黼畈罘钫镄稃馥痱蚨蜉蜚蝠蝮缶篚舫翡麸趺跗蹯霏鲂鲋鲱鲼鳆鼢",
+  g:"噶嘎该改概钙盖溉干甘杆柑竿肝赶感秆敢赣冈刚钢缸肛纲岗港杠篙皋高膏羔糕搞稿告哥歌搁戈鸽胳疙割革葛格阁隔铬个各给根跟耕更庚羹埂耿梗工攻功恭龚供躬公宫弓巩汞拱贡共钩勾沟苟狗垢构购够辜菇咕箍估沽孤姑鼓古蛊骨谷股故顾固雇刮瓜剐寡挂褂乖拐怪棺关官冠观管馆罐惯灌贯光广逛瑰规圭硅归龟闺轨鬼诡癸桂柜跪贵刽辊滚棍锅郭国果裹过咯丐亘鬲丨睾嘏匦卦刿佝倌馘衮诂诖诟诰陔郜哿圪坩垓埚塥苷茛菰藁廾尬尴掴掼擀呙呱咣哏哽嗝帼岣崮崞犷猓庋赓汩泔淦涫澉宄遘妫媾尕尜绀绠绲缑缟珙枸桄栝桧梏椁槔槁橄轱戤旮旰杲晷赅觏牯牿搿虢肱胍胱胲膈臌彀毂戆矸硌磙瞽罡罟盥钆钴锆锢镉皈鸪鸹鹳疳痼袼聒虼蚣蛄蜾蝈笱筻篝簋舸艮酐酤觚觥鲑鲠鲧鲴鳏鞲骼",
+  h:"镐蛤哈骸孩海氦亥害骇酣憨邯韩含涵寒函喊罕翰撼捍旱憾悍焊汗汉夯杭航壕嚎豪毫郝好耗号浩呵喝荷菏核禾和何合盒阂河涸赫褐鹤贺嘿黑痕很狠恨哼亨横衡恒轰哄烘虹鸿洪宏弘红喉侯猴吼厚候后呼乎忽瑚壶葫胡蝴狐糊湖弧虎唬护互沪户花哗华猾滑画划化话槐徊怀淮坏欢环桓还缓换患唤痪豢焕涣宦幻荒慌黄磺蝗簧皇凰惶煌晃幌恍谎灰挥辉徽恢蛔回毁悔慧卉惠晦贿秽会烩汇讳诲绘荤昏婚魂浑混豁活伙火获或惑霍货祸咳劐黉訇冱讧诃诙诨隍邗郇奂劾壑堠茴荟荭萑菡蒿蕙蕻薨薅藿蘅撖擐攉咴唿喙嗬嗥嗨嚆嚯囫圜岵後徨猢獾夥馄怙惚隳闳阍阖沆泓洹洄浍浒浣湟溷潢滹漶濠瀚灏寰逅逭遑彗骅纥绗缋缳珩珲琥璜桦桁槲轷昊曷晖晗肓觳烀焓煳灬戽扈祜恚砉盍钬铧铪锪锾镬皓瓠鹄鹕鹱瘊癀耠顸颃颌颔颢虍虺蚝蚶蟥蟪蠖笏篁篌糇翮醐醢踝斛鲎鲩鳇鹘骺鬟麾鼾",
+  j:"击圾基机畸稽积箕肌饥迹激讥鸡姬绩缉吉极棘辑籍集及急疾汲即嫉级挤几脊己蓟技冀季伎祭剂悸济寄寂计记既忌际妓继纪嘉枷夹佳家加荚颊贾甲钾假稼价架驾嫁歼监坚尖笺间煎兼肩艰奸缄茧检柬碱硷拣捡简俭剪减荐鉴践贱见键箭件健舰剑饯渐溅涧建僵姜将浆江疆蒋桨奖讲匠酱降蕉椒礁焦胶交郊浇骄娇嚼搅铰矫侥脚狡角饺缴绞剿教酵轿较叫窖揭接皆秸街阶截劫节桔杰捷睫竭洁结解姐戒藉芥界借介疥诫届巾筋斤金今津襟紧锦仅谨进靳晋禁近烬浸尽劲荆兢茎睛晶鲸京惊精粳经井警景颈静境敬镜径痉靖竟竞净炯窘揪究纠玖韭久灸九酒厩救旧臼舅咎就疚鞠拘狙疽居驹菊局矩举沮聚拒据巨具距踞锯俱句惧炬剧捐鹃娟倦眷卷绢撅攫抉掘倔爵觉决诀绝均菌钧军君峻俊竣浚郡骏亟乩厥刭剞劂冂伽佶佼倨偈儆僭僬僦讦讵诘谏谫谲卩卺阱郏鄄矍墼艽芨芰苣苴莒茭茳荩菁堇菅葭蒺蒹蕨蕺拮挢捃掎掬搛叽咭哜唧喈啾嗟噘噍噤噱囝岌岬崛嵴徼狷獍獗馑廑憬阄泾浃洎洚涓湔蹇謇迥迦迳遽彐屐屦弪妗姣婧婕孑孓骥绛缙缣缰畿玑珏珈琚瑾枧柩桕桀桊桷楗椐楫榘榉槿橛橘殛戋戛戟戢戬炅赆赍觊觐牮犟犄犋犍毽敫肼胛胫腈腱飓齑旌爝扃恝矶碣礓睑羁蠲钅钜铗锏锔锩镌镓镢嵇稷皎鸠鹣鹪鹫疖痂瘕瘠窭衿袷裥裾皲矜耩颉虮蚧蛱蛟笈笄笕笳箐袈羯糨暨翦赳趄豇醮醵趼跏跻跤跽踺踽蹶觖霁龃隽雎鲒鲚鲛鲣鲫鳜鞯鞫骱髻鬏麂麇",
+  k:"槛喀咖卡开揩楷凯慨刊堪勘坎砍看康慷糠扛抗亢炕考拷烤靠坷苛柯棵磕颗科壳可渴克刻客课肯啃垦恳坑吭空恐孔控抠口扣寇枯哭窟苦酷库裤夸垮挎跨胯块筷侩快宽款匡筐狂框矿眶旷况亏盔岿窥葵奎魁傀馈愧溃坤昆捆困括扩廓阔馗匮刳剀蒯伉佧侉侃倥夔诓诳邝郐凵圹垲堀芤莰蒈蒉蔻夼揆叩咔哐哙喹喟喾嗑岢崆狯忾恺恪悝悃愦闶阃阚溘逵尻骒纩绔缂珂琨栲轲戡暌贶犒氪胩脍龛眍睽瞌瞰钪钶铐铠铿锎锞锟锴稞疴窠裉聩颏蚵蛞蝰蝌筘箜篑醌跬鲲骷髁髋髡",
+  l:"垃拉喇蜡腊辣啦莱来赖蓝婪栏拦篮阑兰澜谰揽览懒缆烂滥琅榔狼廊郎朗浪捞劳牢老佬姥酪烙涝勒乐雷镭蕾磊累儡垒擂肋类泪棱楞冷厘梨犁黎篱狸离漓理李里鲤礼莉荔吏栗丽厉励砾历利傈例俐痢立粒沥隶力璃哩俩联莲连镰廉怜涟帘敛脸链恋炼练粮凉梁粱良两辆量晾亮谅撩聊僚疗燎寥辽潦了撂镣廖料列裂烈劣猎琳林磷霖临邻鳞淋凛赁吝拎玲菱零龄铃伶羚凌灵陵岭领另令溜琉榴硫馏留刘瘤流柳六龙聋咙笼窿隆垄拢陇楼娄搂篓漏陋芦卢颅庐炉掳卤虏鲁麓碌露路赂鹿潞禄录陆戮驴吕铝侣旅履屡缕虑氯律率滤绿峦挛孪滦卵乱掠略抡轮伦仑沦纶论萝螺罗逻锣箩骡裸落洛骆络剌仂俪俚倮偻脔蠃羸冽诔郦酃坜垅垆埒塄墚苈茏苓荦莅莨蒌蓠蒗蔹蔺蓼藜奁尥捋捩摞撸叻呖呤咧唠啉啷唳喱喽嘞嘹噜囵囹岚崂崃嵝嶙徕猁猡獠廪愣懔闾阆泐泷泸泠泺洌浏涞渌溧漤漯潋漉濑澧濂寮逦逯遛遴邋娈娌嫠嫘骊骝绫绺缡缧缭珑珞琏璐枥栊栌柃栎栳栾棂椤椋楝榄榈橹檑檩殓轳轹辂辘辚瓴旯赉氇胧胪脶膂臁膦斓旒熘戾砺砻砬睐瞵詈罱罹钌铑铹铼锂锊锍锒镂镏镙镥镧稆稂鸬鸾鹂鹨鹩鹭疠疬痨瘌瘘瘰癃癞裢裣褛褴耒耢耧聆蛎蛉蜊螂蝼蠊蠡笠篥簏籁舻粝粼翎趔酹醪醴跞踉躏躐靓雳雒銮鎏鲈鲡鲢鲮鳓鳢髅魉鬣麟黧",
+  m:"貉妈麻玛码蚂马骂嘛吗埋买麦卖迈脉瞒馒蛮满蔓曼慢漫谩芒茫盲氓忙莽猫茅锚毛矛铆卯茂冒帽貌贸么玫枚梅酶霉煤没眉媒镁每美昧寐妹媚门闷们萌蒙檬盟锰猛梦孟眯醚靡糜迷谜弥米秘觅泌蜜密幂棉眠绵冕免勉娩缅面苗描瞄藐秒渺庙妙蔑灭民抿皿敏悯闽明螟鸣铭名命谬摸摹蘑模膜磨摩魔抹末莫墨默沫漠寞陌谋牟某拇牡亩姆母墓暮幕募慕木目睦牧穆芈仫侔袤冖冥谟谧邙劢勐坶墁茉苜茆苠茗荬莓蓦甍瞢蘼扪咩咪哞唛喵嘧幔峁岷嵋犸猕猸馍懵闵沐沔汨泖泯浼渑湎湄漭溟宀宓邈弭嫫嬷缈缗缦缪玟珉瑁杩杪楣殁昴暝牦耄毪脒腼朦旄焖熳祢愍懋懑淼硭礞眄眇眸瞀瞑钔钼镅镆镘秣鹋鹛瘼袂耱颟虻蛑蜢蝥螨蟒蟆蟊蠓蠛篾艋艨敉糸酩貊貘霾黾鍪鳗鳘鞔魅髦麽縻麋",
+  n:"拿哪呐钠那娜纳氖乃奶耐奈南男难囊挠脑恼闹淖呢馁内嫩能妮霓倪泥尼拟你匿腻逆溺蔫拈年碾撵捻念娘酿鸟尿捏聂孽啮镊镍涅您柠狞凝宁拧泞牛扭钮纽脓浓农弄奴努怒女暖虐疟挪懦糯诺粘辗廿孬鼐乜佞伲侬傩讷陧坭垴埝艿茑萘蘖捺搦攮咛呶哝喏喃嗫嗯囔囡狃猊猱馕忸怩甯弩妞胬嬲孥驽瑙柰楠辇昵曩肭脲腩旎恧恁硇睨钕铌铙锘镎黏疒衲耨聍颞蛲蝻臬衄袅赧蹑鲇鲵鲶",
+  o:"哦欧鸥殴藕呕偶沤讴噢怄瓯耦",
+  p:"耙辟脯啪趴爬帕怕琶拍排牌徘湃派攀潘盘磐盼畔判叛乓庞旁耪胖抛咆刨炮袍跑泡呸胚培裴赔陪配佩沛喷盆砰抨烹澎彭蓬棚硼篷膨朋鹏捧碰坯砒霹批披劈琵毗啤脾疲皮匹痞僻屁譬篇偏片骗飘漂瓢票撇瞥拼频贫品聘乒坪苹萍平凭瓶评屏坡泼颇婆破魄迫粕剖扑铺仆莆葡菩蒲埔朴圃普浦谱曝瀑丕丿叵剽仳俜俳匍裒谝陴邳郫鄱圮埤堋鼙芘苤莩葩蒎匏拚掊擗哌辔嘌嘭噗噼帔彷狍庀庖怦丬爿泮淠湓溥滂濮逄姘娉媲嫔嫖骈骠纰缥珀璞枇杷枰榀殍甓攴牝犏氆氕攵胼脬旆睥瞟罴钋钷铍锫镤镨皤疱癖袢襻疋颦蚍蜱螃螵蟛蟠笸筢翩醅蹁蹒蹼貔霈鲆",
+  q:"期欺栖戚妻七凄漆柒沏其棋奇歧畦崎脐齐旗祈祁骑起岂乞企启契砌器气迄弃汽泣讫掐恰洽牵扦钎铅千迁签仟谦乾黔钱钳前潜遣浅谴堑嵌欠歉枪呛腔羌墙蔷强抢橇锹敲悄桥瞧乔侨巧鞘撬翘峭俏窍切茄且怯窃钦侵亲秦琴勤芹擒禽寝沁青轻氢倾卿清擎晴氰情顷请庆琼穷秋丘邱球求囚酋泅趋区蛆曲躯屈驱渠取娶龋趣去圈颧权醛泉全痊拳犬券劝缺炔瘸却鹊榷确雀裙群丌亓劁俅倩佥诎诠诮谯阡邛劬巯圻芊芑芩芡芪苘茕茜荞荃荠荨萁萋葜葺蕖蕲蘧掮揿吣嗪嘁噙圊屺岍岐岖峤衢犭犰悭悛惬愀慊憔阒阕阙戕汔淇湫骞搴褰逑逡遒妾嫱骐绮绻缱缲琪琦璩杞桤椠楸樯槭檠樵檎辁戗耆赇觑挈氍肷朐欹炝祛祺悫愆憩硗碛磬磲畎钤铨锓锖锲锵镪鸲癯穹襁覃颀虔虬蚯蛩蛐蛴蜣蜻蜞蜷螓蠼罄筇筌箧箝衾裘羟糗綦綮麴跫跄跷蹊謦瞿銎鲭鳅鳍鞒髂鬈麒黢黥鼽",
+  r:"然燃冉染瓤壤攘嚷让饶扰绕惹热壬仁人忍韧任认刃妊纫扔仍日戎茸蓉荣融熔溶容绒冗揉柔肉茹蠕儒孺如辱乳汝入褥软阮蕊瑞锐闰润若弱亻仞偌芮苒荛荏蓐蕤薷嚅嵘狨饪洳溽濡娆缛枘桡榕轫肜朊禳睿铷稔穰衽襦颥蚋蚺蝾箬糅蹂鞣髯",
+  s:"撒洒萨腮鳃塞赛三叁伞散桑嗓丧搔骚扫嫂瑟色涩森僧莎砂杀沙纱傻啥煞筛晒珊苫杉山删煽衫闪陕擅赡膳善汕扇缮墒伤商赏晌上尚裳梢捎稍烧芍勺韶少哨邵绍奢赊蛇舌舍赦摄射慑涉社设砷申呻伸身深娠绅神沈审婶甚肾慎渗声生甥牲升绳省盛剩胜圣师失狮施湿诗尸虱十石拾时什食蚀实识史矢使屎驶始式示士世柿事拭誓逝势是嗜噬适仕侍释饰氏市恃室视试收手首守寿授售受瘦兽蔬枢梳殊抒输叔舒淑疏书赎孰熟薯暑曙署蜀黍鼠属术述树束戍竖墅庶数漱恕刷耍摔衰甩帅栓拴霜双爽谁水睡税吮瞬顺舜说硕朔烁斯撕嘶思私司丝死肆寺嗣四伺似饲巳松耸怂颂送宋讼诵搜艘擞嗽苏酥俗素速粟僳塑溯宿诉肃酸蒜算虽隋随绥髓碎岁穗遂隧祟孙损笋蓑梭唆缩琐索锁所厦栅卅啬厍厮仨俟倏佘夙兕凇讪诜谂谇谡谥鄯劭叟厶塾埏垧埘埽芟荪莳荽莘菘菽葚蓍蒴蔌薮扌摅搠搡弑咝哂唢唼唰嗖嗉嗦嗍嗾噻崧嵊嵩彡狩狲狻猞飧饣馊馓忪悚愫闩氵汜沭泗涑淞渖涮溲滠澍澌潸潲濉邃妁姒姗姝娑嬗孀驷骟纟纾绱绶缌缫杓桫椹榫槊殇轼晟贳挲毵毹胂脎腧臊膻歃飒飕殳炻熵燧礻祀磉眚眭睃睢瞍畲钐铄铈铩铯锶锼矧秫穑鸶疝痧瘙竦耜颡蛳蜃蛸螋螫蟀蟮舐笙笥筮筲簌舢艄艏裟羧糁酾豕跚觞觫霎隼稣鲥鲨鲺鳋鳝麝",
+  t:"弹调囤塌他它她塔獭挞蹋踏胎苔抬台泰酞太态汰坍摊贪瘫滩坛檀痰潭谭谈坦毯袒碳探叹炭汤塘搪堂棠膛唐糖倘躺淌趟烫掏涛滔绦萄桃逃淘陶讨套特藤腾疼誊梯剔踢锑提题蹄啼体替嚏惕涕剃屉天添填田甜恬舔腆挑条迢眺跳贴铁帖厅听烃汀廷停亭庭挺艇通桐酮瞳同铜彤童桶捅筒统痛偷投头透凸秃突图徒途涂屠土吐兔湍团推颓腿蜕褪退吞屯臀拖托脱鸵陀驮驼椭妥拓唾乇鼗佟佗佻倜傥僮仝氽亠邰郯坨堍苕茼莛荼萜菟葶薹抟掭忒啕嗵帑饧饨庹恸悌忝闼阗沱洮溻溏潼逖遢彖婷绨缇瑭韬柝柁梃榻橐殄昙暾肽豚滕炱煺焘祧忑忐慝沓砼砣町畋疃钍钛钭钽铊铤铴铽锬镗镡鹈窕裼耥蜓蜩螗螳笤箨羰粜酡酴醍醣趿跎跆霆龆鼍鲐鲦鳎骰餮饕髫",
+  w:"挖哇蛙洼娃瓦袜歪外豌弯湾玩顽丸烷完碗挽晚皖惋宛婉万腕汪王亡枉网往旺望忘妄威巍微危韦违桅围唯惟为潍维苇萎委伟伪尾纬未蔚味畏胃喂魏位渭谓尉慰卫瘟温蚊文闻纹吻稳紊问嗡翁瓮挝蜗涡窝我斡卧握沃巫呜钨乌污诬屋无芜梧吾吴毋武五捂午舞伍侮坞戊雾晤物勿务悟误兀刎剜罔佤仵倭偎诿阢隈隗邬圬芄芴莴莞菀葳蓊薇蕹尢唔喔囗帏帷幄崴嵬猥猬庑怃忤惘闱阌汶沩洧浯涠渥寤迕逶妩娲娓婺骛纨绾玮琬璺韪杌辋軎牾肟脘腽於炜焐煨硪畹鹉鹜痦痿蜈蜿艉雯龌鋈鲔魍鼯",
+  x:"昔熙析西硒矽晰嘻吸锡牺稀息希悉膝夕惜熄烯溪汐犀檄袭席习媳喜铣洗系隙戏细瞎虾匣霞辖暇峡侠狭下夏吓掀锨先仙鲜纤咸贤衔舷闲涎弦嫌显险现献县腺馅羡宪陷限线相厢镶香箱襄湘乡翔祥详想响享项巷橡像向象萧硝霄削哮销消宵淆晓小孝校肖啸笑效楔些歇蝎鞋协挟携邪斜胁谐写械卸蟹懈泄泻谢屑薪芯锌欣辛新忻心信衅星腥猩惺兴刑型形邢行醒幸杏性姓兄凶胸匈汹雄熊休修羞朽嗅锈秀袖绣墟戌需虚嘘须徐许蓄酗叙旭序恤絮婿绪续轩喧宣悬旋玄选癣眩绚靴薛学穴雪血勋熏循旬询寻驯巡殉汛训讯逊迅吁囟偕僖儇兮巽亵冼诩谑谖陉隰郄勖勰燮圩埙馨芎芗苋荇荀莶菥葙葸萱蓰蓿蕈薤薰藓奚揎撷擤呷哓咻唏岘岫峋崤徇徙狎猃獬獯饩饷馐庥庠廨忄恂悻阋泫洫洵浔浠淅渫溆渲溴潇漩瀣逍遐暹邂屣娴嬉骁骧绁绡缃缬顼玺瑕璇枭柙枵栩楦榭榍樨昕暄曛曦觋氙欷歆歙炫煊燹煦熹祆禊禧泶硎硖碹盱铉镟皙鸺鹇痃痫穸窨胥蚬蜥螅蟋蟓罅筅筱箫舄舾羲籼粞糈翕酰醑醯醺踅跣跹躞貅霰鑫鲞鲟鳕魈飨髹黠鼷",
+  y:"压押鸦鸭呀丫芽牙蚜崖衙涯雅哑亚讶焉咽阉烟淹盐严研蜒岩延言颜阎炎沿奄掩眼衍演艳堰燕厌砚雁唁彦焰宴谚验殃央鸯秧杨扬佯疡羊洋阳氧仰痒养样漾邀腰妖瑶摇尧遥窑谣姚咬舀药要耀椰噎耶爷野冶也页掖业叶曳腋夜液一壹医揖铱依伊衣颐夷遗移仪胰疑沂宜姨彝椅蚁倚已乙矣以艺抑易邑屹亿役臆逸肄疫亦裔意毅忆义益溢诣议谊译异翼翌绎茵荫因殷音阴姻吟银淫寅饮尹引隐印英樱婴鹰应缨莹萤营荧蝇迎赢盈影颖硬映哟拥佣臃痈庸雍踊蛹咏泳涌永恿勇用幽优悠忧尤由邮铀犹油游酉有友右佑釉诱又幼迂淤于盂榆虞愚舆余俞逾鱼愉渝渔隅予娱雨与屿禹宇语羽玉域芋郁遇喻峪御愈欲狱育誉浴寓裕预豫驭鸳渊冤元垣袁原援辕园员圆猿源缘远苑愿怨院曰约越跃钥岳粤月悦阅耘云郧匀陨允运蕴酝晕韵孕轧禺夭爻胤毓厣靥赝卣刈剡劓仡伛伢攸佚侑佾俨俣俑偃龠兖嬴讠诒谀谒谕谳阽邺郓郢郾鄢鄞廴壅圯垭垠垸埸堙塬墉懿芫芸苡茚茔荑荥莠莜莸莺萸菸萦蓥蓣薏弈奕挹揶揠揄掾撄弋吆呓吲呦咦哕咿唷喁喑嘤噫囿圄圉岈峄崦崾嵛嶷徉徭狁狳狺猗夤饫饴馀庾膺怏怿怡恹恽悒愠慵闫阈沅泱洇湮滟滢潆漪瀛瀹宥迓迤鬻妍妪妤娅媛嫣驿纡纭缢幺邕琊珧瑛琰瑜瑗璎韫杳柚桠楹樾橼檐猷殒殪轶轺昀昱晔晏曜贻觎氩氤氲牖爰刖肴胭腌腴媵欤旖炀烨烊焱煜熨熠燠恙肀聿砑眢眙睚罨钇钰钺铕铘铟铫镒镛镱甬鸢鹆鹞鹦鹬疣痖痍瘐瘀瘗瘿瘾癔翊窈窬窳衤颍蚓蚰蚴蛘蜮蜴蝓蝣蝤螈罂竽筵筠箢臾舁舣羿翳繇酏酽雩霪龈龉鼋鱿鳐鳙鞅魇餍饔黝黟鼬鼹",
+  z:"幢翟咀匝砸杂栽哉灾宰载再在咱攒暂赞赃脏葬遭糟凿藻枣早澡蚤躁噪造皂灶燥责择则泽贼怎增憎赠扎喳渣札铡闸眨榨咋乍炸诈摘斋宅窄债寨瞻毡詹沾盏斩崭展蘸栈占战站湛绽樟章彰漳张掌涨杖丈帐账仗胀瘴障招昭找沼赵照罩兆肇召遮折哲蛰辙者锗蔗这浙珍斟真甄砧臻贞针侦枕疹诊震振镇阵蒸挣睁征狰争怔整拯正政帧症郑证芝枝支吱蜘知肢脂汁之织职直植殖执值侄址指止趾只旨纸志挚掷至致置帜峙制智秩稚质炙痔滞治窒中盅忠钟衷终种肿重仲众舟周州洲诌粥轴肘帚咒皱宙昼骤珠株蛛朱猪诸诛逐竹烛煮拄瞩嘱主著柱助蛀贮铸筑住注祝驻抓爪拽专砖转撰赚篆桩庄装妆撞壮状椎锥追赘坠缀谆准捉拙卓桌琢茁酌啄着灼浊兹咨资姿滋淄孜紫仔籽滓子自渍字鬃棕踪宗综总纵邹走奏揍租足卒族祖诅阻组钻纂嘴醉最罪尊遵昨左佐柞做作坐座卮丶仄赜仉伫侏倬偬俎冢诏诤诹诼谘谪谮谵阼陟陬郅邾鄣鄹圳埴芷苎茈茱荮菹蓁蕞奘拶揸搌摭摺撙擢攥吒咂咤哳唣唑啧啭啁嘬帙帻幛峥崽嵫嶂徵獐夂馔忮怍惴浈洙浞渚涿溱潴濯迮彘咫姊妯嫜孳驵驺骓骘纣绉缁缒缜缯缵甾璋瓒杼栉柘枳栀桎桢梓棹楂榛槠橥樽轵轸轾辄辎臧甑昃昝贽赀赈肫胄胙胗胝朕腙膣旃炷祉祚祗祯禚恣斫砟砦碡磔黹眦畛罾钊钲铢铮锃锱镞镯锺雉秭稹鸩鸷鹧痄疰痣瘃瘵窀褶耔颛蚱蛭蜇螽蟑竺笊笫笮筝箦箸箴簪籀舯舳舴粢粽糌翥絷趑趱赭酎酯跖踬踯踵躅躜豸觜觯訾龇隹錾鲰鲻鳟髭麈齄"
+};
+</script>
+
+<script>
+/* ============================================================
+   加密核心 · 与原版完全一致，保证旧数据可解锁
+   ============================================================ */
+const CRYPTO = (() => {
+  'use strict';
+  const te = new TextEncoder();
+  const td = new TextDecoder();
+
+  function bytesToB64(b) {
+    let s = '';
+    for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000));
+    return btoa(s);
+  }
+  function b64ToBytes(s) {
+    const bin = atob(s);
+    const b = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i);
+    return b;
+  }
+  function concat() {
+    const arrs = Array.prototype.slice.call(arguments);
+    const n = arrs.reduce(function(t, a){ return t + a.length; }, 0);
+    const out = new Uint8Array(n);
+    let o = 0;
+    for (const a of arrs) { out.set(a, o); o += a.length; }
+    return out;
+  }
+  function u32be(n) {
+    const b = new Uint8Array(4);
+    b[0] = (n >>> 24) & 255; b[1] = (n >>> 16) & 255; b[2] = (n >>> 8) & 255; b[3] = n & 255;
+    return b;
+  }
+  function randomBytes(n) {
+    const b = new Uint8Array(n);
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) crypto.getRandomValues(b);
+    else for (let i = 0; i < n; i++) b[i] = Math.floor(Math.random() * 256);
+    return b;
+  }
+  function constEq(a, b) {
+    if (a.length !== b.length) return false;
+    let d = 0;
+    for (let i = 0; i < a.length; i++) d |= a[i] ^ b[i];
+    return d === 0;
+  }
+
+  const K = [
+    0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+    0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+    0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+    0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+    0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+    0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+    0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+    0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+  ];
+  function sha256(bytes) {
+    const H = new Int32Array([0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19]);
+    const l = bytes.length;
+    const total = (((l + 9 + 63) >> 6) << 6) || 64;
+    const m = new Uint8Array(total);
+    m.set(bytes);
+    m[l] = 0x80;
+    const dv = new DataView(m.buffer);
+    dv.setUint32(total - 8, Math.floor(l / 0x20000000));
+    dv.setUint32(total - 4, (l << 3) >>> 0);
+    const w = new Int32Array(64);
+    for (let off = 0; off < total; off += 64) {
+      for (let i = 0; i < 16; i++) w[i] = dv.getInt32(off + i * 4);
+      for (let i = 16; i < 64; i++) {
+        const x = w[i - 15], y = w[i - 2];
+        const s0 = ((x >>> 7) | (x << 25)) ^ ((x >>> 18) | (x << 14)) ^ (x >>> 3);
+        const s1 = ((y >>> 17) | (y << 15)) ^ ((y >>> 19) | (y << 13)) ^ (y >>> 10);
+        w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
+      }
+      let a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
+      for (let i = 0; i < 64; i++) {
+        const S1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
+        const ch = (e & f) ^ (~e & g);
+        const t1 = (h + S1 + ch + K[i] + w[i]) | 0;
+        const S0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
+        const maj = (a & b) ^ (a & c) ^ (b & c);
+        const t2 = (S0 + maj) | 0;
+        h = g; g = f; f = e; e = (d + t1) | 0;
+        d = c; c = b; b = a; a = (t1 + t2) | 0;
+      }
+      H[0] = (H[0] + a) | 0; H[1] = (H[1] + b) | 0; H[2] = (H[2] + c) | 0; H[3] = (H[3] + d) | 0;
+      H[4] = (H[4] + e) | 0; H[5] = (H[5] + f) | 0; H[6] = (H[6] + g) | 0; H[7] = (H[7] + h) | 0;
+    }
+    const out = new Uint8Array(32);
+    const odv = new DataView(out.buffer);
+    for (let i = 0; i < 8; i++) odv.setUint32(i * 4, H[i] >>> 0);
+    return out;
+  }
+
+  const HAS_SUBTLE = typeof crypto !== 'undefined' && !!crypto.subtle && typeof crypto.subtle.importKey === 'function';
+
+  function kdfJS(password, salt, iters) {
+    let x = concat(te.encode(password), salt);
+    for (let i = 0; i < iters; i++) x = sha256(x);
+    return x;
+  }
+  function streamXor(key, iv, plain) {
+    const out = new Uint8Array(plain.length);
+    let ks = null;
+    for (let i = 0; i < plain.length; i++) {
+      if (i % 32 === 0) ks = sha256(concat(key, iv, u32be(i / 32)));
+      out[i] = plain[i] ^ ks[i % 32];
+    }
+    return out;
+  }
+  function macJS(key, iv, cipher) {
+    return sha256(concat(sha256(concat(key, te.encode('apm-mac'))), iv, cipher));
+  }
+
+  async function deriveWC(password, salt, iters) {
+    const km = await crypto.subtle.importKey('raw', te.encode(password), 'PBKDF2', false, ['deriveKey']);
+    return crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt: salt, iterations: iters, hash: 'SHA-256' },
+      km, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']
+    );
+  }
+
+  /* OWASP 2023 对 PBKDF2-HMAC-SHA256 的建议值。
+     这个数字决定「加密文件被拷走后，离线爆破主密码」要花多少算力。
+     旧数据（iters=150000）解密时按 blob 里存的旧值算，完全兼容；
+     解锁成功后会自动用新参数重加密一次（见 enterMain 之后的升级逻辑）。
+     注意：js 降级路径（无 WebCrypto）维持 10000 —— 纯 JS 迭代慢近百倍，
+     拉到 600000 会把解锁卡死几十秒，得不偿失。 */
+  const KDF_ITERS_WC = 600000;
+
+  async function encryptObj(obj, password, forceFmt) {
+    const plain = te.encode(JSON.stringify(obj));
+    const fmt = forceFmt || (HAS_SUBTLE ? 'wc' : 'js');
+    if (fmt === 'wc') {
+      const salt = randomBytes(16), iv = randomBytes(12), iters = KDF_ITERS_WC;
+      const key = await deriveWC(password, salt, iters);
+      const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, plain));
+      return { v: 1, fmt: 'wc', iters: iters, salt: bytesToB64(salt), iv: bytesToB64(iv), data: bytesToB64(ct) };
+    }
+    const salt = randomBytes(16), iv = randomBytes(16), iters = 10000;
+    const key = kdfJS(password, salt, iters);
+    const ct = streamXor(key, iv, plain);
+    return { v: 1, fmt: 'js', iters: iters, salt: bytesToB64(salt), iv: bytesToB64(iv), data: bytesToB64(ct), mac: bytesToB64(macJS(key, iv, ct)) };
+  }
+
+  async function decryptObj(vault, password) {
+    if (!vault || !vault.fmt || !vault.data) throw new Error('数据格式不正确');
+    const salt = b64ToBytes(vault.salt), iv = b64ToBytes(vault.iv), ct = b64ToBytes(vault.data);
+    let json;
+    if (vault.fmt === 'wc') {
+      const key = await deriveWC(password, salt, vault.iters || 150000);
+      json = td.decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, ct));
+    } else {
+      const key = kdfJS(password, salt, vault.iters || 10000);
+      if (!vault.mac || !constEq(macJS(key, iv, ct), b64ToBytes(vault.mac))) throw new Error('主密码错误');
+      json = td.decode(streamXor(key, iv, ct));
+    }
+    return JSON.parse(json);
+  }
+
+  return { encryptObj: encryptObj, decryptObj: decryptObj, sha256: sha256, HAS_SUBTLE: HAS_SUBTLE, KDF_ITERS_WC: KDF_ITERS_WC };
+})();
+if (typeof module !== 'undefined' && module.exports) module.exports = CRYPTO;
+
+(function(){
+'use strict';
+
+/* ================= 工具 ================= */
+var $ = function(s){ return document.querySelector(s); };
+var $$ = function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
+
+function esc(s){
+  return (s == null ? '' : String(s)).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+var SVG = {
+  copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11.5" height="11.5" rx="2.2"/><path d="M6.5 15H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1.5"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="2.8"/></svg>',
+  eyeOff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 6.1A9.8 9.8 0 0 1 12 6c6.4 0 10 6 10 6a17 17 0 0 1-3.4 4M6.5 7.4A17 17 0 0 0 2 12s3.6 6 10 6a9.7 9.7 0 0 0 3.5-.6"/><path d="M9.7 9.9a3 3 0 0 0 4.2 4.2"/></svg>',
+  more:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="18.5" r="1.3" fill="currentColor" stroke="none"/></svg>',
+  external:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 4.5H19.5V10.5M19.5 4.5 12 12M17 14v4.5a2 2 0 0 1-2 2H5.5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2H10"/></svg>',
+  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3.5h5l-.8 5.2 3.3 3.3H6.9l3.4-3.3-.8-5.2Z"/><path d="M12 12v8.5"/></svg>',
+  pinOff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3.5h5l-.8 5.2 3.3 3.3H6.9l3.4-3.3-.8-5.2Z"/><path d="M12 12v8.5M4 4l16 16"/></svg>',
+  edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 4.5a2.1 2.1 0 0 1 3 3L8 19l-4 1 1-4 11.5-11.5Z"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 6.5h15M9.5 6.5V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 5v1.5M6.5 6.5 7.4 19a2 2 0 0 0 2 1.9h5.2a2 2 0 0 0 2-1.9l.9-12.5"/></svg>'
+};
+
+var toastTimer = null;
+function toast(msg){
+  var t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2000);
+}
+
+function copyText(text){
+  return new Promise(function(resolve){
+    function fallback(){
+      try{
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.focus(); ta.select();
+        var ok = document.execCommand('copy');
+        ta.remove();
+        resolve(!!ok);
+      }catch(e){ resolve(false); }
+    }
+    /* Android WebView 里 Clipboard API 可能挂起不回调（不 resolve 也不 reject），
+       复制就永远卡住 —— 壳环境（UA 含 "; wv)"）直接走 execCommand，可靠。 */
+    if (/\bwv\b/.test(navigator.userAgent)) return fallback();
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ resolve(true); }, fallback);
+    } else fallback();
+  });
+}
+
+function readText(file){
+  return new Promise(function(resolve, reject){
+    var r = new FileReader();
+    r.onload = function(){ resolve(String(r.result)); };
+    r.onerror = function(){ reject(r.error); };
+    r.readAsText(file);
+  });
+}
+
+/* 前几个字保留 + 后几位保留，中间打点。用于默认展示账号，避免肩窥 */
+function maskAccount(v){
+  v = String(v || '');
+  if (v.length <= 4) return '•'.repeat(v.length || 3);
+  if (v.length <= 10) return v.slice(0, 2) + '•'.repeat(v.length - 4) + v.slice(-2);
+  return v.slice(0, 4) + '•'.repeat(Math.min(v.length - 7, 6)) + v.slice(-3);
+}
+
+function genPw(len){
+  len = len || 16;
+  var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%&*-_=+';
+  var rnd = new Uint32Array(len);
+  crypto.getRandomValues(rnd);
+  var s = '';
+  for (var i = 0; i < len; i++) s += chars.charAt(rnd[i] % chars.length);
+  return s;
+}
+
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+
+/* 密码强度评估 · 只是提示，不做门禁 */
+function scorePw(pw){
+  if (!pw) return { n:0, label:'', tip:'' };
+  var pool = 0;
+  if (/[a-z]/.test(pw)) pool += 26;
+  if (/[A-Z]/.test(pw)) pool += 26;
+  if (/[0-9]/.test(pw)) pool += 10;
+  if (/[^A-Za-z0-9]/.test(pw)) pool += 24;
+  var entropy = pw.length * (Math.log(pool || 1) / Math.LN2);
+  var common = ['123456','password','qwerty','abc123','111111','000000','admin','letmein','iloveyou','888888','666666'];
+  if (common.indexOf(pw.toLowerCase()) >= 0) entropy = Math.min(entropy, 20);
+  if (pw.length < 8) entropy = Math.min(entropy, 30);
+  if (entropy < 40) return { n:1, label:'弱', tip:'建议加长到 12 位以上' };
+  if (entropy < 60) return { n:2, label:'一般', tip:'混入大小写和符号会更稳' };
+  if (entropy < 80) return { n:3, label:'强', tip:'' };
+  return { n:4, label:'很强', tip:'' };
+}
+
+function relTime(ts){
+  if (!ts) return '';
+  var d = Date.now() - ts;
+  var day = 86400000;
+  if (d < 60000) return '刚刚';
+  if (d < 3600000) return Math.floor(d / 60000) + ' 分钟前';
+  if (d < day) return Math.floor(d / 3600000) + ' 小时前';
+  if (d < day * 2) return '昨天';
+  if (d < day * 30) return Math.floor(d / day) + ' 天前';
+  if (d < day * 365) return Math.floor(d / (day * 30)) + ' 个月前';
+  return Math.floor(d / (day * 365)) + ' 年前';
+}
+
+/* 确认框 */
+var confirmOk = null;
+function confirmDlg(msg, okLabel, onOk){
+  $('#confirmMsg').textContent = msg;
+  $('#confirmOk').textContent = okLabel || '确定';
+  confirmOk = onOk;
+  openScrim('#confirmOverlay');
+}
+$('#confirmCancel').addEventListener('click', function(){ closeScrim('#confirmOverlay'); confirmOk = null; });
+$('#confirmOk').addEventListener('click', function(){
+  closeScrim('#confirmOverlay');
+  var fn = confirmOk; confirmOk = null;
+  if (fn) fn();
+});
+
+/* ================= 弹层开关 · 统一管理焦点 ================= */
+var lastFocus = null;
+var scrimStack = [];
+
+function openScrim(sel){
+  var el = $(sel);
+  if (!el || !el.hidden) return;
+  if (!scrimStack.length) lastFocus = document.activeElement;
+  el.hidden = false;
+  scrimStack.push(sel);
+  document.documentElement.classList.add('scrim-open');
+  var first = el.querySelector('input:not([type=hidden]), textarea, select, button:not([disabled])');
+  setTimeout(function(){ if (first) first.focus(); }, 60);
+}
+function closeScrim(sel){
+  var el = $(sel);
+  if (!el) return;
+  el.hidden = true;
+  var i = scrimStack.indexOf(sel);
+  if (i >= 0) scrimStack.splice(i, 1);
+  if (!scrimStack.length) document.documentElement.classList.remove('scrim-open');
+  if (!scrimStack.length && lastFocus && lastFocus.focus) {
+    try { lastFocus.focus(); } catch(e){}
+    lastFocus = null;
+  }
+}
+function closeTopScrim(){
+  if (!scrimStack.length) return false;
+  closeScrim(scrimStack[scrimStack.length - 1]);
+  return true;
+}
+/* 锁定时必须关掉全部弹层：否则编辑表单、设置等会悬浮在锁屏上方，
+   自动锁定时表单里已显示的密码会跟着锁屏一起留在屏幕上 */
+function closeAllScrims(){
+  while (scrimStack.length) closeScrim(scrimStack[scrimStack.length - 1]);
+  lastFocus = null;
+}
+/* Android 壳（App）的返回键会调用这个：先关最上层的弹层，
+   关掉了就停留在页面，没弹层了壳才退出。网页端无人调用，无副作用。 */
+window.__vaultCloseTop = function(){ return closeTopScrim(); };
+
+$$('.scrim').forEach(function(sc){
+  sc.addEventListener('click', function(e){ if (e.target === this) closeScrim('#' + this.id); });
+});
+/* 另一个窗口改了CipherBox：storage 事件只在「其他」标签页修改时触发。
+   不处理的话，本窗口的下一次保存会把那边的改动整个覆盖掉。 */
+window.addEventListener('storage', function(e){
+  if (e.key !== LS_VAULT || !isUnlocked) return;
+  confirmDlg(
+    '检测到CipherBox已在其他窗口被修改。\n' +
+    '如果在本窗口继续操作，下一次保存会覆盖那些改动。\n\n' +
+    '建议刷新页面加载最新数据（本窗口未保存的修改会丢弃）。',
+    '刷新页面', function(){ location.reload(); }
+  );
+});
+
+/* ================= 状态与存储 ================= */
+var LS_VAULT = 'apm.vault.v1';
+var LS_SET = 'apm.settings.v1';
+var LS_THEME = 'apm.theme.v1';
+
+var entries = [];
+var masterPw = '';
+var isUnlocked = false;
+var firstRun = false;
+var settings = { autoLockMin: 5, bgLock: false, lastExportAt: 0, snoozeUntil: 0 };
+var autoLockTimer = null;
+var revealTimers = {};
+var editingId = null;
+var selectedCat = '';
+var selectedId = null;
+var moreTargetId = null;
+var wrongCount = 0;
+var waitUntil = 0;
+var cdTimer = null;
+var acctOpen = {};       // 哪些卡片的账号处于明文状态
+
+function getVault(){
+  try{ return JSON.parse(localStorage.getItem(LS_VAULT)); }catch(e){ return null; }
+}
+function loadSettings(){
+  try{
+    var s = JSON.parse(localStorage.getItem(LS_SET) || '{}');
+    settings.autoLockMin = (s.autoLockMin === 0 || s.autoLockMin) ? s.autoLockMin : 5;
+    settings.bgLock = !!s.bgLock;
+    settings.lastExportAt = s.lastExportAt || 0;
+    settings.snoozeUntil = s.snoozeUntil || 0;
+  }catch(e){}
+  if (!settings.lastExportAt) settings.lastExportAt = Date.now();
+}
+function saveSettings(){
+  try{ localStorage.setItem(LS_SET, JSON.stringify(settings)); }catch(e){}
+}
+/* 存储配额（约 5MB）用满或加密异常时，setItem 会抛异常。
+   这里不能吞掉 —— 用户看着「已保存」关掉页面，改动就真丢了。
+   弹强提示并把「确定」直接接到导出备份上。 */
+var saveFailedShown = false;
+/* App 自动备份：数据修改后 2 分钟无操作才写（连续修改只备最后一次），
+   静默执行 —— 原生侧写入 auto/ 目录并保留最近 5 份 */
+var AUTO_BACKUP_DELAY = 120000;
+var autoBackupTimer = null, autoDirty = false;
+function runAutoBackup(){
+  autoBackupTimer = null;
+  if (!autoDirty || !isUnlocked) return;
+  autoDirty = false;
+  if (!IN_APP || !window.AppBridge || !window.AppBridge.autoBackup) return;
+  var b = makeBackup();
+  if (!b) return;
+  var d0 = new Date();
+  b.name = 'auto-backup_' + String(d0.getMonth()+1).padStart(2,'0') + String(d0.getDate()).padStart(2,'0') + '-' + String(d0.getHours()).padStart(2,'0') + String(d0.getMinutes()).padStart(2,'0') + '.json';
+  blobToB64(b.blob).then(function(b64){
+    if (b64) window.AppBridge.autoBackup(b.name, b64);
+  });
+}
+function scheduleAutoBackup(){
+  if (!IN_APP || !window.AppBridge || !window.AppBridge.autoBackup) return;
+  autoDirty = true;
+  if (autoBackupTimer) return;
+  autoBackupTimer = setTimeout(runAutoBackup, AUTO_BACKUP_DELAY);
+}
+window.__vaultAutoBackupNow = runAutoBackup;   /* 测试/调试：跳过等待 */
+
+async function persist(){
+  try {
+    var blob = await CRYPTO.encryptObj({ entries: entries }, masterPw);
+    var old = getVault();
+    if (old && old.hint) blob.hint = old.hint;
+    localStorage.setItem(LS_VAULT, JSON.stringify(blob));
+    if (saveFailedShown){
+      saveFailedShown = false;
+      toast('存储已恢复，数据已保存');
+    }
+    scheduleAutoBackup();
+  } catch (err) {
+    if (saveFailedShown) return;   /* 已经在提醒了，别连着弹 */
+    saveFailedShown = true;
+    var isQuota = /quota/i.test(String((err && err.name || '') + (err && err.message || '')));
+    confirmDlg(
+      '保存失败（' + (isQuota ? '浏览器存储空间已满' : '加密或写入出错') + '）。\n' +
+      '刚才的修改没有写入存储，关闭页面后会丢失。\n\n' +
+      '建议立即导出备份，并清理其他标签页或浏览器存储后重试。',
+      '导出备份', function(){ doExport(); }
+    );
+  }
+}
+/* ---------- 拼音首字母 ----------
+   让"tb"能搜到"淘宝"、"zsyh"能搜到"招商银行"。
+   只为解决"不切输入法也能搜"这一件事，所以只做首字母，不存全拼。 */
+/* 多音字补充：只收「首字母不同」的常见字，
+   否则"银行"会被读成 yínxíng，"gsyh"就搜不到了。
+   代价是误匹配（搜 h 会命中"行程"），但搜索宁可多匹配不可漏匹配。 */
+var PY_EXTRA = {
+  h: '行',
+  k: '会',
+  z: '长重传藏曾',
+  c: '长重传藏曾',
+  d: '调弹',
+  j: '校',
+  y: '乐',
+  p: '便',
+  w: '恶'
+};
+var _pyMap = null;
+function pyMap(){
+  if (_pyMap) return _pyMap;
+  _pyMap = {};
+  var k, g, i;
+  for (k in PY_GROUPS){
+    g = PY_GROUPS[k];
+    for (i = 0; i < g.length; i++) _pyMap[g[i]] = k;
+  }
+  /* 多音字：一个字指向多个首字母，用数组存 */
+  for (k in PY_EXTRA){
+    g = PY_EXTRA[k];
+    for (i = 0; i < g.length; i++){
+      var ch = g[i], cur = _pyMap[ch];
+      if (typeof cur === 'string'){
+        if (cur.indexOf(k) === -1) _pyMap[ch] = cur + k;
+      }
+    }
+  }
+  return _pyMap;
+}
+/* 返回该字符串的「所有可能首字母串」——多音字会分叉，
+   但分叉数量有限（每个多音字最多 2 个读法），用集合去重即可。
+   例："银行" → ["yx", "yh"]，"工商银行" → ["gsyx", "gsyh"] */
+function pyInitialsAll(str){
+  if (!str) return [];
+  var m = pyMap();
+  var parts = [''];
+  for (var i = 0; i < str.length; i++){
+    var c = str[i], opts;
+    if (c >= 'a' && c <= 'z') opts = c;
+    else if (c >= 'A' && c <= 'Z') opts = c.toLowerCase();
+    else if (c >= '0' && c <= '9') opts = c;
+    else opts = m[c] || '';
+    if (!opts) continue;              /* 非汉字且非字母数字：跳过 */
+    if (opts.length === 1){
+      for (var j = 0; j < parts.length; j++) parts[j] += opts;
+    } else {
+      var next = [];
+      for (var j2 = 0; j2 < parts.length; j2++){
+        for (var o = 0; o < opts.length; o++) next.push(parts[j2] + opts[o]);
+      }
+      parts = next;
+      if (parts.length > 32) parts = parts.slice(0, 32);  /* 防御性上限 */
+    }
+  }
+  return parts;
+}
+function pyInitials(str){
+  var a = pyInitialsAll(str);
+  return a.length ? a[0] : '';
+}
+
+/* 重复密码：按密码值分组，组内 >1 条即为重复。
+   只在内存里做，不新增任何存储字段。 */
+var dupInfo = {};
+function computeDup(){
+  dupInfo = {};
+  var m = {}, i, e, k, arr;
+  var list = activeEntries();
+  for (i = 0; i < list.length; i++){
+    e = list[i];
+    if (!e.password) continue;
+    (m[e.password] = m[e.password] || []).push(e);
+  }
+  for (k in m){
+    arr = m[k];
+    if (arr.length < 2) continue;
+    for (i = 0; i < arr.length; i++){
+      dupInfo[arr[i].id] = {
+        n: arr.length,
+        names: arr.filter(function(x){ return x.id !== arr[i].id; }).map(function(x){ return x.name; })
+      };
+    }
+  }
+}
+
+function activeEntries(){
+  return entries.filter(function(e){ return !e.deletedAt; });
+}
+function findEntry(id){
+  for (var i = 0; i < entries.length; i++) if (entries[i].id === id) return entries[i];
+  return null;
+}
+
+/* ================= 首次欢迎引导 ================= */
+function syncWelcomeBar(){
+  var bar = $('#welcomeBar');
+  if (!bar) return;
+  bar.hidden = !!settings.welcomeSeen;
+}
+$('#welcomeHelp').addEventListener('click', function(){
+  openScrim('#helpOverlay');
+});
+$('#welcomeClose').addEventListener('click', function(){
+  settings.welcomeSeen = 1;
+  saveSettings();
+  syncWelcomeBar();
+});
+
+/* ================= 光场暂停 ================= */
+/* 锁定或页面不可见时暂停光场动画：此时它被完全遮住，谁也看不见，
+   但动画一帧没停 —— 手机锁屏放兜里时 GPU 仍满载，是发热耗电的主场景。 */
+function syncFxPause(){
+  var paused = document.hidden || !isUnlocked;
+  document.documentElement.classList.toggle('fx-paused', paused);
+}
+document.addEventListener('visibilitychange', syncFxPause);
+
+/* ================= 主题 ================= */
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  try{ localStorage.setItem(LS_THEME, t); }catch(e){}
+  syncThemeColor();
+}
+/* theme-color 必须跟随实际画布色。用探针取解析后的 rgb 而不是硬编码 hex，
+   这样以后改令牌，手机浏览器地址栏不会和页面脱节。 */
+function syncThemeColor(){
+  var meta = document.querySelector('meta[name=theme-color]');
+  if (!meta) return;
+  var probe = document.createElement('div');
+  probe.style.cssText = 'position:absolute;width:0;height:0;color:var(--bg-canvas)';
+  document.body.appendChild(probe);
+  var c = getComputedStyle(probe).color;
+  probe.remove();
+  if (c) meta.setAttribute('content', c);
+}
+/* ---------- 主题清单（预览卡的染色数据）----------
+   pv 是预览卡局部变量：底色 / 主色块 / 玻璃色 / 光斑色，
+   卡片用它渲染一个迷你界面 —— 新增主题只要往列表里加一行。 */
+var THEMES = [
+  { id:'dark',       name:'深空',     pv:'--bg-canvas:oklch(14% .012 245);--tc-accent:oklch(72% .12 240);--tc-glass:rgba(190,210,240,.14);--tc-glow:oklch(45% .1 245);' },
+  { id:'light',      name:'晨雾',     pv:'--bg-canvas:oklch(92.5% .004 248);--tc-accent:oklch(45% .15 240);--tc-glass:rgba(255,255,255,.62);--tc-glow:oklch(80% .08 240);' },
+  { id:'pink-drink', name:'饮品粉',   pv:'--bg-canvas:oklch(81% .075 2);--tc-accent:oklch(30% .05 10);--tc-glass:rgba(255,255,255,.5);--tc-glow:oklch(70% .1 0);' },
+  { id:'pink-ice',   name:'草莓雪',   pv:'--bg-canvas:oklch(93% .028 2);--tc-accent:oklch(54% .15 5);--tc-glass:rgba(255,255,255,.62);--tc-glow:oklch(85% .06 0);' },
+  { id:'green-gold', name:'咖啡绿金', pv:'--bg-canvas:oklch(68% .085 60);--tc-accent:oklch(38% .10 155);--tc-glass:rgba(255,255,255,.45);--tc-glow:oklch(80% .08 60);' },
+  { id:'starbucks',  name:'星巴克',   pv:'--bg-canvas:oklch(94% .02 150);--tc-accent:oklch(40% .10 155);--tc-glass:rgba(255,255,255,.55);--tc-glow:oklch(80% .07 150);' },
+  { id:'coffee',     name:'咖啡棕',   pv:'--bg-canvas:oklch(19% .035 60);--tc-accent:oklch(52% .125 55);--tc-glass:rgba(255,220,190,.14);--tc-glow:oklch(38% .06 55);' },
+  { id:'midnight',   name:'暗夜',     pv:'--bg-canvas:oklch(15% .015 285);--tc-accent:oklch(72% .055 275);--tc-glass:rgba(190,200,235,.15);--tc-glow:oklch(30% .045 285);' }
+];
+function themeName(id){
+  for (var i = 0; i < THEMES.length; i++) if (THEMES[i].id === id) return THEMES[i].name;
+  return id;
+}
+function renderThemes(){
+  var cur = document.documentElement.getAttribute('data-theme');
+  var grid = $('#themeGrid');
+  if (!grid) return;
+  grid.innerHTML = THEMES.map(function(t){
+    var on = t.id === cur;
+    return '<button class="theme-card' + (on ? ' on' : '') + '" data-t="' + t.id + '"' +
+      (t.pv ? ' style="' + t.pv + '"' : '') + ' aria-pressed="' + on + '">' +
+      '<span class="tc-view" aria-hidden="true"><i class="tc-glow"></i><i class="tc-glass"></i><i class="tc-bar"></i><i class="tc-btn"></i></span>' +
+      '<span class="tc-name">' + t.name + '</span>' +
+      (on ? '<i class="tc-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5 10-11"/></svg></i>' : '') +
+      '</button>';
+  }).join('');
+}
+$('#themeGrid').addEventListener('click', function(ev){
+  var b = ev.target.closest('.theme-card');
+  if (!b) return;
+  var id = b.getAttribute('data-t');
+  if (id === document.documentElement.getAttribute('data-theme')) return;
+  applyTheme(id);
+  renderThemes();
+  toast('已切换到「' + themeName(id) + '」');
+});
+$('#themeClose').addEventListener('click', function(){ closeScrim('#themeOverlay'); });
+$('#btnTheme').addEventListener('click', function(){ renderThemes(); openScrim('#themeOverlay'); });
+
+function initTheme(){
+  var saved = null;
+  try{ saved = localStorage.getItem(LS_THEME); }catch(e){}
+  for (var ti = 0; ti < THEMES.length; ti++){
+    if (saved === THEMES[ti].id){ applyTheme(saved); return; }
+  }
+  var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  applyTheme(prefersLight ? 'light' : 'dark');
+}
+/* 旧的「两点循环切换」已由主题选择弹层取代 */
+
+/* ================= 锁屏 ================= */
+function clearReveals(){
+  for (var k in revealTimers){ if (revealTimers.hasOwnProperty(k)) clearTimeout(revealTimers[k]); }
+  revealTimers = {};
+  acctOpen = {};
+}
+function startCooldown(){
+  clearInterval(cdTimer);
+  var btn = $('#lockBtn');
+  var tick = function(){
+    var left = Math.ceil((waitUntil - Date.now()) / 1000);
+    if (left <= 0){
+      clearInterval(cdTimer);
+      btn.disabled = false;
+      btn.textContent = firstRun ? '创建并开始使用' : '解锁';
+      $('#lockErr').textContent = '';
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = '请等待 ' + left + ' 秒';
+    $('#lockErr').textContent = '连续输错 ' + wrongCount + ' 次，稍后再试';
+  };
+  tick();
+  cdTimer = setInterval(tick, 500);
+}
+function lockBusy(b){
+  var btn = $('#lockBtn');
+  btn.disabled = b;
+  btn.textContent = b ? '正在处理…' : (firstRun ? '创建并开始使用' : '解锁');
+}
+function lockError(msg){
+  lockBusy(false);
+  $('#lockErr').textContent = msg;
+}
+function showLock(first){
+  firstRun = !!first;
+  isUnlocked = false;
+  syncFxPause();
+  entries = []; masterPw = '';
+  clearReveals();
+  clearInterval(cdTimer);
+  clearTimeout(autoLockTimer);
+  selectedId = null;
+  closeAllScrims();
+  confirmOk = null;
+  /* 把所有弹层里填过的内容清掉 —— 弹层虽然 hidden 了，但 input.value
+     里的明文密码还躺在 DOM 里。锁定状态下页面上不该残留任何明文。
+     （搜索框在主界面顶栏里，不在 .scrim 内，不受影响。） */
+  $$('.scrim input, .scrim textarea, .scrim select').forEach(function(el){
+    if (el.type === 'checkbox' || el.type === 'radio' || el.type === 'submit' || el.type === 'button') return;
+    el.value = '';
+  });
+  /* 编辑表单的"显示密码"状态也要复位，否则解锁后新建记录会直接明文 */
+  var _fpw = $('#fPw'); if (_fpw) _fpw.type = 'password';
+  var _sb = $('#strengthBox'); if (_sb) _sb.hidden = true;
+  var _ee = $('#editErr'); if (_ee) _ee.textContent = '';
+  editingId = null; moreTargetId = null;
+  var _toast = $('#toast'); if (_toast) _toast.classList.remove('show');
+  $('#mainScreen').hidden = true;
+  $('#lockScreen').hidden = false;
+  $('#lockFirstWrap').hidden = !firstRun;
+  $('#lockPw2Wrap').hidden = !firstRun;
+  $('#hintWrap').hidden = !firstRun;
+  $('#lockTitle').textContent = firstRun ? '建立你的CipherBox' : 'CipherBox';
+  $('#lockSub').textContent = firstRun ? '设置一个主密码，用来加密全部数据' : '输入主密码解锁';
+  $('#lockPwLabel').textContent = firstRun ? '设置主密码' : '主密码';
+  $('#lockPw').value = ''; $('#lockPw2').value = ''; $('#hintInput').value = '';
+  $('#lockErr').textContent = '';
+  $('#lockPw').setAttribute('autocomplete', firstRun ? 'new-password' : 'current-password');
+
+  var v = getVault();
+  var hint = v && v.hint;
+  var lh = $('#lockHint');
+  if (!firstRun && hint){
+    lh.textContent = '提示：' + hint;
+    lh.hidden = false;
+  } else lh.hidden = true;
+
+  if (!firstRun && Date.now() < waitUntil) startCooldown();
+  else lockBusy(false);
+
+  setTimeout(function(){ $('#lockPw').focus(); }, 80);
+}
+async function onLockSubmit(){
+  if (isUnlocked) return;
+  if (!firstRun && Date.now() < waitUntil){
+    $('#lockErr').textContent = '请等 ' + Math.ceil((waitUntil - Date.now()) / 1000) + ' 秒后再试';
+    return;
+  }
+  var pw = $('#lockPw').value;
+  if (firstRun){
+    var pw2 = $('#lockPw2').value;
+    if (pw.length < 6) return lockError('主密码至少 6 位');
+    if (pw !== pw2) return lockError('两次输入的密码不一致');
+    lockBusy(true);
+    try{
+      entries = []; masterPw = pw;
+      var blob = await CRYPTO.encryptObj({ entries: entries }, pw);
+      blob.hint = $('#hintInput').value.trim();
+      localStorage.setItem(LS_VAULT, JSON.stringify(blob));
+      settings.lastExportAt = Date.now();
+      settings.snoozeUntil = 0;
+      saveSettings();
+      enterMain();
+      toast('CipherBox已建立，来添加第一条账号');
+    }catch(e){ lockError('创建失败：' + e.message); }
+  } else {
+    var v = getVault();
+    if (!v) { showLock(true); return; }
+    lockBusy(true);
+    try{
+      var data = await CRYPTO.decryptObj(v, pw);
+      entries = (data && data.entries) || [];
+      masterPw = pw;
+      /* KDF 升级：旧版本用 150000 次迭代加密，现在标准 600000。
+         趁主密码在手，解锁后静默重加密一次 —— 文件被拷走后，
+         离线爆破主密码的成本随之翻两番。
+         js 降级格式不动（纯 JS 迭代慢近百倍，拉高会卡死解锁）。 */
+      if (v && v.fmt === 'wc' && (v.iters || 0) < CRYPTO.KDF_ITERS_WC){
+        persist();
+      }
+      wrongCount = 0; waitUntil = 0; clearInterval(cdTimer);
+      enterMain();
+    }catch(e){
+      wrongCount++;
+      if (wrongCount >= 5){
+        waitUntil = Date.now() + 10000;
+        startCooldown();
+      } else {
+        lockError('主密码不对，请重试（还可以试 ' + (5 - wrongCount) + ' 次）');
+      }
+    }
+  }
+}
+$('#lockBtn').addEventListener('click', onLockSubmit);
+$('#lockPw').addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); onLockSubmit(); } });
+$('#lockPw2').addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); onLockSubmit(); } });
+
+/* ================= 主界面 ================= */
+function enterMain(){
+  isUnlocked = true;
+  $('#lockScreen').hidden = true;
+  $('#mainScreen').hidden = false;
+  syncFxPause();
+  syncWelcomeBar();
+  $('#search').value = '';
+  selectedCat = '';
+  selectedId = null;
+
+  var cutoff = Date.now() - 30 * 86400000;
+  var n0 = entries.length;
+  entries = entries.filter(function(e){ return !e.deletedAt || e.deletedAt > cutoff; });
+  if (entries.length !== n0) persist().catch(function(){});
+
+  $('#autolockSel').value = String(settings.autoLockMin);
+  updateDataStats();
+  var _lw = $('#lockWarn'); if (_lw) _lw.hidden = !!settings.autoLockMin;
+  render();
+  renderDetail();
+  resetAutoLock();
+}
+
+function catOf(){
+  var cats = [];
+  entries.forEach(function(e){
+    if (!e.deletedAt && e.category && cats.indexOf(e.category) < 0) cats.push(e.category);
+  });
+  return cats;
+}
+function catCount(c){
+  return activeEntries().filter(function(e){ return e.category === c; }).length;
+}
+
+function renderCats(){
+  var row = $('#catRow');
+  var cats = catOf();
+  if (!cats.length){ row.hidden = true; selectedCat = ''; return; }
+  row.hidden = false;
+  var html = '<button class="chip' + (selectedCat === '' ? ' on' : '') + '" data-cat="" aria-pressed="' + (selectedCat === '') + '">全部<span class="cnt">' + activeEntries().length + '</span></button>';
+  cats.forEach(function(c){
+    html += '<button class="chip' + (selectedCat === c ? ' on' : '') + '" data-cat="' + esc(c) + '" aria-pressed="' + (selectedCat === c) + '">' + esc(c) + '<span class="cnt">' + catCount(c) + '</span></button>';
+  });
+  row.innerHTML = html;
+  syncCatFade();
+}
+
+/* 分类行滚到最右时取消右侧渐隐，否则最后一个 chip 会被蒙版永久压暗 */
+function syncCatFade(){
+  var row = $('#catRow');
+  if (!row) return;
+  var atEnd = row.scrollLeft + row.clientWidth >= row.scrollWidth - 2;
+  row.setAttribute('data-atend', atEnd ? '1' : '0');
+}
+$('#catRow').addEventListener('scroll', syncCatFade, { passive: true });
+window.addEventListener('resize', syncCatFade);
+
+/* 设置面板「数据」信息卡：打开设置时刷新快照 */
+function updateDataStats(){
+  var g = function(id){ return document.getElementById(id); };
+  if (!g('dsCount')) return;
+  var active = activeEntries();
+  g('dsCount').textContent = active.length + ' 条';
+  var mod = 0;
+  entries.forEach(function(e){ if ((e.updatedAt || 0) > mod) mod = e.updatedAt || 0; });
+  g('dsModified').textContent = mod ? (relTime(mod) || '刚刚') : '—';
+  g('dsBackup').textContent = settings.lastExportAt ? (relTime(settings.lastExportAt) || '刚刚') : '从未';
+  var lm = settings.lastMerge;
+  g('dsMerge').textContent = lm ? ((relTime(lm.at) || '刚刚') + '（+' + (lm.added || 0) + ' ↑' + (lm.updated || 0) + '）') : '从未';
+  var size = 0;
+  try { size = new Blob([JSON.stringify(getVault())]).size; } catch (e) { size = 0; }
+  g('dsSize').textContent = size ? (size / 1024).toFixed(1) + ' KB' : '—';
+}
+
+function checkBackupBanner(){
+  var need = activeEntries().length > 0 &&
+    Date.now() - settings.lastExportAt > 30 * 86400000 &&
+    Date.now() > (settings.snoozeUntil || 0);
+  $('#backupBanner').hidden = !need;
+  var note = $('#exportNote');
+  if (note){
+    /* 显示真实的相对时间 —— 不再说「今天已导出」：
+       昨晚导出的到今天中午不满 24 小时，说「今天」是误导 */
+    if (!settings.lastExportAt){
+      note.textContent = '';
+    } else {
+      var gap = Date.now() - settings.lastExportAt;
+      var rel = gap >= 86400000 ? (Math.floor(gap / 86400000) + ' 天前')
+              : gap >= 3600000  ? (Math.floor(gap / 3600000) + ' 小时前')
+              : (Math.max(Math.floor(gap / 60000), 1) + ' 分钟前');
+      note.textContent = '上次导出：' + rel;
+    }
+  }
+}
+
+function cardHTML(e, idx){
+  var hasUrl = /^https?:\/\//i.test(e.url || '');
+  var initial = (e.name || '?').trim().charAt(0) || '?';
+  var revealed = !!revealTimers[e.id];
+  var acctShown = !!acctOpen[e.id];
+  var sel = (e.id === selectedId) ? ' selected' : '';
+
+  return '<article class="card' + (e.pinned ? ' pinned' : '') + sel + '" data-id="' + e.id + '" ' +
+      'role="listitem" tabindex="0" style="--i:' + Math.min(idx, 12) + '" ' +
+      'aria-label="' + esc(e.name) + (e.category ? '，分类 ' + esc(e.category) : '') + '">' +
+    '<div class="card-head">' +
+      '<div class="avatar" aria-hidden="true">' + esc(initial) + '</div>' +
+      '<div class="card-body">' +
+        '<h3 class="card-title">' + esc(e.name) + '</h3>' +
+        '<div class="card-meta">' +
+          '<span>' + (relTime(e.updatedAt) || '刚创建') + '</span>' +
+          (e.category ? '<span class="sep">·</span><span class="badge">' + esc(e.category) + '</span>' : '') +
+          (dupInfo[e.id]
+            ? '<span class="dup-flag" title="这个密码还用在：' + esc(dupInfo[e.id].names.join('、')) + '">密码重复 · ' + dupInfo[e.id].n + ' 处</span>'
+            : '') +
+        '</div>' +
+      '</div>' +
+      (hasUrl ? '<a class="card-link" href="' + esc(e.url) + '" target="_blank" rel="noopener noreferrer" ' +
+        'aria-label="打开 ' + esc(e.name) + ' 网站" title="打开网站">' + SVG.external + '</a>' : '') +
+    '</div>' +
+    (e.desc ? '<p class="card-desc">' + esc(e.desc) + '</p>' : '') +
+    '<div class="card-sep"></div>' +
+    '<div class="secret-row">' +
+      '<span class="secret-label">账号</span>' +
+      '<span class="secret-val mono' + (acctShown ? '' : ' masked') + '" data-acct>' +
+        (acctShown ? esc(e.account) : esc(maskAccount(e.account))) +
+      '</span>' +
+      '<button class="act" data-act="toggle-acct" style="flex:0 0 auto;padding:0 12px" ' +
+        'aria-label="' + (acctShown ? '隐藏账号' : '显示完整账号') + '">' +
+        (acctShown ? SVG.eyeOff : SVG.eye) + '</button>' +
+    '</div>' +
+    '<div class="secret-row" style="margin-top:9px">' +
+      '<span class="secret-label">密码</span>' +
+      '<span class="secret-val mono' + (revealed ? ' revealed' : ' masked') + '" data-pw>' +
+        (revealed ? esc(e.password) : (e.password ? '••••••••••' : '未设置')) +
+      '</span>' +
+    '</div>' +
+    '<div class="actions" data-count="4">' +
+      '<button class="act" data-act="copy-account" aria-label="复制账号">' + SVG.copy + '<span class="act-txt">复制账号</span></button>' +
+      '<button class="act" data-act="copy-pw" aria-label="复制密码">' + SVG.copy + '<span class="act-txt">复制密码</span></button>' +
+      '<button class="act reveal" data-act="eye" aria-label="' + (revealed ? '隐藏密码' : '显示密码') + '">' + (revealed ? SVG.eyeOff : SVG.eye) + '<span class="act-txt">' + (revealed ? '隐藏' : '显示') + '</span></button>' +
+      '<button class="act more" data-act="more" aria-label="更多操作">' + SVG.more + '</button>' +
+    '</div>' +
+  '</article>';
+}
+
+function sortEntries(a, b){
+  var pa = a.pinned ? 1 : 0, pb = b.pinned ? 1 : 0;
+  if (pa !== pb) return pb - pa;
+  return (b.updatedAt || 0) - (a.updatedAt || 0);
+}
+
+function render(){
+  computeDup();
+  var q = ($('#search').value || '').trim().toLowerCase();
+  var active = activeEntries();
+  var items = active.filter(function(e){ return !selectedCat || e.category === selectedCat; });
+  if (q){
+    /* 查询词是纯字母数字时，额外走一遍拼音首字母匹配：
+       "tb" → 淘宝、"zsyh" → 招商银行。中文查询词不受影响。 */
+    var abbr = /^[a-z0-9]+$/.test(q);
+    items = items.filter(function(e){
+      var fields = [e.name, e.account, e.desc, e.url, e.category];
+      var hit = fields.some(function(v){
+        return (v || '').toLowerCase().indexOf(q) !== -1;
+      });
+      if (!hit && abbr){
+        var py = pyInitialsAll(fields.join('\u0001'));
+        for (var pi = 0; pi < py.length && !hit; pi++){
+          if (py[pi].indexOf(q) !== -1) hit = true;
+        }
+      }
+      return hit;
+    });
+  }
+  items.sort(sortEntries);
+
+  /* 分组：置顶 / 最近 30 天 / 更早 */
+  var html = '';
+  var idx = 0;
+  var groups = [[], [], []];
+  var month = Date.now() - 30 * 86400000;
+  items.forEach(function(e){
+    if (e.pinned) groups[0].push(e);
+    else if ((e.updatedAt || 0) >= month) groups[1].push(e);
+    else groups[2].push(e);
+  });
+  var labels = ['置顶', '最近', '更早'];
+  groups.forEach(function(g, gi){
+    if (!g.length) return;
+    var mark = gi === 0 ? '<span class="mark">★</span>' : '';
+    html += '<div class="group-head">' + mark + labels[gi] + '</div>';
+    g.forEach(function(e){ html += cardHTML(e, idx++); });
+  });
+
+  $('#mainList').innerHTML = html;
+  $('#empty').hidden = active.length > 0;
+  if (active.length > 0 && items.length === 0){
+    $('#noResult').hidden = false;
+    $('#noResultSub').textContent = q ? ('没有包含「' + q + '」的记录') : ('「' + selectedCat + '」分类下暂无记录');
+  } else {
+    $('#noResult').hidden = true;
+  }
+
+  var n = active.length;
+  $('#statusCount').textContent = n + ' 条记录';
+  var dupN = Object.keys(dupInfo).length;
+  $('#stat').textContent = n
+    ? ('共 ' + n + ' 条记录 · 已加密保存在本机' + (dupN ? ' · ' + dupN + ' 条密码重复' : ''))
+    : '';
+
+  renderCats();
+  checkBackupBanner();
+}
+
+/* ================= 卡片交互 ================= */
+function flashDone(btn, label){
+  if (!btn) return;
+  var old = btn.innerHTML;
+  btn.classList.add('done');
+  btn.innerHTML = SVG.check + (label || '已复制');
+  setTimeout(function(){
+    btn.classList.remove('done');
+    btn.innerHTML = old;
+  }, 1400);
+}
+
+function toggleEye(id, btn){
+  var e = findEntry(id);
+  if (!e) return;
+  if (!e.password){ toast('这条记录没有存密码'); return; }
+  var card = $('.card[data-id="' + id + '"]');
+  var span = card ? card.querySelector('[data-pw]') : null;
+  if (revealTimers[id]){
+    clearTimeout(revealTimers[id]);
+    delete revealTimers[id];
+    if (span){
+      span.textContent = '••••••••••';
+      span.className = 'secret-val mono masked';
+    }
+    if (btn) btn.innerHTML = SVG.eye + '显示';
+  } else {
+    if (span){
+      span.textContent = e.password;
+      span.className = 'secret-val mono revealed';
+    }
+    if (btn) btn.innerHTML = SVG.eyeOff + '隐藏';
+    revealTimers[id] = setTimeout(function(){
+      delete revealTimers[id];
+      var c2 = $('.card[data-id="' + id + '"]');
+      var s2 = c2 ? c2.querySelector('[data-pw]') : null;
+      if (s2){ s2.textContent = '••••••••••'; s2.className = 'secret-val mono masked'; }
+      var b2 = c2 ? c2.querySelector('[data-act="eye"]') : null;
+      if (b2) b2.innerHTML = SVG.eye + '显示';
+      renderDetail();
+    }, 20000);
+  }
+  renderDetail();
+}
+
+function toggleAcct(id, btn){
+  var e = findEntry(id);
+  if (!e) return;
+  acctOpen[id] = !acctOpen[id];
+  var card = $('.card[data-id="' + id + '"]');
+  var span = card ? card.querySelector('[data-acct]') : null;
+  if (span){
+    span.textContent = acctOpen[id] ? e.account : maskAccount(e.account);
+    span.className = 'secret-val mono' + (acctOpen[id] ? '' : ' masked');
+  }
+  if (btn) btn.innerHTML = acctOpen[id] ? SVG.eyeOff : SVG.eye;
+}
+
+function openMore(id){
+  var e = findEntry(id);
+  if (!e) return;
+  moreTargetId = id;
+  $('#moreTitle').textContent = e.name;
+  var html = '';
+  html += '<button data-m="pin">' + (e.pinned ? SVG.pinOff : SVG.pin) +
+    '<span class="m-label">' + (e.pinned ? '取消置顶' : '置顶到最前') + '</span></button>';
+  if (/^https?:\/\//i.test(e.url || '')){
+    html += '<button data-m="open">' + SVG.external + '<span class="m-label">打开网站</span></button>';
+  }
+  html += '<button data-m="edit">' + SVG.edit + '<span class="m-label">编辑</span></button>';
+  html += '<button data-m="del" class="danger">' + SVG.trash + '<span class="m-label">删除</span></button>';
+  $('#moreMenu').innerHTML = html;
+  openScrim('#moreOverlay');
+}
+
+$('#mainList').addEventListener('click', async function(ev){
+  var btn = ev.target.closest('[data-act]');
+  var card = ev.target.closest('.card');
+  if (!card) return;
+  var id = card.getAttribute('data-id');
+  var e = findEntry(id);
+  if (!e) return;
+
+  if (!btn){
+    /* 点卡片空白处：桌面上打开详情，手机上聚焦 */
+    selectedId = id;
+    if (window.matchMedia('(min-width:1024px)').matches){
+      render();
+      renderDetail();
+    }
+    return;
+  }
+  var act = btn.getAttribute('data-act');
+
+  if (act === 'eye'){ toggleEye(id, btn); }
+  else if (act === 'toggle-acct'){ toggleAcct(id, btn); }
+  else if (act === 'more'){ openMore(id); }
+  else if (act === 'copy-account'){
+    var ok = await copyText(e.account);
+    toast(ok ? '账号已复制' : '复制失败，请手动选中');
+    if (ok) flashDone(btn, '已复制');
+    e.updatedAt = Date.now();
+    persist().catch(function(){});
+  }
+  else if (act === 'copy-pw'){
+    if (!e.password){ toast('这条记录没有存密码'); return; }
+    var ok2 = await copyText(e.password);
+    toast(ok2 ? '密码已复制' : '复制失败，请手动选中');
+    if (ok2) flashDone(btn, '已复制');
+    e.updatedAt = Date.now();
+    persist().catch(function(){});
+  }
+});
+
+$('#mainList').addEventListener('keydown', function(ev){
+  var card = ev.target.closest ? ev.target.closest('.card') : null;
+  if (!card) return;
+  var id = card.getAttribute('data-id');
+  var e = findEntry(id);
+  if (!e) return;
+  if (ev.key === 'Enter' || ev.key === ' '){
+    ev.preventDefault();
+    selectedId = id;
+    if (window.matchMedia('(min-width:1024px)').matches){ render(); renderDetail(); }
+    else openMore(id);
+  } else if (ev.key === 'c' || ev.key === 'C'){
+    ev.preventDefault();
+    copyText(e.password).then(function(ok){ toast(ok ? '密码已复制' : '复制失败'); });
+  }
+});
+
+$('#catRow').addEventListener('click', function(ev){
+  var btn = ev.target.closest('[data-cat]');
+  if (!btn) return;
+  selectedCat = btn.getAttribute('data-cat');
+  render();
+});
+$('#search').addEventListener('input', render);
+$('#clearFilters').addEventListener('click', function(){
+  $('#search').value = ''; selectedCat = ''; render();
+});
+$('#fab').addEventListener('click', function(){ openEdit(null); });
+$('#emptyAdd').addEventListener('click', function(){ openEdit(null); });
+$('#btnLock').addEventListener('click', function(){ showLock(false); });
+
+$('#bannerExport').addEventListener('click', function(){ openExport(); });
+$('#bannerClose').addEventListener('click', function(){
+  settings.snoozeUntil = Date.now() + 7 * 86400000;
+  saveSettings();
+  $('#backupBanner').hidden = true;
+  toast('7 天内不再提醒');
+});
+
+/* ================= 更多菜单 ================= */
+$('#moreMenu').addEventListener('click', async function(ev){
+  var btn = ev.target.closest('[data-m]');
+  if (!btn) return;
+  var m = btn.getAttribute('data-m');
+  var id = moreTargetId;
+  var e = findEntry(id);
+  if (!e) return;
+  closeScrim('#moreOverlay');
+
+  if (m === 'pin'){
+    e.pinned = !e.pinned;
+    await persist();
+    render(); renderDetail();
+    toast(e.pinned ? '已置顶' : '已取消置顶');
+  } else if (m === 'edit'){
+    openEdit(id);
+  } else if (m === 'open'){
+    window.open(e.url, '_blank', 'noopener');
+  } else if (m === 'del'){
+    confirmDlg('把「' + e.name + '」移到回收站？30 天内可以恢复。', '移到回收站', async function(){
+      e.deletedAt = Date.now();
+      if (selectedId === id) selectedId = null;
+      await persist();
+      render(); renderDetail();
+      toast('已移入回收站');
+    });
+  }
+});
+$('#moreClose').addEventListener('click', function(){ closeScrim('#moreOverlay'); });
+
+/* ================= 桌面端详情面板 ================= */
+function renderDetail(){
+  var box = $('#detail');
+  if (!box) return;
+  if (!selectedId){ box.innerHTML = detailEmptyHTML(); return; }
+  var e = findEntry(selectedId);
+  if (!e){ selectedId = null; box.innerHTML = detailEmptyHTML(); return; }
+
+  var initial = (e.name || '?').trim().charAt(0) || '?';
+  var revealed = !!revealTimers[selectedId];
+  var acctShown = !!acctOpen[selectedId];
+
+  box.innerHTML = '<div class="detail-inner">' +
+    '<div class="d-hero">' +
+      '<div class="avatar" aria-hidden="true">' + esc(initial) + '</div>' +
+      '<div style="min-width:0">' +
+        '<h2>' + esc(e.name) + '</h2>' +
+        '<div class="card-meta">' +
+          '<span>' + (relTime(e.updatedAt) || '刚创建') + '</span>' +
+          (e.category ? '<span class="sep">·</span><span class="badge">' + esc(e.category) + '</span>' : '') +
+          (dupInfo[e.id]
+            ? '<span class="dup-flag" title="这个密码还用在：' + esc(dupInfo[e.id].names.join('、')) + '">密码重复 · ' + dupInfo[e.id].n + ' 处</span>'
+            : '') +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="d-block">' +
+      '<p class="d-block-title">登录信息</p>' +
+      '<div class="d-field">' +
+        '<p class="d-field-label">账号</p>' +
+        '<div class="d-field-row">' +
+          '<span class="d-field-value mono' + (acctShown ? '' : ' masked') + '" data-dacct>' +
+            (acctShown ? esc(e.account) : esc(maskAccount(e.account))) + '</span>' +
+          '<span class="d-inline-acts">' +
+            '<button data-dact="toggle-acct" class="' + (acctShown ? 'on' : '') + '" aria-label="显示或隐藏账号">' +
+              (acctShown ? SVG.eyeOff : SVG.eye) + '<span class="d-act-txt">' + (acctShown ? '隐藏' : '显示') + '</span></button>' +
+            '<button data-dact="copy-account" aria-label="复制账号">' + SVG.copy + '<span class="d-act-txt">复制</span></button>' +
+          '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="d-field">' +
+        '<p class="d-field-label">密码</p>' +
+        (dupInfo[e.id]
+          ? '<p class="dup-note">这个密码还用在：' + esc(dupInfo[e.id].names.join('、')) + '</p>'
+          : '') +
+        '<div class="d-field-row">' +
+          '<span class="d-field-value mono' + (revealed ? ' revealed' : ' masked') + '" data-dpw>' +
+            (revealed ? esc(e.password) : (e.password ? '••••••••••••' : '未设置')) + '</span>' +
+          '<span class="d-inline-acts">' +
+            '<button data-dact="eye" class="' + (revealed ? 'on' : '') + '" aria-label="显示或隐藏密码">' +
+              (revealed ? SVG.eyeOff : SVG.eye) + '<span class="d-act-txt">' + (revealed ? '隐藏' : '显示') + '</span></button>' +
+            '<button data-dact="copy-pw" aria-label="复制密码">' + SVG.copy + '<span class="d-act-txt">复制</span></button>' +
+          '</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+
+    (e.desc
+      ? '<div class="d-block"><p class="d-block-title">简介</p><p class="d-desc">' + esc(e.desc) + '</p></div>'
+      : '') +
+
+    '<div class="d-block">' +
+      '<p class="d-block-title">详情</p>' +
+      '<div class="d-grid">' +
+        '<div class="d-metric"><div class="k">创建时间</div><div class="v">' + fmtDate(e.createdAt) + '</div></div>' +
+        '<div class="d-metric"><div class="k">最后更新</div><div class="v">' + (relTime(e.updatedAt) || '—') + '</div></div>' +
+        (e.url ? '<div class="d-metric" style="grid-column:1/-1"><div class="k">网址</div><div class="v" style="word-break:break-all;font-size:var(--text-sm)">' + esc(e.url) + '</div></div>' : '') +
+      '</div>' +
+    '</div>' +
+
+    '<div class="d-actions">' +
+      (e.pinned
+        ? '<button class="btn ghost" data-dact="unpin">取消置顶</button>'
+        : '<button class="btn ghost" data-dact="pin">置顶</button>') +
+      '<button class="btn brand" data-dact="edit">编辑</button>' +
+      (e.url ? '<button class="btn ghost" data-dact="open">打开网站</button>' : '') +
+      '<button class="btn danger" data-dact="del">删除</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function detailEmptyHTML(){
+  return '<div class="detail-empty"><div>' +
+    '<div class="empty-art" aria-hidden="true">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
+      '<rect x="3" y="4.5" width="18" height="15" rx="2.4"/><path d="M9 4.5v15M12.5 9h6M12.5 12.5h6M12.5 16h3.5"/></svg>' +
+    '</div>' +
+    '<h2>选一条记录</h2>' +
+    '<p>点击左侧任意一条，这里会显示账号、密码和完整信息。</p>' +
+    '</div></div>';
+}
+
+function fmtDate(ts){
+  if (!ts) return '—';
+  var d = new Date(ts);
+  var p = function(n){ return String(n).padStart(2, '0'); };
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+}
+
+$('#detail').addEventListener('click', async function(ev){
+  var btn = ev.target.closest('[data-dact]');
+  if (!btn) return;
+  var act = btn.getAttribute('data-dact');
+  var e = findEntry(selectedId);
+  if (!e) return;
+
+  if (act === 'eye'){ toggleEye(selectedId, null); }
+  else if (act === 'toggle-acct'){
+    acctOpen[selectedId] = !acctOpen[selectedId];
+    renderDetail();
+  }
+  else if (act === 'copy-account'){
+    var ok = await copyText(e.account);
+    if (ok) flashDone(btn);
+    toast(ok ? '账号已复制' : '复制失败');
+  }
+  else if (act === 'copy-pw'){
+    if (!e.password){ toast('这条记录没有存密码'); return; }
+    var ok2 = await copyText(e.password);
+    if (ok2) flashDone(btn);
+    toast(ok2 ? '密码已复制' : '复制失败');
+  }
+  else if (act === 'pin'){
+    e.pinned = true; await persist(); render(); renderDetail(); toast('已置顶');
+  }
+  else if (act === 'unpin'){
+    e.pinned = false; await persist(); render(); renderDetail(); toast('已取消置顶');
+  }
+  else if (act === 'edit'){ openEdit(selectedId); }
+  else if (act === 'open'){ window.open(e.url, '_blank', 'noopener'); }
+  else if (act === 'del'){
+    var target = e;
+    confirmDlg('把「' + target.name + '」移到回收站？30 天内可以恢复。', '移到回收站', async function(){
+      target.deletedAt = Date.now();
+      selectedId = null;
+      await persist();
+      render(); renderDetail();
+      toast('已移入回收站');
+    });
+  }
+});
+
+/* ================= 添加 / 编辑 ================= */
+function openEdit(id){
+  editingId = id;
+  var e = id ? findEntry(id) : null;
+  $('#editTitle').textContent = e ? '编辑账号' : '添加账号';
+  $('#fName').value = e ? e.name : '';
+  $('#fUrl').value = e ? (e.url || '') : '';
+  $('#fCat').value = e ? (e.category || '') : '';
+  $('#fAccount').value = e ? e.account : '';
+  $('#fPw').value = e ? e.password : '';
+  $('#fDesc').value = e ? (e.desc || '') : '';
+  $('#fPw').type = 'password';
+  $('#fPwEye').setAttribute('aria-label', '显示密码');
+  $('#fPwEye').innerHTML = SVG.eye;
+  $('#editErr').textContent = '';
+
+  var cats = catOf();
+  $('#catList').innerHTML = cats.map(function(c){ return '<option value="' + esc(c) + '"></option>'; }).join('');
+
+  updateStrength();
+  openScrim('#editOverlay');
+  setTimeout(function(){ $('#fName').focus(); }, 90);
+}
+function updateStrength(){
+  var pw = $('#fPw').value;
+  var s = scorePw(pw);
+  var box = $('#strengthBox');
+  if (!pw){ box.hidden = true; return; }
+  box.hidden = false;
+  var colors = ['', 'var(--danger)', 'var(--accent)', 'var(--success)', 'var(--success)'];
+  var bars = box.querySelectorAll('.strength-bars i');
+  for (var i = 0; i < bars.length; i++){
+    bars[i].style.background = i < s.n ? colors[s.n] : 'var(--line-soft)';
+  }
+  $('#strengthLabel').textContent = '强度：' + s.label;
+  $('#strengthLabel').style.color = colors[s.n];
+  $('#strengthTip').textContent = s.tip;
+}
+$('#fPw').addEventListener('input', updateStrength);
+
+$('#editClose').addEventListener('click', function(){ closeScrim('#editOverlay'); });
+$('#fPwEye').addEventListener('click', function(){
+  var inp = $('#fPw');
+  var show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  this.setAttribute('aria-label', show ? '隐藏密码' : '显示密码');
+  this.innerHTML = show ? SVG.eyeOff : SVG.eye;
+});
+$('#fGen').addEventListener('click', function(){
+  var inp = $('#fPw');
+  inp.value = genPw(16);
+  inp.type = 'text';
+  $('#fPwEye').setAttribute('aria-label', '隐藏密码');
+  $('#fPwEye').innerHTML = SVG.eyeOff;
+  updateStrength();
+  toast('已生成 16 位随机密码');
+});
+$('#saveBtn').addEventListener('click', async function(){
+  var name = $('#fName').value.trim();
+  var account = $('#fAccount').value.trim();
+  var pw = $('#fPw').value;
+  var errEl = $('#editErr');
+  if (!name){ errEl.textContent = '请填写网站或应用名称'; $('#fName').focus(); return; }
+  if (!account){ errEl.textContent = '请填写账号'; $('#fAccount').focus(); return; }
+  if (!pw){ errEl.textContent = '请填写密码'; $('#fPw').focus(); return; }
+  errEl.textContent = '';
+
+  var now = Date.now();
+  if (editingId){
+    var e = findEntry(editingId);
+    if (e){
+      e.name = name; e.url = $('#fUrl').value.trim();
+      e.category = $('#fCat').value.trim();
+      e.account = account; e.password = pw;
+      e.desc = $('#fDesc').value.trim(); e.updatedAt = now;
+    }
+  } else {
+    var item = {
+      id: uid(), name: name, url: $('#fUrl').value.trim(),
+      category: $('#fCat').value.trim(), pinned: false,
+      account: account, password: pw, desc: $('#fDesc').value.trim(),
+      createdAt: now, updatedAt: now
+    };
+    entries.push(item);
+    selectedId = item.id;
+  }
+  try{
+    await persist();
+    closeScrim('#editOverlay');
+    render();
+    renderDetail();
+    toast('已保存');
+  }catch(err){
+    errEl.textContent = '保存失败：' + err.message;
+  }
+});
+
+/* ================= 设置 ================= */
+$('#btnSettings').addEventListener('click', function(){
+  $('#autolockSel').value = String(settings.autoLockMin);
+  updateDataStats();
+  var _lw = $('#lockWarn'); if (_lw) _lw.hidden = !!settings.autoLockMin;
+  $('#bgLockChk').checked = !!settings.bgLock;
+  var tn = entries.filter(function(e){ return e.deletedAt; }).length;
+  $('#trashCount').textContent = tn ? tn + ' 条' : '';
+  checkBackupBanner();
+  openScrim('#settingsOverlay');
+});
+$('#settingsClose').addEventListener('click', function(){ closeScrim('#settingsOverlay'); });
+$('#autolockSel').addEventListener('change', function(){
+  settings.autoLockMin = parseInt(this.value, 10);
+  saveSettings();
+  resetAutoLock();
+  toast(settings.autoLockMin ? ('已设为 ' + settings.autoLockMin + ' 分钟无操作自动锁定') : '已关闭自动锁定');
+});
+$('#bgLockChk').addEventListener('change', function(){
+  settings.bgLock = this.checked;
+  saveSettings();
+  toast(this.checked ? '切到后台会立即锁定' : '已关闭切后台锁定');
+});
+
+/* 导出 */
+/* 生成加密备份（导出的是加密 blob，不是明文 —— 主密码仍是唯一钥匙） */
+/* 壳环境（Android App 的 WebView）检测：UA 含 "; wv)"。
+   壳里 a[download] 下载和 Web Share 都不可用，导出走原生桥 AppBridge。 */
+var IN_APP = /\bwv\b/.test(navigator.userAgent);
+function blobToB64(blob){
+  return new Promise(function(resolve){
+    try{
+      var r = new FileReader();
+      r.onload = function(){ var str = String(r.result); resolve(str.slice(str.indexOf(',') + 1)); };
+      r.onerror = function(){ resolve(null); };
+      r.readAsDataURL(blob);
+    }catch(e){ resolve(null); }
+  });
+}
+function makeBackup(){
+  var v = getVault();
+  if (!v) return null;
+  /* 元数据明文放在容器外（只暴露导出时间与来源端，不含任何记录内容），
+     导入方在解密前就能知道这份备份何时、从哪端导出 */
+  v.exportedAt = Date.now();
+  v.exportedFrom = (typeof IN_APP !== 'undefined' && IN_APP) ? 'app' : 'pc';
+  var d = new Date();
+  var name = '密码备份_' + d.getFullYear() +
+    String(d.getMonth() + 1).padStart(2, '0') +
+    String(d.getDate()).padStart(2, '0') + '.json';
+  var blob = new Blob([JSON.stringify(v, null, 2)], { type: 'application/json' });
+  return { name: name, blob: blob };
+}
+function afterExport(){
+  settings.lastExportAt = Date.now();
+  settings.snoozeUntil = 0;
+  saveSettings();
+  checkBackupBanner();
+}
+/* App 壳的原生导出在**确实写完文件**之后才调用这个 ——
+   「今天已导出」的标记只反映真实发生的导出 */
+window.__vaultAfterExport = afterExport;
+/* 去向 1：下载（保留旧函数名 —— persist 失败的兜底提示也指向它） */
+function doExport(){
+  var b = makeBackup();
+  if (!b){ toast('还没有可导出的数据'); return; }
+  /* 壳里 a[download] 下载无反应，走原生写「下载」文件夹；
+     只有原生确认成功才 afterExport —— 失败不再出现「今天已导出」 */
+  if (IN_APP && window.AppBridge && window.AppBridge.saveToDownloads){
+    blobToB64(b.blob).then(function(b64){
+      if (!b64){ toast('读取备份失败'); return; }
+      if (window.AppBridge.saveToDownloads(b.name, b64)) afterExport();
+    });
+    return;
+  }
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(b.blob);
+  a.download = b.name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  afterExport();
+  toast('备份已导出到下载');
+}
+/* 去向 2：保存到指定位置（桌面 Chrome/Edge 支持；不支持自动降级为下载） */
+async function exportPicker(){
+  var b = makeBackup();
+  if (!b){ toast('还没有可导出的数据'); return; }
+  /* 壳里走 SAF 保存对话框（ACTION_CREATE_DOCUMENT），写入完成后由原生回调 afterExport */
+  if (IN_APP && window.AppBridge && window.AppBridge.createDocument){
+    blobToB64(b.blob).then(function(b64){
+      if (!b64){ toast('读取备份失败'); return; }
+      window.AppBridge.createDocument(b.name, b64);
+    });
+    return;
+  }
+  if (!window.showSaveFilePicker){
+    toast('此浏览器不支持选择位置，已改为下载');
+    exportDownload();
+    return;
+  }
+  try{
+    var handle = await window.showSaveFilePicker({
+      suggestedName: b.name,
+      types: [{ description: '加密备份', accept: { 'application/json': ['.json'] } }]
+    });
+    var w = await handle.createWritable();
+    await w.write(b.blob);
+    await w.close();
+    afterExport();
+    toast('备份已保存');
+  }catch(e){ /* 用户取消了选择器，不算错误 */ }
+}
+/* 去向 3：分享到其他应用（Android Chrome 93+ 支持分享文件） */
+async function exportShare(){
+  var b = makeBackup();
+  if (!b){ toast('还没有可导出的数据'); return; }
+  /* 壳里 Web Share 不可用，走原生 ACTION_SEND + FileProvider 式授权 */
+  if (IN_APP && window.AppBridge && window.AppBridge.shareFile){
+    blobToB64(b.blob).then(function(b64){
+      if (!b64){ toast('读取备份失败'); return; }
+      if (window.AppBridge.shareFile(b.name, b64)) afterExport();
+    });
+    return;
+  }
+  var file;
+  try{ file = new File([b.blob], b.name, { type: 'application/json' }); }
+  catch(e){ toast('此浏览器不支持分享文件'); return; }
+  if (!(navigator.canShare && navigator.canShare({ files: [file] }))){
+    toast('此浏览器不支持分享文件，已改为下载');
+    exportDownload();
+    return;
+  }
+  try{
+    await navigator.share({ files: [file], title: '密码备份（加密）', text: '加密的密码备份文件' });
+    afterExport();
+  }catch(e){ /* 用户取消了分享 */ }
+}
+/* 能力检测：不支持的去向在菜单里置灰 */
+function updateExportCaps(){
+  /* 壳环境：三个去向都由原生实现，全部可用 */
+  if (IN_APP && window.AppBridge){
+    var pd = $('#expPicker'), sx = $('#expShare'), dl = $('#expDownload');
+    if (pd) pd.classList.toggle('disabled', !window.AppBridge.createDocument);
+    if (sx) sx.classList.toggle('disabled', !window.AppBridge.shareFile);
+    if (dl) dl.classList.toggle('disabled', !window.AppBridge.saveToDownloads);
+    return;
+  }
+  var canPick = !!window.showSaveFilePicker;
+  var canShare = false;
+  try{
+    canShare = !!(navigator.canShare && navigator.canShare({ files: [new File([''], 't.json', { type: 'application/json' })] }));
+  }catch(e){ canShare = false; }
+  var p = $('#expPicker'), sh = $('#expShare');
+  if (p) p.classList.toggle('disabled', !canPick);
+  if (sh) sh.classList.toggle('disabled', !canShare);
+}
+function openExport(){
+  updateExportCaps();
+  openScrim('#exportOverlay');
+}
+$('#btnExport').addEventListener('click', function(){
+  closeScrim('#settingsOverlay');
+  openExport();
+});
+
+/* 导入 */
+$('#btnImport').addEventListener('click', function(){ $('#importFile').click(); });
+/* ================= 智能合并导入 ================= */
+var impBackup = null;   /* { name, vault, entries } */
+
+/* 差异分析：incoming（备份）与当前 entries 按 id 逐条比 updatedAt */
+function impDiff(incoming){
+  var cur = {}, inc = {}, i;
+  for (i = 0; i < entries.length; i++) cur[entries[i].id] = entries[i];
+  for (i = 0; i < incoming.length; i++) inc[incoming[i].id] = incoming[i];
+  var r = { added: [], updated: [], kept: [], same: 0, onlyCur: 0 };
+  for (i = 0; i < incoming.length; i++){
+    var e = incoming[i], c = cur[e.id];
+    if (!c) r.added.push(e);
+    else {
+      var ct = c.updatedAt || 0, it = e.updatedAt || 0;
+      if (it > ct) r.updated.push(e);
+      else if (it < ct) r.kept.push(c);
+      else r.same++;
+    }
+  }
+  for (i = 0; i < entries.length; i++) if (!inc[entries[i].id]) r.onlyCur++;
+  return r;
+}
+
+/* 合并：当前为基础，逐条取 updatedAt 新者 + 补上单侧新增（含回收站状态） */
+function impMergeDo(incoming){
+  var d = impDiff(incoming);
+  var byId = {}, i;
+  for (i = 0; i < entries.length; i++) byId[entries[i].id] = entries[i];
+  for (i = 0; i < incoming.length; i++){
+    var e = incoming[i], c = byId[e.id];
+    if (!c || (e.updatedAt || 0) > (c.updatedAt || 0)) byId[e.id] = e;
+  }
+  entries = Object.keys(byId).map(function(k){ return byId[k]; });
+  /* 合并对账单：什么时候、从哪份备份、合并了多少 —— 数据卡会展示 */
+  settings.lastMerge = {
+    at: Date.now(),
+    added: d.added.length, updated: d.updated.length, kept: d.kept.length,
+    from: impBackup ? impBackup.name : ''
+  };
+  saveSettings();
+  persist();
+  render();
+  renderDetail();
+  checkBackupBanner();
+}
+
+$('#importFile').addEventListener('change', async function(ev){
+  var f = ev.target.files[0];
+  ev.target.value = '';
+  if (!f) return;
+  var v;
+  try{ v = JSON.parse(await readText(f)); }
+  catch(e){ toast('文件读不出来，可能不是备份文件'); return; }
+  if (!v || v.v !== 1 || !v.fmt || !v.salt || !v.iv || !v.data){
+    toast('这不是本应用导出的备份文件');
+    return;
+  }
+  /* 不再直接覆盖 vault —— 进入导入向导：验密码 → 看差异 → 合并 */
+  impBackup = { name: f.name, vault: v, entries: null };
+  $('#impFileName').textContent = f.name;
+  var meta = $('#impFileMeta');
+  if (v.exportedAt){
+    var g = Date.now() - v.exportedAt;
+    var rel = g >= 86400000 ? (Math.floor(g/86400000) + ' 天前')
+            : g >= 3600000  ? (Math.floor(g/3600000) + ' 小时前')
+            : (Math.max(Math.floor(g/60000),1) + ' 分钟前');
+    meta.textContent = '（导出于 ' + rel + '，来自 ' + (v.exportedFrom === 'app' ? 'App' : v.exportedFrom === 'pc' ? 'PC' : '未知设备') + '）';
+  } else meta.textContent = '（导出时间未知）';
+  $('#impPw').value = masterPw;              /* 同主密码场景预填，一键过 */
+  $('#impPw').type = 'password';
+  $('#impErr').hidden = true; $('#impErr').textContent = '';
+  $('#impStep1').hidden = false;
+  $('#impStep2').hidden = true;
+  openScrim('#importOverlay');
+  setTimeout(function(){ var e = $('#impPw'); e.focus(); }, 120);
+});
+
+$('#impPwEye').addEventListener('click', function(){
+  var p = $('#impPw');
+  p.type = p.type === 'password' ? 'text' : 'password';
+});
+
+$('#impDecrypt').addEventListener('click', async function(){
+  if (!impBackup) return;
+  var pw = $('#impPw').value;
+  var err = $('#impErr');
+  if (!pw){ err.textContent = '请输入这份备份的主密码'; err.hidden = false; return; }
+  try{
+    var data = await CRYPTO.decryptObj(impBackup.vault, pw);
+    impBackup.entries = (data && data.entries) || [];
+  }catch(e){
+    err.textContent = '解密失败：这份备份的主密码不对（它可能是用另一端的不同主密码导出的）';
+    err.hidden = false;
+    return;
+  }
+  err.hidden = true;
+  /* 差异摘要 */
+  var d = impDiff(impBackup.entries);
+  var stat = function(cls, n, label){ return '<div class="imp-stat ' + cls + '"><b>' + n + '</b><span>' + label + '</span></div>'; };
+  $('#impStats').innerHTML =
+    stat('add', d.added.length, '备份新增') +
+    stat('upd', d.updated.length, '备份更新') +
+    stat('keep', d.kept.length, '保留本机') +
+    stat('same', d.same, '完全相同');
+  var rows = [];
+  d.added.forEach(function(e){ rows.push('<div class="imp-row"><i class="imp-tag add">新增</i><span class="nm">' + esc(e.name) + '</span></div>'); });
+  d.updated.forEach(function(e){ rows.push('<div class="imp-row"><i class="imp-tag upd">更新</i><span class="nm">' + esc(e.name) + '</span></div>'); });
+  d.kept.forEach(function(e){ rows.push('<div class="imp-row"><i class="imp-tag keep">本机较新</i><span class="nm">' + esc(e.name) + '</span></div>'); });
+  if (!rows.length) rows.push('<div class="imp-row"><span class="nm">两边完全一致，没有需要合并的内容</span></div>');
+  $('#impList').innerHTML = rows.join('');
+  $('#impStats').insertAdjacentHTML('beforeend', '');
+  if (d.onlyCur){
+    $('#impList').insertAdjacentHTML('afterend',
+      '<p class="lock-warn" id="impOnly">另有 ' + d.onlyCur + ' 条只存在于本机的记录，合并时会原样保留。</p>');
+  }
+  $('#impStep1').hidden = true;
+  $('#impStep2').hidden = false;
+});
+
+$('#impCancel').addEventListener('click', function(){ closeScrim('#importOverlay'); });
+$('#importClose').addEventListener('click', function(){ closeScrim('#importOverlay'); });
+
+$('#impMerge').addEventListener('click', function(){
+  if (!impBackup || !impBackup.entries) return;
+  impMergeDo(impBackup.entries);
+  impBackup = null;
+  closeScrim('#importOverlay');
+  toast('合并完成，数据已用本机主密码重新加密');
+});
+
+/* 关闭导入弹层时清理状态与明文 */
+$('#importOverlay').addEventListener('transitionend', function(){
+  if ($('#importOverlay').hidden){
+    impBackup = null;
+    $('#impPw').value = '';
+    $('#impStep1').hidden = false;
+    $('#impStep2').hidden = true;
+    var o = $('#impOnly'); if (o) o.remove();
+  }
+});
+
+/* 修改主密码 */
+$('#btnChPw').addEventListener('click', function(){
+  $('#oldPw').value = ''; $('#newPw').value = ''; $('#newPw2').value = '';
+  $('#chpwErr').textContent = '';
+  $('#chStrengthBox').hidden = true;
+  closeScrim('#settingsOverlay');
+  openScrim('#chpwOverlay');
+});
+$('#chpwClose').addEventListener('click', function(){ closeScrim('#chpwOverlay'); });
+$('#newPw').addEventListener('input', function(){
+  var s = scorePw(this.value);
+  var box = $('#chStrengthBox');
+  if (!this.value){ box.hidden = true; return; }
+  box.hidden = false;
+  var colors = ['', 'var(--danger)', 'var(--accent)', 'var(--success)', 'var(--success)'];
+  var bars = box.querySelectorAll('.strength-bars i');
+  for (var i = 0; i < bars.length; i++){
+    bars[i].style.background = i < s.n ? colors[s.n] : 'var(--line-soft)';
+  }
+  var lb = $('#chStrengthLabel');
+  lb.textContent = '强度：' + s.label;
+  lb.style.color = colors[s.n];
+});
+$('#chpwSave').addEventListener('click', async function(){
+  var oldPw = $('#oldPw').value, n1 = $('#newPw').value, n2 = $('#newPw2').value;
+  var errEl = $('#chpwErr');
+  if (!oldPw || !n1){ errEl.textContent = '请把三项都填完'; return; }
+  if (n1.length < 6){ errEl.textContent = '新主密码至少 6 位'; return; }
+  if (n1 !== n2){ errEl.textContent = '两次输入的新密码不一致'; return; }
+  try{
+    await CRYPTO.decryptObj(getVault(), oldPw);
+  }catch(e){ errEl.textContent = '当前主密码不正确'; return; }
+  masterPw = n1;
+  try{
+    await persist();
+    closeScrim('#chpwOverlay');
+    toast('主密码已更换，记牢新密码');
+  }catch(e){ errEl.textContent = '修改失败：' + e.message; }
+});
+
+/* 回收站 */
+function renderTrash(){
+  var items = entries.filter(function(e){ return e.deletedAt; })
+    .sort(function(a, b){ return b.deletedAt - a.deletedAt; });
+  $('#trashList').innerHTML = items.map(function(e){
+    var days = Math.max(0, Math.ceil((e.deletedAt + 30 * 86400000 - Date.now()) / 86400000));
+    return '<div class="t-item" data-id="' + e.id + '">' +
+      '<div class="t-info">' +
+        '<div class="t-name">' + esc(e.name) + '</div>' +
+        '<div class="t-sub">' + esc(maskAccount(e.account)) +
+          ' · <span class="t-days">' + days + ' 天后自动清除</span></div>' +
+      '</div>' +
+      '<div class="t-ops">' +
+        '<button data-t="restore">恢复</button>' +
+        '<button class="danger" data-t="purge">彻底删除</button>' +
+      '</div>' +
+    '</div>';
+  }).join('') || '<p class="no-result" style="padding:var(--sp-6) 0"><b>回收站是空的</b><span>删除的记录会先放到这里</span></p>';
+  $('#btnEmptyTrash').hidden = !items.length;
+}
+$('#btnTrash').addEventListener('click', function(){
+  closeScrim('#settingsOverlay');
+  renderTrash();
+  openScrim('#trashOverlay');
+});
+$('#trashClose').addEventListener('click', function(){ closeScrim('#trashOverlay'); });
+$('#exportClose').addEventListener('click', function(){ closeScrim('#exportOverlay'); });
+$('#expDownload').addEventListener('click', function(){ closeScrim('#exportOverlay'); exportDownload(); });
+$('#expPicker').addEventListener('click', function(){
+  if (this.classList.contains('disabled')){ toast('此浏览器不支持选择保存位置'); return; }
+  closeScrim('#exportOverlay'); exportPicker();
+});
+$('#expShare').addEventListener('click', function(){
+  if (this.classList.contains('disabled')){ toast('此浏览器不支持分享文件'); return; }
+  closeScrim('#exportOverlay'); exportShare();
+});
+$('#trashList').addEventListener('click', async function(ev){
+  var btn = ev.target.closest('[data-t]');
+  if (!btn) return;
+  var item = btn.closest('.t-item');
+  if (!item) return;
+  var id = item.getAttribute('data-id');
+  var e = findEntry(id);
+  if (!e) return;
+  if (btn.getAttribute('data-t') === 'restore'){
+    delete e.deletedAt;
+    await persist();
+    renderTrash();
+    render();
+    toast('已恢复「' + e.name + '」');
+  } else {
+    confirmDlg('彻底删除「' + e.name + '」？这一步之后无法恢复。', '彻底删除', async function(){
+      entries = entries.filter(function(x){ return x.id !== id; });
+      await persist();
+      renderTrash();
+      render();
+      toast('已彻底删除');
+    });
+  }
+});
+$('#btnEmptyTrash').addEventListener('click', function(){
+  confirmDlg('清空回收站？里面的记录会被永久删除，无法恢复。', '清空回收站', async function(){
+    entries = entries.filter(function(e){ return !e.deletedAt; });
+    await persist();
+    renderTrash();
+    render();
+    toast('回收站已清空');
+  });
+});
+
+/* 使用说明 */
+$('#btnHelp').addEventListener('click', function(){
+  closeScrim('#settingsOverlay');
+  openScrim('#helpOverlay');
+});
+$('#helpClose').addEventListener('click', function(){ closeScrim('#helpOverlay'); });
+
+/* 清空全部 */
+$('#btnClear').addEventListener('click', function(){
+  confirmDlg('这会删除本机保存的全部账号密码，且无法恢复。确定继续？', '继续', function(){
+    confirmDlg('最后确认一次：真的要清空吗？建议先导出备份。', '全部删除', function(){
+      localStorage.removeItem(LS_VAULT);
+      localStorage.removeItem(LS_SET);
+      closeScrim('#settingsOverlay');
+      showLock(true);
+      toast('已清空全部数据');
+    });
+  });
+});
+
+/* ================= 自动锁定 ================= */
+function resetAutoLock(){
+  clearTimeout(autoLockTimer);
+  if (!isUnlocked || !settings.autoLockMin) return;
+  autoLockTimer = setTimeout(function(){
+    if (!isUnlocked) return;
+    showLock(false);
+    toast('长时间未操作，已自动锁定');
+  }, settings.autoLockMin * 60000);
+}
+['click', 'keydown', 'touchstart', 'scroll'].forEach(function(ev){
+  document.addEventListener(ev, resetAutoLock, { passive: true });
+});
+document.addEventListener('visibilitychange', function(){
+  if (document.visibilityState === 'hidden' && isUnlocked && settings.bgLock) showLock(false);
+});
+
+/* ================= 键盘 ================= */
+document.addEventListener('keydown', function(e){
+  var tag = (e.target.tagName || '').toLowerCase();
+  var typing = tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable;
+
+  if (e.key === 'Escape'){
+    if (closeTopScrim()) e.preventDefault();
+    else if (isUnlocked && typing && e.target.blur) e.target.blur();
+    return;
+  }
+  if (!isUnlocked || typing) return;
+
+  if (e.key === '/'){ e.preventDefault(); $('#search').focus(); $('#search').select(); }
+  else if (e.key === 'n' || e.key === 'N'){ e.preventDefault(); openEdit(null); }
+  else if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+    var cards = $$('#mainList .card');
+    if (!cards.length) return;
+    e.preventDefault();
+    var cur = cards.indexOf(document.activeElement.closest ? document.activeElement.closest('.card') : null);
+    var next;
+    if (cur < 0) next = 0;
+    else next = e.key === 'ArrowDown' ? Math.min(cur + 1, cards.length - 1) : Math.max(cur - 1, 0);
+    cards[next].focus();
+    cards[next].scrollIntoView({ block: 'nearest' });
+  }
+  else if (e.key === 'Enter'){
+    var focused = document.activeElement.closest ? document.activeElement.closest('.card') : null;
+    if (focused){
+      e.preventDefault();
+      selectedId = focused.getAttribute('data-id');
+      if (window.matchMedia('(min-width:1024px)').matches){ render(); renderDetail(); }
+      else openMore(selectedId);
+    }
+  }
+});
+
+/* ================= 启动 ================= */
+initTheme();
+loadSettings();
+showLock(getVault() ? false : true);
+
+/* ================= 折射链的设备降级 =================
+   backdrop-filter 的 SVG 滤镜链（feTurbulence + feDisplacementMap）
+   是纯 GPU/CPU 混合负载。实测在无 GPU 加速的环境下，
+   开启折射会让滚动帧率掉约 33%。
+   这里按硬件线索做保守判断：低端设备直接关掉折射层 ——
+   玻璃本身（模糊 + 高光 + 描边）仍然保留，只是少了边缘弯折。 */
+(function(){
+  var weak = false;
+  try{
+    /* 默认值取乐观值：Safari / Firefox 没有 deviceMemory，
+       若默认成 4 会把它们全部误判为低端机 */
+    var cores = navigator.hardwareConcurrency || 8;
+    var mem = navigator.deviceMemory || 8;
+    if (cores <= 4 || mem <= 4) weak = true;
+    /* 省电模式：系统在省电时通常也会降 GPU 频率 */
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) weak = true;
+  }catch(e){}
+  if (weak) document.documentElement.classList.add('no-refract');
+})();
+
+renderDetail();
+})();
+</script>
+</body>
+</html>

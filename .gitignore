@@ -1,0 +1,35 @@
+# 构建工具链（体积大，不入库）
+android-build/bt/
+android-build/dl/
+android-build/plat/
+android-build/app/build/
+android-build/build/
+
+# 截图与中间产物
+shots/
+*.idsig
+*.tmp
+/*.png
+
+# Chrome 测试 profile 残留
+.chrome-bg-*/
+
+# 一次性演进脚本（保留测试/构建/诊断工具）
+patch*.js
+fix-*.js
+clean-*.js
+append-*.js
+shot*.js
+measure-*.js
+probe.js
+
+# 工具元数据（含工作日志，不入库）
+.workbuddy/
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 系统
+Thumbs.db
+.DS_Store
