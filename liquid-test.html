@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Liquid Glass 技术验证</title>
+<style>
+  :root{ color-scheme: dark; }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; padding:24px; min-height:100vh;
+    font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+    /* 用高对比纹理做底：折射效果只有在背景有细节时才看得见 */
+    background:
+      repeating-linear-gradient(45deg,#123 0 14px,#1a2a44 14px 28px),
+      radial-gradient(circle at 30% 20%, #2b6 0 8%, transparent 30%),
+      radial-gradient(circle at 75% 70%, #c46 0 10%, transparent 34%),
+      #0b1220;
+    color:#fff;
+  }
+  h1{ font-size:15px; font-weight:600; opacity:.75; margin:0 0 18px; letter-spacing:.02em; }
+  .grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); }
+  .cell{ }
+  .label{ font-size:11px; opacity:.6; margin:0 0 6px; font-family:ui-monospace,monospace; }
+
+  .glass{
+    height:110px; border-radius:20px;
+    display:grid; place-items:center;
+    font-size:13px; font-weight:600;
+    background:rgba(255,255,255,.10);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.35),
+      inset 0 -1px 0 rgba(0,0,0,.28),
+      0 10px 28px rgba(0,0,0,.45);
+    border:1px solid rgba(255,255,255,.18);
+  }
+
+  /* A. 基准：只有模糊（= 之前的做法） */
+  .blur-only{
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  /* B. 模糊 + SVG 位移折射（整块扭曲） */
+  .refract{
+    backdrop-filter: blur(6px) url(#lg-dist) saturate(180%);
+    -webkit-backdrop-filter: blur(6px) saturate(180%);
+  }
+
+  /* C. 边缘折射：伪元素只覆盖边缘环，内部保持干净
+        —— 这才是 iOS 的行为（中间不扭曲，只有边缘折射） */
+  .edge{ position:relative; overflow:hidden; }
+  .edge::before{
+    content:''; position:absolute; inset:0; border-radius:inherit;
+    backdrop-filter: blur(2px) url(#lg-dist);
+    -webkit-backdrop-filter: blur(2px) saturate(180%);
+    padding:14px;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite:exclude;
+    pointer-events:none;
+  }
+  .edge{ backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); }
+
+  /* D. 边缘折射 + 强镜面高光（最接近 iOS 的组合） */
+  .full{ position:relative; overflow:hidden; }
+  .full::before{
+    content:''; position:absolute; inset:0; border-radius:inherit;
+    backdrop-filter: blur(2px) url(#lg-dist);
+    -webkit-backdrop-filter: blur(2px) saturate(180%);
+    padding:16px;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite:exclude;
+    pointer-events:none;
+  }
+  .full::after{
+    content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    /* 镜面反射：左上受光 + 边缘一圈亮边 */
+    background:radial-gradient(120% 90% at 22% -18%, rgba(255,255,255,.42), transparent 56%);
+    box-shadow:
+      inset 0 1.5px 0 rgba(255,255,255,.75),
+      inset 0 0 0 1px rgba(255,255,255,.22),
+      inset 0 -1.5px 0 rgba(0,0,0,.30);
+  }
+  .full{ backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); }
+
+  .note{ margin-top:20px; font-size:12px; line-height:1.7; opacity:.72; font-family:ui-monospace,monospace; }
+  .note b{ color:#7ff; font-weight:600; }
+</style>
+</head>
+<body>
+
+<h1>Liquid Glass 技术验证 · 四种方案对比</h1>
+
+<div class="grid">
+  <div class="cell">
+    <p class="label">A. blur only（之前的做法）</p>
+    <div class="glass blur-only">均匀模糊</div>
+  </div>
+  <div class="cell">
+    <p class="label">B. blur + URL 折射（整块扭曲）</p>
+    <div class="glass refract">整体波纹</div>
+  </div>
+  <div class="cell">
+    <p class="label">C. 边缘折射（中间不扭曲）</p>
+    <div class="glass edge">边缘弯折</div>
+  </div>
+  <div class="cell">
+    <p class="label">D. 边缘折射 + 镜面高光</p>
+    <div class="glass full">最接近 iOS</div>
+  </div>
+</div>
+
+<p class="note" id="cap">
+  探针：<b id="p1">检测中…</b>
+</p>
+
+<!-- 全局只定义一次，所有玻璃元素共用 -->
+<svg width="0" height="0" style="position:absolute;left:-9999px" aria-hidden="true">
+  <defs>
+    <filter id="lg-dist" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise"/>
+      <feGaussianBlur in="noise" stdDeviation="2" result="blurred"/>
+      <feDisplacementMap in="SourceGraphic" in2="blurred" scale="60" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  (async () => {
+    const out = [];
+    const el = document.querySelector('.refract');
+    // 1. backdrop-filter 是否接受 url() 形式的 SVG 滤镜
+    const cs = getComputedStyle(el);
+    out.push('backdropFilter解析=' + (cs.backdropFilter || cs.webkitBackdropFilter || 'none'));
+
+    // 2. 逐像素比对：模糊层 vs 折射层，看折射是否真的改变了画面
+    const shot = async (sel) => {
+      const r = document.querySelector(sel).getBoundingClientRect();
+      return { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height) };
+    };
+    window.__rects = {
+      blur: await shot('.blur-only'),
+      refract: await shot('.refract'),
+      edge: await shot('.edge'),
+      full: await shot('.full'),
+    };
+    out.push('rects=' + JSON.stringify(window.__rects));
+    document.getElementById('p1').textContent = out.join(' | ');
+    window.__ready = true;
+  })();
+</script>
+</body>
+</html>
