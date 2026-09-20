@@ -4,7 +4,7 @@ const fs = require('fs'), path = require('path'), http = require('http'), net = 
 const { spawn } = require('child_process');
 
 const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
-const FILE = 'C:/Users/30855/Desktop/新建文件夹/账号密码管理_v2.html';
+const FILE = process.env.CIPHERBOX_TEST_HTML || path.join(__dirname, 'vault.html');
 const OUT = path.join(__dirname, 'shots');
 fs.mkdirSync(OUT, { recursive: true });
 
@@ -109,6 +109,33 @@ function check(label, cond) { console.log('  ' + (cond ? '✅' : '❌') + ' ' + 
   await ev(`document.getElementById('helpClose').click()`);
   await sleep(400);
 
+  /* 保存第一条信息后，以及重新打开并登录后，都不应显示欢迎栏。 */
+  await ev(`document.querySelector('#fab').click(); document.querySelector('#fName').value='Welcome regression'; document.querySelector('#fAccount').value='test-user'; document.querySelector('#fPw').value='Example-password-123'; document.querySelector('#saveBtn').click()`);
+  await sleep(1200);
+  check('第一条信息已保存', await ev(`document.querySelectorAll('#mainList .card').length === 1 && document.querySelector('#editOverlay').hidden`));
+  check('保存信息后立即隐藏欢迎栏', await ev(`document.querySelector('#welcomeBar').hidden`));
+  await cdp.send('Page.reload');
+  await sleep(1600);
+  await ev(`document.querySelector('#lockPw').value='MasterPass123'; document.querySelector('#lockBtn').click()`);
+  await sleep(1600);
+  check('重新打开登录后信息仍在', await ev(`!document.querySelector('#mainScreen').hidden && document.querySelectorAll('#mainList .card').length === 1`));
+  check('有信息的用户重新登录后不显示欢迎栏', await ev(`document.querySelector('#welcomeBar').hidden`));
+  await ev(`document.querySelector('#search').value='no-matching-entry'; document.querySelector('#search').dispatchEvent(new Event('input',{bubbles:true}))`);
+  await sleep(400);
+  check('搜索无结果也不显示欢迎栏', await ev(`document.querySelector('#welcomeBar').hidden`));
+  await ev(`document.querySelector('#search').value=''; document.querySelector('#search').dispatchEvent(new Event('input',{bubbles:true}))`);
+  await sleep(400);
+  await ev(`document.querySelector('#mainList [data-act="more"]').click(); document.querySelector('[data-m="del"]').click()`);
+  await ev(`document.querySelector('#confirmOk').click()`);
+  await sleep(800);
+  check('仅回收站仍有保存信息时隐藏欢迎栏', await ev(`document.querySelector('#welcomeBar').hidden`));
+  await ev(`document.querySelector('#btnSettings').click(); document.querySelector('#btnTrash').click()`);
+  check('信息已移到回收站', await ev(`document.querySelectorAll('#trashList .t-item').length === 1`));
+  await ev(`document.querySelector('#btnEmptyTrash').click(); document.querySelector('#confirmOk').click()`);
+  await sleep(800);
+  await ev(`document.querySelector('#trashClose').click()`);
+  check('所有保存信息清空后显示欢迎栏', await ev(`!document.querySelector('#welcomeBar').hidden`));
+
   /* 点 ✕ → 欢迎栏消失且记住 */
   await ev(`document.getElementById('welcomeClose').click()`);
   await sleep(400);
@@ -141,4 +168,5 @@ function check(label, cond) { console.log('  ' + (cond ? '✅' : '❌') + ' ' + 
   try { fs.rmSync(prof, { recursive: true, force: true }); } catch (e) {}
   console.log('');
   console.log('结果: PASS ' + pass + ' / FAIL ' + failN);
+  process.exitCode = failN ? 1 : 0;
 })();

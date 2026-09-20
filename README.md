@@ -2,7 +2,16 @@
 
 本地优先的加密密码保险箱 —— 同一个 HTML 内核，双端运行：**PC 网页版** + **Android App（零权限）**。数据只存在你自己的设备上，不上传、不联网。
 
-> 定版：**v1.8.6**（2026-09-17）· 详见 [`releases/CipherBox-v1.8.6/RELEASE.txt`](releases/CipherBox-v1.8.6/RELEASE.txt)
+> 当前修复版：**v1.8.6 欢迎提示修复**（2026-09-20）· [修复说明](WELCOME-FIX.md)
+
+## 下载与本次修复
+
+- [下载 Android 修复版 APK](https://github.com/Sepe2025/CipherBox/raw/refs/heads/main/CipherBox-1.8.6-welcome-fix.apk)
+- [电脑 HTML 版](vault.html)：打开文件页面，点击 **Download raw file** 下载，再用本机浏览器打开。
+
+本次仅修复主页“查看说明”的显示条件：保存信息后立即隐藏，重新登录后也不再显示；没有保存信息且未手动关闭时显示。回收站信息仍计入，原有手动关闭行为保留。
+
+旧的 `CipherBox-1.8.6.apk` 和 `releases/CipherBox-v1.8.6/` 保留为历史归档，不包含本次修复。修复版使用上方下载入口；详细验证和更新注意事项见 [修复说明](WELCOME-FIX.md)。
 
 ## 核心特性
 
