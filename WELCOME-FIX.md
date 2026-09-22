@@ -2,6 +2,8 @@
 
 日期：2026-09-20
 
+> 此 APK 已被新签名迁移版替代。旧签名密钥曾公开，请使用 [v1.9.0 迁移说明](SECURITY-MIGRATION.md)，不要继续安装旧签名更新。以下仅保留历史修复记录。
+
 ## 修复内容
 
 修复已有保存信息的用户重新打开并登录后，主页仍显示“查看说明”欢迎栏的问题。
@@ -16,7 +18,7 @@
 
 ## 下载
 
-- [Android 修复版 APK](https://github.com/Sepe2025/CipherBox/raw/refs/heads/main/CipherBox-1.8.6-welcome-fix.apk)
+- Android 修复 APK 已撤下，改用 [新签名迁移版](SECURITY-MIGRATION.md)。
 - [电脑 HTML 版](https://github.com/Sepe2025/CipherBox/blob/main/vault.html)：进入后点击 Download raw file，保存并在本机浏览器打开。
 
 旧的 CipherBox-1.8.6.apk 和 releases/CipherBox-v1.8.6/ 仍为原始版本，请使用上面的修复版入口。修复版 APK 的内部版本号保持 1.8.6，使用原签名。

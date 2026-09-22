@@ -2,17 +2,17 @@
 <!-- 故意不申请任何权限（包括 INTERNET）：这个 App 没有联网能力，
      数据只存在于本机 WebView 的私有存储里。 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.g.vault"
-    android:versionCode="25"
-    android:versionName="1.8.6">
+    package="com.sepe.cipherbox"
+    android:versionCode="26"
+    android:versionName="1.9.0">
     <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="34"/>
-    <application android:name=".CrashApp"
+    <application android:name="com.g.vault.CrashApp"
         android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="false"
         android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
         <activity
-            android:name=".MainActivity"
+            android:name="com.g.vault.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize"
             android:configChanges="orientation|screenSize|keyboardHidden|screenLayout">
@@ -21,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-    <provider android:name=".BackupProvider" android:authorities="com.g.vault.files"
+    <provider android:name="com.g.vault.BackupProvider" android:authorities="com.sepe.cipherbox.files"
         android:grantUriPermissions="true" android:exported="false"/>
     </application>
 </manifest>

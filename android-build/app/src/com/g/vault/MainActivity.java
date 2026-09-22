@@ -130,7 +130,7 @@ public class MainActivity extends Activity {
                 OutputStream os = new FileOutputStream(f);
                 os.write(data); os.close();
                 runOnUiThread(new Runnable(){ public void run(){
-                    Uri uri = Uri.parse("content://com.g.vault.files/" + name);
+                    Uri uri = Uri.parse("content://" + getPackageName() + ".files/" + name);
                     Intent i = new Intent(Intent.ACTION_SEND);
                     i.setType("application/json");
                     i.putExtra(Intent.EXTRA_STREAM, uri);

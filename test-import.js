@@ -4,7 +4,7 @@ const fs = require('fs'), path = require('path'), http = require('http'), net = 
 const { spawn } = require('child_process');
 
 const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
-const FILE = 'C:/Users/30855/Desktop/新建文件夹/账号密码管理_v2.html';
+const FILE = process.env.CIPHERBOX_TEST_HTML || path.join(__dirname, 'vault.html');
 const OUT = path.join(__dirname, 'shots');
 fs.mkdirSync(OUT, { recursive: true });
 const TMP = path.join(OUT, 'imp-backups');
@@ -239,4 +239,5 @@ function check(label, cond) { console.log('  ' + (cond ? '✅' : '❌') + ' ' + 
   try { fs.rmSync(profile, { recursive: true, force: true }); } catch (e) {}
   console.log('');
   console.log('结果: PASS ' + pass + ' / FAIL ' + failN);
+  process.exitCode = failN ? 1 : 0;
 })();

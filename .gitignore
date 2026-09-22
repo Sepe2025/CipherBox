@@ -31,5 +31,17 @@ __pycache__/
 *.pyc
 
 # 系统
+# 私有签名材料：必须保存在仓库外
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.key
+*.pem
+*password*.xml
+.env
+.env.*
+
+# 系统
 Thumbs.db
 .DS_Store

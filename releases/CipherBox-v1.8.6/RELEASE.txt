@@ -1,4 +1,5 @@
 CipherBox v1.8.6 · 定版
+【已停止分发】旧签名密钥已泄露，请阅读仓库根目录 SECURITY-MIGRATION.md，导出备份后迁移到新签名版本。本文件以下内容仅是历史记录，不是当前更新建议。
 ======================
 发布时间：2026-09-17
 App：CipherBox-1.8.6.apk（versionCode 25 / versionName 1.8.6 / 零权限）

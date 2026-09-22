@@ -2,16 +2,16 @@
 
 本地优先的加密密码保险箱 —— 同一个 HTML 内核，双端运行：**PC 网页版** + **Android App（零权限）**。数据只存在你自己的设备上，不上传、不联网。
 
-> 当前修复版：**v1.8.6 欢迎提示修复**（2026-09-20）· [修复说明](WELCOME-FIX.md)
+> 当前 Android 版本：**v1.9.0 新签名迁移版**（2026-09-22）· [安全说明与迁移步骤](SECURITY-MIGRATION.md)
 
 ## 下载与本次修复
 
-- [下载 Android 修复版 APK](https://github.com/Sepe2025/CipherBox/raw/refs/heads/main/CipherBox-1.8.6-welcome-fix.apk)
+- [下载 Android 新签名迁移版 APK](https://github.com/Sepe2025/CipherBox/raw/refs/heads/main/CipherBox-1.9.0.apk)
 - [电脑 HTML 版](vault.html)：打开文件页面，点击 **Download raw file** 下载，再用本机浏览器打开。
 
 本次仅修复主页“查看说明”的显示条件：保存信息后立即隐藏，重新登录后也不再显示；没有保存信息且未手动关闭时显示。回收站信息仍计入，原有手动关闭行为保留。
 
-旧的 `CipherBox-1.8.6.apk` 和 `releases/CipherBox-v1.8.6/` 保留为历史归档，不包含本次修复。修复版使用上方下载入口；详细验证和更新注意事项见 [修复说明](WELCOME-FIX.md)。
+旧签名密钥曾公开，旧 APK 已撤下当前分支下载入口。**先在旧 App 导出加密备份，再安装“CipherBox 新签名版”并导入核对；不要先卸载旧版。** 新版是独立应用，不会自动迁移数据，详细步骤见 [安全迁移说明](SECURITY-MIGRATION.md)。此前欢迎提示修复仍保留，见 [修复记录](WELCOME-FIX.md)。
 
 ## 核心特性
 
@@ -33,8 +33,9 @@
 
 ```
 vault.html                      # PC 版源码（与 App 内 assets/vault.html 字节一致）
-CipherBox-1.8.6.apk             # Android 安装包（零权限）
-releases/CipherBox-v1.8.6/      # 定版归档（APK + 源码副本 + RELEASE.txt）
+CipherBox-1.9.0.apk             # 新签名 Android 安装包（零权限）
+SECURITY-MIGRATION.md          # 签名迁移与数据迁移说明
+releases/CipherBox-v1.8.6/      # 历史源码与说明，旧 APK 不再分发
 android-build/                  # Android 壳工程
   app/src/com/g/vault/          #   MainActivity / BackupProvider / CrashApp
   app/AndroidManifest.xml
@@ -50,6 +51,8 @@ verify_v2.js  test-*.js         # 自动化测试（端到端 86 项 + 各专项
 ```bash
 node android-build/build-app.js    # → CipherBox-<version>.apk
 ```
+
+构建前须设置 `CIPHERBOX_KEYSTORE`（仓库外路径）、`CIPHERBOX_STORE_PASSWORD`（仅当前进程环境）、可选的 `CIPHERBOX_KEY_ALIAS`（默认 cipherbox-prod）。工具链可通过 `CIPHERBOX_ANDROID_TOOLS` 指定，Python 可通过 `CIPHERBOX_PYTHON` 指定。禁止把私钥或密码放进仓库。已配置 Windows 私有凭据的维护者可运行 `android-build/Build-Private.ps1`。
 
 构建链路：`aapt2 编译资源 → aapt2 link → javac（全部源文件）→ d8 → 注入 dex → zipalign → apksigner 签名`
 
